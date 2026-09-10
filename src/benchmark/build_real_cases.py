@@ -141,8 +141,8 @@ def generate_28_real_cases():
             ],
             "vouchers": [
                 {"voucher_id": "FR-2018-091", "voucher_date": "2018-12-20", "preparer": "李会计", "associated_doc_id": "FR-LOAN-01", "entries": [
-                    {"account_code": "1002", "account_name": "银行存款", "debit": 1816000000.0, "credit": 0.0, "summary": "账面列报存款"},
-                    {"account_code": "1221", "account_name": "其他应收款-辅仁集团", "debit": 0.0, "credit": 1816000000.0, "summary": "资金实际已被大股东划出占用"}
+                    {"account_code": "1002", "account_name": "银行存款", "debit": 2820000000.0, "credit": 0.0, "summary": "账面列报存款"},
+                    {"account_code": "1221", "account_name": "其他应收款-辅仁集团", "debit": 0.0, "credit": 2820000000.0, "summary": "资金实际已被大股东划出占用"}
                 ]}
             ],
             "contracts": [],
@@ -1170,7 +1170,7 @@ def generate_28_real_cases():
             },
             "ground_truth_findings": [],
             "vouchers": [
-                {"voucher_id": "CM-2024-REV01", "voucher_date": "2024-12-31", "preparer": "计费中台自动制单", "associated_doc_id": "CM-BILL-SYS-12", "entries": [
+                {"voucher_id": "CM-2024-REV01", "voucher_date": "2024-12-31", "preparer": "计费中台自动制单", "associated_doc_id": "CM-INV-202412", "entries": [
                     {"account_code": "1122", "account_name": "应收账款-政企专线与云算力客户", "debit": 1200000000.0, "credit": 0.0, "summary": "政企业务当月出账确认"},
                     {"account_code": "6001", "account_name": "主营业务收入-数字化DICT通信服务", "debit": 0.0, "credit": 1132075471.70, "summary": "完成专线服务按月履约确认收入"},
                     {"account_code": "2221", "account_name": "应交税费-应交增值税", "debit": 0.0, "credit": 67924528.30, "summary": "销项税额"}

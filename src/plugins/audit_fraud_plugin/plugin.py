@@ -9,7 +9,11 @@ from src.core.schemas import (
     AccountingCaseData, AnalysisReportResult, RiskFinding, 
     AuditWorkpaper, RiskLevel, EvidenceItem, WorkpaperColumn
 )
-from src.plugins.audit_fraud_plugin.tools import calculate_beneish_m_score, perform_three_way_reconciliation
+from src.plugins.audit_fraud_plugin.tools import (
+    calculate_beneish_m_score,
+    calculate_beneish_from_case,
+    perform_three_way_reconciliation
+)
 from src.plugins.audit_fraud_plugin.prompts import AUDIT_SYSTEM_PROMPT
 
 
@@ -34,31 +38,16 @@ class AuditFraudPlugin(BaseAccountingPlugin):
         return AUDIT_SYSTEM_PROMPT
 
     def execute_tools(self, case: AccountingCaseData) -> Dict[str, Any]:
-        """Execute deterministic audit tools on case data."""
+        """Execute deterministic audit tools on case data with strict input verification."""
         results = {}
         
         # 1. 3-way Reconciliation
         recon_res = perform_three_way_reconciliation(case)
         results["reconciliation"] = recon_res
         
-        # 2. Beneish M-Score (if financial summary present or mock based on vouchers)
-        if case.financial_summary:
-            fs = case.financial_summary
-            # Assume prior year base ratios for demonstration
-            m_res = calculate_beneish_m_score(
-                cur_sales=fs.revenue, prev_sales=fs.revenue * 0.75,
-                cur_ar=fs.accounts_receivable, prev_ar=fs.accounts_receivable * 0.5,
-                cur_cogs=fs.cost_of_sales, prev_cogs=fs.cost_of_sales * 0.7,
-                cur_assets=fs.total_assets, prev_assets=fs.total_assets * 0.8,
-                cur_depr=fs.total_assets * 0.05, prev_depr=fs.total_assets * 0.04,
-                cur_ppe=fs.total_assets * 0.35, prev_ppe=fs.total_assets * 0.32,
-                cur_sga=fs.revenue * 0.12, prev_sga=fs.revenue * 0.10,
-                cur_leverage=0.45, prev_leverage=0.40,
-                cur_net_income=fs.net_profit, cur_cfo=fs.operating_cash_flow
-            )
-            results["beneish"] = m_res
-        else:
-            results["beneish"] = None
+        # 2. Beneish M-Score (rigorous 2-period verification, refusal to fake numbers)
+        m_res = calculate_beneish_from_case(case)
+        results["beneish"] = m_res
 
         return results
 
@@ -74,17 +63,23 @@ class AuditFraudPlugin(BaseAccountingPlugin):
         ]
 
         if beneish:
-            prompt_parts.append(
-                f"- Beneish M-Score: {beneish['m_score']} (操纵预警线: -1.78, 研判结论: {beneish['conclusion']})"
-            )
-            for k, v in beneish["variables"].items():
-                prompt_parts.append(f"  * {k}: {v}")
+            if beneish.get("is_calculable"):
+                prompt_parts.append(
+                    f"- Beneish M-Score: {beneish['m_score']} (操纵预警线: -1.78, 研判结论: {beneish['conclusion']})"
+                )
+                for k, v in beneish.get("variables", {}).items():
+                    prompt_parts.append(f"  * {k}: {v}")
+            else:
+                prompt_parts.append(
+                    f"- Beneish M-Score: 【不可计算】({beneish.get('reason')})，缺失字段: {', '.join(beneish.get('missing_fields', []))}"
+                )
 
         prompt_parts.append(
             f"- 三单勾稽比对异常数量: {recon.get('total_discrepancies_count', 0)} 处，涉及异常金额: {recon.get('total_abnormal_amount', 0.0):,.2f} 元"
         )
         for disc in recon.get("discrepancies", []):
-            prompt_parts.append(f"  * [{disc.get('type')}] 关联单据: {disc.get('voucher_id', '')} - {disc.get('detail')}")
+            disc_amt = disc.get('amount', 0.0)
+            prompt_parts.append(f"  * [{disc.get('type')}] 关联单据: {disc.get('voucher_id', '')} | 涉及金额: {disc_amt:.2f}元 | 详情: {disc.get('detail')}")
 
         prompt_parts.append("\n【记账凭证抽样明细】：")
         for v in case.vouchers:
@@ -135,7 +130,10 @@ class AuditFraudPlugin(BaseAccountingPlugin):
                     impact_amount=float(f.get("impact_amount", 0.0)),
                     suspected_mechanism=f.get("suspected_mechanism", ""),
                     evidences=evidences,
-                    suggested_procedure=f.get("suggested_procedure", "执行函证与穿透抽凭")
+                    suggested_procedure=f.get("suggested_procedure", "执行函证与穿透抽凭"),
+                    rule_evidence=f.get("rule_evidence", ""),
+                    model_explanation=f.get("model_explanation", ""),
+                    human_verification_flag=f.get("human_verification_flag", "待注册会计师实施现场核实程序")
                 )
             )
 

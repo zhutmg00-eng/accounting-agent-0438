@@ -4,6 +4,7 @@ Exposes REST and SSE Streaming APIs for the modern frontend presentation.
 """
 
 import os
+import io
 import json
 import time
 import asyncio
@@ -21,8 +22,12 @@ from src.core.schemas import (
 )
 from src.core.harness import AccountingAgentHarness
 from src.core.llm_adapter import DeepSeekLLMAdapter
-from src.benchmark.test_cases import get_benchmark_cases, get_case_categories, get_case_by_id
-from src.plugins.audit_fraud_plugin.tools import calculate_beneish_m_score, perform_three_way_reconciliation
+from src.benchmark.test_cases import (
+    get_benchmark_cases, get_all_cases, get_case_categories, get_case_by_id, register_custom_case
+)
+from src.plugins.audit_fraud_plugin.tools import (
+    calculate_beneish_m_score, calculate_beneish_from_case, perform_three_way_reconciliation
+)
 from src.benchmark.benchmark_runner import run_benchmark_suite
 from src.exporters.excel_exporter import export_workpaper_to_excel
 from src.exporters.pdf_exporter import export_report_to_pdf
@@ -38,10 +43,19 @@ app = FastAPI(
     version="2.0.0"
 )
 
-# Enable CORS for local modern frontend development (Vite port 5173, etc.)
+# Compliant CORS configuration for modern frontend development (Vite port 5173, etc.)
+cors_origins_env = os.getenv("CORS_ORIGINS")
+allowed_origins = [orig.strip() for orig in cors_origins_env.split(",") if orig.strip()] if cors_origins_env else [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:8501",
+    "http://127.0.0.1:8501",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -109,8 +123,8 @@ def get_categories():
 
 @app.get("/api/cases")
 def list_cases(category: Optional[str] = Query(None)):
-    """List cases filtered by category or all 28 authentic cases."""
-    cases = get_benchmark_cases(category=category)
+    """List cases filtered by category or all authentic cases + custom uploaded cases."""
+    cases = get_all_cases(category=category)
     result = []
     for c in cases:
         result.append({
@@ -126,8 +140,8 @@ def list_cases(category: Optional[str] = Query(None)):
             "invoice_count": len(c.invoices),
             "contract_count": len(c.contracts),
             "bank_flow_count": len(c.bank_flows),
-            "ground_truth_count": len(c.ground_truth_findings),
-            "is_clean": len(c.ground_truth_findings) == 0
+            "ground_truth_count": len(c.ground_truth_findings or []),
+            "is_clean": len(c.ground_truth_findings or []) == 0
         })
     return {"cases": result, "total": len(result)}
 
@@ -161,15 +175,9 @@ def run_audit(req: AuditRunRequest):
         report = harness.run_case(case, plugin_id=req.plugin_id, temperature=req.temperature)
         report_dict = report.model_dump()
         recon_res = perform_three_way_reconciliation(case)
+        beneish_res = calculate_beneish_from_case(case)
         report_dict["tool_outputs"] = {
-            "beneish_m_score": {
-                "m_score": report.beneish_m_score if report.beneish_m_score is not None else -2.2,
-                "is_manipulator": bool(report.is_beneish_manipulator),
-                "dsri": 1.15,
-                "gmi": 1.05,
-                "aqi": 1.02,
-                "sgi": 1.25
-            },
+            "beneish_m_score": beneish_res,
             "three_way_reconciliation": recon_res
         }
         return report_dict
@@ -199,24 +207,13 @@ async def stream_audit(case_id: str = Query(...), mode: str = Query("MOCK")):
         # Stage 2: Deterministic calculation
         yield f"data: {json.dumps({'stage': 2, 'title': '确定性财务算子矩阵扫描', 'status': 'running', 'detail': '执行 Beneish M-Score 8 因子与借贷平衡刚性验证'})}\n\n"
         await asyncio.sleep(0.3)
-        if case.financial_summary:
-            fs = case.financial_summary
-            m_res = calculate_beneish_m_score(
-                cur_sales=fs.revenue, prev_sales=fs.revenue * 0.75,
-                cur_ar=fs.accounts_receivable, prev_ar=fs.accounts_receivable * 0.5,
-                cur_cogs=fs.cost_of_sales, prev_cogs=fs.cost_of_sales * 0.7,
-                cur_assets=fs.total_assets, prev_assets=fs.total_assets * 0.8,
-                cur_depr=fs.total_assets * 0.05, prev_depr=fs.total_assets * 0.04,
-                cur_ppe=fs.total_assets * 0.35, prev_ppe=fs.total_assets * 0.32,
-                cur_sga=fs.revenue * 0.12, prev_sga=fs.revenue * 0.10,
-                cur_leverage=0.45, prev_leverage=0.40,
-                cur_net_income=fs.net_profit, cur_cfo=fs.operating_cash_flow
-            )
+        beneish_res = calculate_beneish_from_case(case)
+        if beneish_res.get("is_calculable"):
+            m_score_val = beneish_res.get("m_score", 0.0)
+            stage2_detail = f"Beneish M-Score: {m_score_val:.2f} (操纵预警: {'超标' if beneish_res.get('is_manipulator') else '正常'})"
         else:
-            m_res = {"m_score": -2.2, "manipulation_probability": "正常"}
-        m_score_val = m_res.get("m_score", 0.0)
-        m_prob_val = m_res.get("manipulation_probability", "--")
-        yield f"data: {json.dumps({'stage': 2, 'title': '确定性财务算子矩阵扫描', 'status': 'completed', 'detail': f'M-Score: {m_score_val:.2f} (操纵概率: {m_prob_val})'})}\n\n"
+            stage2_detail = f"Beneish M-Score: 不可计算 ({beneish_res.get('reason')})"
+        yield f"data: {json.dumps({'stage': 2, 'title': '确定性财务算子矩阵扫描', 'status': 'completed', 'detail': stage2_detail})}\n\n"
 
         # Stage 3: Three-way reconciliation
         yield f"data: {json.dumps({'stage': 3, 'title': '三单勾稽穿透核查', 'status': 'running', 'detail': '执行 凭证 ⟷ 合同 ⟷ 发票 ⟷ 银行流水 闭环对账'})}\n\n"
@@ -249,7 +246,7 @@ async def stream_audit(case_id: str = Query(...), mode: str = Query("MOCK")):
         # Final full report with tool_outputs
         report_dict = report.model_dump()
         report_dict["tool_outputs"] = {
-            "beneish_m_score": m_res,
+            "beneish_m_score": beneish_res,
             "three_way_reconciliation": recon_res
         }
         yield f"data: {json.dumps({'type': 'final_report', 'report': report_dict})}\n\n"
@@ -291,39 +288,93 @@ async def upload_files(
     stock_code: str = Form("CUSTOM-001"),
     industry: str = Form("综合制造")
 ):
-    """Upload custom Excel/CSV files and build a dynamic AccountingCaseData."""
+    """Upload custom Excel/CSV files, strictly validate fields, register into case pool, and return case_id."""
+    # Check if at least one file is provided
+    if not vouchers_file and not invoices_file and not bank_flows_file:
+        raise HTTPException(
+            status_code=400,
+            detail="未检测到上传文件，请至少上传凭证表、发票表或银行流水表之一。"
+        )
+
     vouchers = []
     invoices = []
     bank_flows = []
+    validation_errors = []
 
     if vouchers_file:
         v_bytes = await vouchers_file.read()
-        vouchers, _ = parse_vouchers_file(v_bytes, filename=vouchers_file.filename or "")
+        if len(v_bytes) == 0:
+            validation_errors.append(f"凭证文件 '{vouchers_file.filename}' 为空文件（0字节）")
+        else:
+            parsed_v, v_val = parse_vouchers_file(io.BytesIO(v_bytes), filename=vouchers_file.filename or "")
+            if not v_val.is_valid:
+                validation_errors.extend([f"[凭证表校验未通过] {err}" for err in v_val.errors])
+            else:
+                vouchers = parsed_v
 
     if invoices_file:
         i_bytes = await invoices_file.read()
-        invoices, _ = parse_invoices_file(i_bytes, filename=invoices_file.filename or "")
+        if len(i_bytes) == 0:
+            validation_errors.append(f"发票文件 '{invoices_file.filename}' 为空文件（0字节）")
+        else:
+            parsed_i, i_val = parse_invoices_file(io.BytesIO(i_bytes), filename=invoices_file.filename or "")
+            if not i_val.is_valid:
+                validation_errors.extend([f"[发票表校验未通过] {err}" for err in i_val.errors])
+            else:
+                invoices = parsed_i
 
     if bank_flows_file:
         b_bytes = await bank_flows_file.read()
-        bank_flows, _ = parse_bank_flows_file(b_bytes, filename=bank_flows_file.filename or "")
+        if len(b_bytes) == 0:
+            validation_errors.append(f"银行流水文件 '{bank_flows_file.filename}' 为空文件（0字节）")
+        else:
+            parsed_b, b_val = parse_bank_flows_file(io.BytesIO(b_bytes), filename=bank_flows_file.filename or "")
+            if not b_val.is_valid:
+                validation_errors.extend([f"[银行流水表校验未通过] {err}" for err in b_val.errors])
+            else:
+                bank_flows = parsed_b
 
+    if validation_errors:
+        raise HTTPException(
+            status_code=400,
+            detail={"message": "账套文件解析校验失败，请修正后重新上传", "errors": validation_errors}
+        )
+
+    if not vouchers and not invoices and not bank_flows:
+        raise HTTPException(
+            status_code=400,
+            detail="上传的文件未解析出任何有效凭证、发票或银行流水明细数据。"
+        )
+
+    case_id = f"CASE-CUSTOM-{int(time.time())}"
     custom_case = AccountingCaseData(
-        case_id=f"CASE-CUSTOM-{int(time.time())}",
+        case_id=case_id,
         company_name=company_name,
         stock_code=stock_code,
         industry=industry,
+        case_category="自定义导入案例",
         audit_period="2025年度",
-        description="用户自定义上传导入的业财与凭证账套数据",
+        description=f"用户自定义上传导入的业财与凭证账套数据（包含凭证 {len(vouchers)} 笔、发票 {len(invoices)} 张、流水 {len(bank_flows)} 笔）",
         vouchers=vouchers,
         invoices=invoices,
         bank_flows=bank_flows,
         contracts=[],
-        financial_statements=FinancialStatementsSummary()
+        financial_summary=None,
+        prior_financial_summary=None
     )
+
+    # 1. Register into in-memory case store for immediate API access
+    register_custom_case(custom_case)
+
+    # 2. Persist to disk for reload persistence
+    custom_cases_dir = Path("data/cases/custom_cases")
+    custom_cases_dir.mkdir(parents=True, exist_ok=True)
+    with open(custom_cases_dir / f"{case_id}.json", "w", encoding="utf-8") as f:
+        json.dump(custom_case.model_dump(), f, ensure_ascii=False, indent=2)
 
     return {
         "status": "success",
+        "case_id": case_id,
         "case": custom_case.model_dump(),
         "counts": {
             "vouchers": len(vouchers),

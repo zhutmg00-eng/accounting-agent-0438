@@ -219,7 +219,7 @@
           {
             "account_code": "1002",
             "account_name": "银行存款",
-            "debit": 1816000000.0,
+            "debit": 2820000000.0,
             "credit": 0.0,
             "summary": "账面列报存款"
           },
@@ -227,7 +227,7 @@
             "account_code": "1221",
             "account_name": "其他应收款-辅仁集团",
             "debit": 0.0,
-            "credit": 1816000000.0,
+            "credit": 2820000000.0,
             "summary": "资金实际已被大股东划出占用"
           }
         ]
@@ -1850,7 +1850,7 @@
         "voucher_id": "CM-2024-REV01",
         "voucher_date": "2024-12-31",
         "preparer": "计费中台自动制单",
-        "associated_doc_id": "CM-BILL-SYS-12",
+        "associated_doc_id": "CM-INV-202412",
         "entries": [
           {
             "account_code": "1122",

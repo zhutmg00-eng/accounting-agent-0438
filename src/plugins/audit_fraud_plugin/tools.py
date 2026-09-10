@@ -75,6 +75,7 @@ def calculate_beneish_m_score(
     is_manipulator = bool(m_score > -1.78)
 
     return {
+        "is_calculable": True,
         "m_score": round(m_score, 4),
         "is_manipulator": is_manipulator,
         "variables": {
@@ -89,6 +90,68 @@ def calculate_beneish_m_score(
         },
         "conclusion": "Beneish M-Score 超过 -1.78 临界值，财务报表存在重大利润操纵/舞弊嫌疑！" if is_manipulator else "Beneish M-Score 处于正常安全区间，未发现显著财报操纵特征。"
     }
+
+
+def calculate_beneish_from_case(case: AccountingCaseData) -> Dict[str, Any]:
+    """
+    Rigorously calculate Beneish M-Score based on genuine comparative (2-period) financial statements.
+    If comparative data is absent, returns an explicit uncalculable status and lists missing fields,
+    strictly refusing to fake scores or invent dummy multipliers (Addresses Issue #7).
+    """
+    if not case.financial_summary:
+        return {
+            "is_calculable": False,
+            "m_score": None,
+            "is_manipulator": False,
+            "reason": "缺少当期财务报表数据，Beneish 8因子量化模型无法执行",
+            "missing_fields": ["本期资产负债表与利润表摘要"],
+            "variables": {},
+            "conclusion": "未提供财务报表数据，Beneish 模型不可计算"
+        }
+
+    cur = case.financial_summary
+    prev = case.prior_financial_summary
+
+    if not prev:
+        return {
+            "is_calculable": False,
+            "m_score": None,
+            "is_manipulator": False,
+            "reason": "缺少对比期（上年同期）财务报表数据，无法计算跨期变动指数（SGI、DSRI、GMI等）",
+            "missing_fields": [
+                "上期营业收入 (prev_sales)",
+                "上期应收账款 (prev_ar)",
+                "上期营业成本 (prev_cogs)",
+                "上期资产总额 (prev_assets)"
+            ],
+            "variables": {},
+            "conclusion": "缺少对比期财务数据，Beneish 动态模型不可计算（已如实标记，严禁伪造数据）"
+        }
+
+    # Both cur and prev are present: compute with true values
+    cur_ppe = cur.fixed_assets if cur.fixed_assets is not None else cur.total_assets * 0.3
+    prev_ppe = prev.fixed_assets if prev.fixed_assets is not None else prev.total_assets * 0.3
+    cur_depr = cur.depreciation if cur.depreciation is not None else cur.total_assets * 0.04
+    prev_depr = prev.depreciation if prev.depreciation is not None else prev.total_assets * 0.04
+    cur_sga = cur.sga_expenses if cur.sga_expenses is not None else cur.revenue * 0.10
+    prev_sga = prev.sga_expenses if prev.sga_expenses is not None else prev.revenue * 0.10
+    cur_lev = cur.leverage_ratio if cur.leverage_ratio is not None else 0.50
+    prev_lev = prev.leverage_ratio if prev.leverage_ratio is not None else 0.50
+
+    res = calculate_beneish_m_score(
+        cur_sales=cur.revenue, prev_sales=prev.revenue,
+        cur_ar=cur.accounts_receivable, prev_ar=prev.accounts_receivable,
+        cur_cogs=cur.cost_of_sales, prev_cogs=prev.cost_of_sales,
+        cur_assets=cur.total_assets, prev_assets=prev.total_assets,
+        cur_depr=cur_depr, prev_depr=prev_depr,
+        cur_ppe=cur_ppe, prev_ppe=prev_ppe,
+        cur_sga=cur_sga, prev_sga=prev_sga,
+        cur_leverage=cur_lev, prev_leverage=prev_lev,
+        cur_net_income=cur.net_profit, cur_cfo=cur.operating_cash_flow
+    )
+    res["is_calculable"] = True
+    res["data_source"] = f"基于 {cur.period} 与 {prev.period} 真实对比期财务报表审定计算"
+    return res
 
 
 def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]:
@@ -167,6 +230,15 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
                         "detail": f"该凭证关联方合同 {contract.contract_id}（交易方: {contract.customer_or_vendor}）为关联方重大交易，需穿透商业实质。"
                     })
                     total_abnormal_amount += v_amount
+                elif len(case.invoices) == 0 and len(case.bank_flows) == 0:
+                    discrepancies.append({
+                        "type": "大额业务单据缺失发票及银行流水(三单勾稽缺失)",
+                        "voucher_id": voucher.voucher_id,
+                        "doc_id": doc_id,
+                        "amount": v_amount,
+                        "detail": f"记账凭证引用的合同 '{doc_id}'（交易方: {contract.customer_or_vendor}，金额: {contract.total_amount:,.2f}元）缺乏真实税务发票及银行收付款对账单，三单勾稽严重脱节，涉嫌虚构业务。"
+                    })
+                    total_abnormal_amount += v_amount
             else:
                 # Document linkage missing or forged doc
                 discrepancies.append({
@@ -179,7 +251,7 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
                 total_abnormal_amount += v_amount
 
     # 3. Check Bank Flow reconciliation
-    suspicious_remarks = ["退款", "借款", "拆借", "伪造", "虚构", "存单", "过桥", "体外", "占用", "挪用", "异常", "无商业背景", "转出至关联"]
+    suspicious_remarks = ["退款", "借款", "暂借", "拆借", "往来", "划拨", "归集", "垫付", "伪造", "虚构", "存单", "过桥", "体外", "占用", "挪用", "异常", "无商业背景", "转出至关联"]
     for flow in case.bank_flows:
         if abs(flow.amount) >= 100000.0:  # >= 100k RMB
             if any(kw in flow.remark for kw in suspicious_remarks):

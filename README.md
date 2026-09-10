@@ -83,7 +83,7 @@ uv run uvicorn src.api.server:app --host 0.0.0.0 --port 8501
 # 3. 运行严谨评测基准套件 (28 案例自动化评分卡)
 uv run python src/benchmark/benchmark_runner.py
 
-# 4. 运行自动化测试套件 (全部 20 项测试通过)
+# 4. 运行自动化测试套件 (全部 26 项测试通过，覆盖隔离性、闭环与真实指标)
 uv run pytest -v
 ```
 
@@ -93,21 +93,23 @@ uv run pytest -v
 
 ```
 accounting-agent-0438/
+├── .github/workflows/ci.yml    # GitHub Actions 云端双平台 (Ubuntu/Windows) 自动化 CI
 ├── run.bat                     # Windows 一键极速启动脚本
 ├── pyproject.toml              # 现代依赖与配置锁
 ├── data/
 │   ├── templates/              # 供用户下载的标准 Excel/CSV 导入模板
 │   └── cases/                  # 28 例中国证监会真实处罚决定书案例数据集
+│       └── custom_cases/       # 用户上传导入自定义案例持久化目录
 ├── frontend/                   # 现代 React 18 全景审计指挥舱 SPA 源码
 │   ├── src/                    # UI 组件 (审计舱、勾稽飞轮、资金拓扑、CoT终端、竞技场)
 │   └── dist/                   # 生产环境编译构建产物 (由 FastAPI 直接托管)
 ├── src/
 │   ├── config.py               # DeepSeek-V4.1 Flash / V4 Pro 全局配置
 │   ├── api/
-│   │   └── server.py           # FastAPI 高性能后端与 SSE 流式推理推送
+│   │   └── server.py           # FastAPI 高性能后端、合规 CORS 与 SSE 流式推送
 │   ├── core/                   # 核心智能体基座与微内核
-│   │   ├── schemas.py          # 强类型数据模型与证据链定义
-│   │   ├── llm_adapter.py      # DeepSeek V4.1/V4 Pro 三模自适应适配器
+│   │   ├── schemas.py          # 强类型数据模型、证据链与 Beneish 评价定义
+│   │   ├── llm_adapter.py      # DeepSeek V4.1/V4 Pro 三模自适应与无泄漏事实推理
 │   │   └── harness.py          # 智能体执行流水线与严谨评测引擎
 │   ├── data_loader/            # 真实文件导入与字段校验器
 │   │   └── file_importer.py    # Excel 凭证、CSV 发票与银行流水解析器
@@ -116,5 +118,11 @@ accounting-agent-0438/
 │   │   └── cost_analysis_plugin/#【扩展】管理会计本量利决策 (CostAgent)
 │   ├── exporters/              # 成果导出器 (Excel/PDF/JSON)
 │   └── benchmark/              # 评测基座与 28 大实战案例集
-└── tests/                      # 自动化测试用例套件 (20/20 通过)
+└── tests/                      # 自动化测试用例套件 (26/26 100% 通过)
+    ├── test_upload_closed_loop.py    # 上传至审计全流程闭环及 400 校验测试
+    ├── test_benchmark_isolation.py   # 基准答案隔离与变异事实敏感性测试
+    ├── test_modes_and_errors.py      # 运行模式与异常拦截测试
+    ├── test_harness.py               # 28 大案例基准全量自动化评测
+    ├── test_api_server.py            # API 路由与静态页面托管测试
+    └── test_file_importer.py         # 报表解析与字段校验测试
 ```

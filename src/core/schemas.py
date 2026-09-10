@@ -94,6 +94,20 @@ class FinancialStatementsSummary(BaseModel):
     inventory: float = Field(description="存货期末余额")
     total_assets: float = Field(description="资产总计")
     operating_cash_flow: float = Field(description="经营活动现金流净额")
+    fixed_assets: Optional[float] = Field(default=None, description="固定资产/不动产、厂房和设备(PPE)")
+    depreciation: Optional[float] = Field(default=None, description="折旧与摊销")
+    sga_expenses: Optional[float] = Field(default=None, description="销售与管理费用")
+    leverage_ratio: Optional[float] = Field(default=None, description="资产负债率/财务杠杆")
+
+
+class BeneishEvaluationResult(BaseModel):
+    is_calculable: bool = Field(default=True, description="是否具备完整两期财报满足计算条件")
+    m_score: Optional[float] = Field(default=None, description="Beneish M-Score 分数")
+    is_manipulator: bool = Field(default=False, description="是否超过 -1.78 临界值")
+    reason: Optional[str] = Field(default=None, description="计算状态或不可计算原因说明")
+    missing_fields: List[str] = Field(default_factory=list, description="缺失的关键财务指标清单")
+    variables: Dict[str, float] = Field(default_factory=dict, description="8因子计算明细")
+    conclusion: str = Field(default="", description="最终综合判定结论")
 
 
 # 2. 案例输入结构 (Case Input) 与基准标准答案 (Ground Truth)
@@ -116,6 +130,7 @@ class AccountingCaseData(BaseModel):
     audit_period: str = Field(default="2025年度", description="审计或核算期间")
     description: str = Field(description="案例背景与简述")
     financial_summary: Optional[FinancialStatementsSummary] = None
+    prior_financial_summary: Optional[FinancialStatementsSummary] = Field(default=None, description="对比期/上期财务报表数据")
     vouchers: List[AccountingVoucher] = Field(default_factory=list)
     contracts: List[BusinessContract] = Field(default_factory=list)
     invoices: List[InvoiceItem] = Field(default_factory=list)

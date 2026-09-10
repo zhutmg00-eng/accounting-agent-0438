@@ -22,3 +22,7 @@ deepseek-harness/
 # Generated exports and secrets
 output/
 .env
+
+# Custom cases upload directory
+data/cases/custom_cases/*.json
+!data/cases/custom_cases/.gitkeep

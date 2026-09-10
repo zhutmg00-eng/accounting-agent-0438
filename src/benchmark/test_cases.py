@@ -37,6 +37,10 @@ def _load_cases_from_json() -> List[AccountingCaseData]:
         if item.get("financial_summary"):
             fs_obj = FinancialStatementsSummary(**item["financial_summary"])
 
+        p_fs_obj = None
+        if item.get("prior_financial_summary"):
+            p_fs_obj = FinancialStatementsSummary(**item["prior_financial_summary"])
+
         vouchers = []
         for v in item.get("vouchers", []):
             entries = [JournalEntryLine(**e) for e in v.get("entries", [])]
@@ -75,6 +79,7 @@ def _load_cases_from_json() -> List[AccountingCaseData]:
             audit_period=item.get("audit_period", "2018年度"),
             description=item.get("description", ""),
             financial_summary=fs_obj,
+            prior_financial_summary=p_fs_obj,
             vouchers=vouchers,
             contracts=contracts,
             invoices=invoices,
@@ -87,6 +92,32 @@ def _load_cases_from_json() -> List[AccountingCaseData]:
     return _CACHED_CASES
 
 
+_DYNAMIC_CASES_STORE: Dict[str, AccountingCaseData] = {}
+
+
+def _load_custom_cases_from_disk() -> None:
+    """Load persisted custom cases from disk into _DYNAMIC_CASES_STORE."""
+    custom_dir = Path("data/cases/custom_cases")
+    if custom_dir.exists():
+        for json_file in custom_dir.glob("*.json"):
+            try:
+                with open(json_file, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    case = AccountingCaseData(**data)
+                    _DYNAMIC_CASES_STORE[case.case_id] = case
+            except Exception:
+                pass
+
+
+# Initialize custom cases from disk
+_load_custom_cases_from_disk()
+
+
+def register_custom_case(case: AccountingCaseData) -> None:
+    """Register a custom uploaded case into the in-memory case store for unified query."""
+    _DYNAMIC_CASES_STORE[case.case_id] = case
+
+
 def get_benchmark_cases(category: Optional[str] = None) -> List[AccountingCaseData]:
     """
     Get all authentic Chinese capital market cases or filter by category.
@@ -97,9 +128,20 @@ def get_benchmark_cases(category: Optional[str] = None) -> List[AccountingCaseDa
     return all_cases
 
 
+def get_all_cases(category: Optional[str] = None) -> List[AccountingCaseData]:
+    """
+    Get all cases including both benchmark cases and registered custom uploaded cases.
+    """
+    benchmark = get_benchmark_cases(category=category)
+    custom = list(_DYNAMIC_CASES_STORE.values())
+    if category and category != "全部案例 (All 28 Cases)":
+        custom = [c for c in custom if c.case_category == category]
+    return custom + benchmark
+
+
 def get_case_categories() -> List[str]:
     """Get list of unique case categories."""
-    cases = _load_cases_from_json()
+    cases = get_all_cases()
     categories = []
     for c in cases:
         if c.case_category and c.case_category not in categories:
@@ -108,9 +150,17 @@ def get_case_categories() -> List[str]:
 
 
 def get_case_by_id(case_id: str) -> Optional[AccountingCaseData]:
-    """Retrieve case by case_id or company name substring."""
+    """Retrieve case by case_id, stock_code, or company name, including custom uploaded cases."""
+    if case_id in _DYNAMIC_CASES_STORE:
+        return _DYNAMIC_CASES_STORE[case_id]
+
     cases = _load_cases_from_json()
     for c in cases:
         if c.case_id == case_id or case_id in c.company_name or (c.stock_code and case_id == c.stock_code):
             return c
+
+    for c in _DYNAMIC_CASES_STORE.values():
+        if case_id in c.company_name or (c.stock_code and case_id == c.stock_code):
+            return c
+
     return None
