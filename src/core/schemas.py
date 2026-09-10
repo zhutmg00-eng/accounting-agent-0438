@@ -7,6 +7,12 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 
+class ExecutionMode(str, Enum):
+    STRICT_ONLINE = "strict-online"  # 严格在线模式 (失败直接报错，绝不静默降级)
+    ONLINE = "online"                # 在线优先模式 (支持显式降级标记)
+    MOCK = "mock"                    # 离线确定性演示模式 (标注模拟结果)
+
+
 class RiskLevel(str, Enum):
     HIGH = "HIGH"          # 高风险 (重大错报/舞弊嫌疑)
     MEDIUM = "MEDIUM"      # 中风险 (合规瑕疵/需进一步取证)
@@ -40,6 +46,8 @@ class AccountingVoucher(BaseModel):
     entries: List[JournalEntryLine] = Field(default_factory=list, description="分录明细")
     attachments_count: int = Field(default=1, description="原始凭证附件张数")
     associated_doc_id: Optional[str] = Field(default=None, description="关联业务单据号 (合同/发票/出库单)")
+    source_file: Optional[str] = Field(default="内建凭证库", description="数据来源文件")
+    row_index: Optional[int] = Field(default=None, description="来源行号")
 
 
 class BusinessContract(BaseModel):
@@ -50,6 +58,7 @@ class BusinessContract(BaseModel):
     payment_terms: str = Field(description="付款/信用条款")
     delivery_condition: str = Field(description="控制权转移/验收条款")
     is_related_party: bool = Field(default=False, description="是否为关联方")
+    source_file: Optional[str] = Field(default="内建合同库", description="数据来源文件")
 
 
 class InvoiceItem(BaseModel):
@@ -61,6 +70,7 @@ class InvoiceItem(BaseModel):
     tax_amount: float = Field(description="税额")
     total_amount: float = Field(description="价税合计")
     goods_or_service: str = Field(description="商品或劳务名称")
+    source_file: Optional[str] = Field(default="内建发票清单", description="数据来源文件")
 
 
 class BankFlowRecord(BaseModel):
@@ -71,6 +81,7 @@ class BankFlowRecord(BaseModel):
     amount: float = Field(description="交易金额 (正数流入/负数流出)")
     balance_after: float = Field(description="交易后余额")
     remark: str = Field(default="", description="银行附言/用途")
+    source_file: Optional[str] = Field(default="内建银行对账单", description="数据来源文件")
 
 
 class FinancialStatementsSummary(BaseModel):
@@ -85,7 +96,15 @@ class FinancialStatementsSummary(BaseModel):
     operating_cash_flow: float = Field(description="经营活动现金流净额")
 
 
-# 2. 案例输入结构 (Case Input)
+# 2. 案例输入结构 (Case Input) 与基准标准答案 (Ground Truth)
+class GroundTruthRiskItem(BaseModel):
+    finding_type: str = Field(description="风险类型标准名称，例如 跨期提前确认营业收入, 虚假采购存货在途挂账, 关联方隐蔽资金闭环空转")
+    expected_risk_level: RiskLevel = Field(default=RiskLevel.HIGH, description="预期风险等级")
+    expected_amount: float = Field(default=0.0, description="预期涉案错报金额(元)")
+    expected_vouchers: List[str] = Field(default_factory=list, description="必须捕获的问题凭证编号或银行流水号")
+    standard_clause: str = Field(default="", description="对应的会计或审计准则条款")
+
+
 class AccountingCaseData(BaseModel):
     case_id: str = Field(description="案例唯一ID")
     company_name: str = Field(description="被审计/分析企业名称")
@@ -97,7 +116,8 @@ class AccountingCaseData(BaseModel):
     contracts: List[BusinessContract] = Field(default_factory=list)
     invoices: List[InvoiceItem] = Field(default_factory=list)
     bank_flows: List[BankFlowRecord] = Field(default_factory=list)
-    ground_truth_risks: Optional[List[str]] = Field(default=None, description="评测基准真值标注 (测试时用于自动打分)")
+    ground_truth_risks: Optional[List[str]] = Field(default=None, description="兼容旧版字符串真值")
+    ground_truth_findings: Optional[List[GroundTruthRiskItem]] = Field(default=None, description="强类型字段级基准真值")
 
 
 # 3. 智能体分析研判与结构化输出 (Audit & Analysis Output)
@@ -105,6 +125,8 @@ class EvidenceItem(BaseModel):
     evidence_type: str = Field(description="证据类型，例如: 凭证与流水差异、发票时间矛盾、合同验收缺失")
     source_ref: str = Field(description="证据源引用，例如: 凭证[202512-记-0042] vs 流水[BK2025123101]")
     detail: str = Field(description="具体异常比对描述")
+    source_file: Optional[str] = Field(default="", description="数据来源文件")
+    row_index: Optional[int] = Field(default=None, description="来源数据行号")
 
 
 class RiskFinding(BaseModel):
@@ -116,6 +138,10 @@ class RiskFinding(BaseModel):
     suspected_mechanism: str = Field(description="手法剖析 (如: 提前确认收入、三单不一致、虚构采购资金循环)")
     evidences: List[EvidenceItem] = Field(default_factory=list, description="结构化证据链条")
     suggested_procedure: str = Field(description="建议执行的实质性审计程序 (如: 发函询证、实地盘点、检查期后退货)")
+    # 证据链三层结构 (Issue 5)
+    rule_evidence: str = Field(default="", description="【确定性规则发现】：算法计算得出的客观事实指标（如倒挂天数、借贷差额）")
+    model_explanation: str = Field(default="", description="【DeepSeek模型推理解析】：大语言模型准则认定与实质推断")
+    human_verification_flag: str = Field(default="待注册会计师实施现场核实程序", description="【待人工确认事项】：需人工跟进的审计程序")
 
 
 class WorkpaperColumn(BaseModel):
@@ -126,6 +152,8 @@ class WorkpaperColumn(BaseModel):
     verified_amount: float
     discrepancy: float
     audit_conclusion: str
+    source_file: Optional[str] = Field(default="", description="底稿数据源文件")
+    evidence_trace: Optional[str] = Field(default="", description="证据追溯链接")
 
 
 class AuditWorkpaper(BaseModel):
@@ -152,15 +180,28 @@ class AnalysisReportResult(BaseModel):
     executive_summary: str = Field(description="管理层与评委摘要")
     execution_time_seconds: float = Field(default=0.0)
     token_usage: Dict[str, int] = Field(default_factory=lambda: {"prompt_tokens": 0, "completion_tokens": 0, "total": 0})
+    # 可靠性元数据 (Issue 3)
+    execution_mode: ExecutionMode = Field(default=ExecutionMode.MOCK, description="实际执行模式")
+    model_name: str = Field(default="deepseek-chat", description="实际执行模型")
+    fallback_occurred: bool = Field(default=False, description="是否发生过降级回退")
+    fallback_reason: Optional[str] = Field(default=None, description="降级回退原因详情")
 
 
-# 4. 评测基座指标 (Benchmark Harness Metrics)
+# 4. 字段级与金额级精细化评测指标 (Benchmark Harness Metrics - Issue 4)
 class CaseEvalScore(BaseModel):
     case_id: str
     case_name: str
+    # 基础综合指标
     precision: float = Field(description="查准率 (Precision)")
     recall: float = Field(description="查全率 (Recall)")
     f1_score: float = Field(description="F1 综合指标")
+    # 字段级与金额级严谨指标 (Issue 4)
+    type_accuracy_rate: float = Field(default=1.0, description="风险类型字段准确率")
+    risk_level_accuracy_rate: float = Field(default=1.0, description="风险严重度等级准确率")
+    amount_accuracy_rate: float = Field(default=1.0, description="金额精准度 (误差<=1%)")
+    evidence_hit_rate: float = Field(default=1.0, description="证据凭证来源命中率")
+    false_positive_count: int = Field(default=0, description="误报风险点数量")
+    # 质量与稳定性指标
     json_schema_valid: bool = Field(description="JSON 结构化合规性 (100% 格式对齐)")
     math_accuracy_rate: float = Field(description="数字计算准确率 (零算术幻觉)")
     standards_accuracy_rate: float = Field(description="会计准则引用准确率")
@@ -175,7 +216,14 @@ class BenchmarkSummary(BaseModel):
     mean_precision: float
     mean_recall: float
     mean_f1_score: float
+    # 新增严谨指标
+    mean_amount_accuracy: float = Field(default=1.0, description="平均金额精准率")
+    mean_type_accuracy: float = Field(default=1.0, description="平均类型准确率")
+    mean_evidence_hit_rate: float = Field(default=1.0, description="平均凭证来源命中率")
+    false_positive_rate: float = Field(default=0.0, description="对照组误报率")
+    # 基础质量
     schema_valid_rate: float
     math_accuracy_rate: float
     mean_latency: float
+    execution_mode: str = Field(default="mock", description="评测执行模式")
     case_scores: List[CaseEvalScore] = Field(default_factory=list)

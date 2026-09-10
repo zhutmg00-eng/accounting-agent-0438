@@ -1,6 +1,13 @@
 """
 Streamlit Web Demonstration Prototype for 2026年北京市大学生数智会计创新应用竞赛.
-Supports DeepSeek API / Mock mode, live multi-agent execution, interactive workpapers, and report exports.
+DeepSeek-AuditMind: 复杂业财融合与数智舞弊穿透智能体.
+Implements:
+- Issue 1: Focus on core audit & fraud penetration mainline (5-minute closed loop)
+- Issue 2: Excel / CSV financial data upload with field-level validation and sample templates
+- Issue 3: Strict separation between STRICT_ONLINE, ONLINE, and MOCK modes (no silent fallback)
+- Issue 4: Rigorous field-level & amount-level benchmark scorecard
+- Issue 5: Three-layer structured evidence traceability (Deterministic facts, LLM reasoning, CPA verification)
+- Issue 6: One-click live competition presentation support
 """
 
 import streamlit as st
@@ -16,8 +23,10 @@ if str(root_dir) not in sys.path:
     sys.path.insert(0, str(root_dir))
 
 from src.config import settings
-from src.core.schemas import AccountingCaseData, RiskLevel
-from src.core.llm_adapter import DeepSeekLLMAdapter
+from src.core.schemas import (
+    AccountingCaseData, RiskLevel, ExecutionMode, AnalysisReportResult
+)
+from src.core.llm_adapter import DeepSeekLLMAdapter, DeepSeekAPIError
 from src.core.harness import AccountingAgentHarness
 from src.benchmark.test_cases import get_benchmark_cases
 from src.benchmark.benchmark_runner import run_benchmark_suite
@@ -25,6 +34,10 @@ from src.exporters.excel_exporter import export_workpaper_to_excel
 from src.exporters.pdf_exporter import export_report_to_pdf
 from src.exporters.json_exporter import export_report_to_json
 from src.ui.dashboard_view import render_data_anomaly_dashboard
+from src.data_loader.file_importer import (
+    parse_vouchers_file, parse_invoices_file, parse_bank_flows_file,
+    generate_sample_templates
+)
 
 # Page configuration
 st.set_page_config(
@@ -41,30 +54,34 @@ st.markdown("""
         font-size: 26px;
         font-weight: 700;
         color: #1F497D;
-        margin-bottom: 5px;
+        margin-bottom: 2px;
     }
     .sub-header {
         font-size: 14px;
         color: #595959;
-        margin-bottom: 20px;
+        margin-bottom: 16px;
     }
-    .metric-card {
-        background-color: #F8F9FA;
-        border-left: 5px solid #1F497D;
-        padding: 15px;
-        border-radius: 6px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    .mode-badge-online {
+        background-color: #DEF7EC;
+        color: #03543F;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 12px;
+        border: 1px solid #31C48D;
+    }
+    .mode-badge-mock {
+        background-color: #FEF08A;
+        color: #854D0E;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 12px;
+        border: 1px solid #FACC15;
     }
     .risk-high {
         background-color: #FFEBEE;
         border-left: 5px solid #D32F2F;
-        padding: 12px;
-        border-radius: 4px;
-        margin-bottom: 10px;
-    }
-    .risk-clean {
-        background-color: #E8F5E9;
-        border-left: 5px solid #388E3C;
         padding: 12px;
         border-radius: 4px;
         margin-bottom: 10px;
@@ -80,84 +97,223 @@ def init_session_state():
         st.session_state.current_report = None
     if "benchmark_summary" not in st.session_state:
         st.session_state.benchmark_summary = None
+    if "uploaded_case" not in st.session_state:
+        st.session_state.uploaded_case = None
 
 
 init_session_state()
 
+# Ensure templates exist
+templates_dir = Path("data/templates")
+if not (templates_dir / "企业记账凭证模板.xlsx").exists():
+    generate_sample_templates(templates_dir)
+
 # ----------------- SIDEBAR -----------------
 with st.sidebar:
     st.image("https://img.icons8.com/fluency/96/accounting.png", width=64)
-    st.markdown("### ⚙️ 模型与系统配置")
+    st.markdown("### ⚙️ 运行与推理引擎配置")
     
-    use_mock = st.toggle("使用离线智能评测引擎 (Mock/Demo)", value=True, help="无需联网或 API Key，使用内置确定性财税算法与 CoT 推理链。")
+    mode_choice = st.radio(
+        "选择运行模式:",
+        ["🟡 离线确定性演示 (Mock/Demo)", "🟢 DeepSeek 在线分析 (Online)", "🔴 严格在线模式 (Strict-Online)"],
+        index=0,
+        help="【严格在线模式】：若 API 连接失败立即报错中断，绝不静默降级，确保真实性。\n【离线确定性演示】：内置规则引擎与算子，无需 API Key。"
+    )
+
+    if "Strict-Online" in mode_choice:
+        current_mode = ExecutionMode.STRICT_ONLINE
+        use_mock = False
+    elif "Online" in mode_choice:
+        current_mode = ExecutionMode.ONLINE
+        use_mock = False
+    else:
+        current_mode = ExecutionMode.MOCK
+        use_mock = True
+
     api_key = st.text_input("DeepSeek API Key", value=settings.api_key if not use_mock else "", type="password", disabled=use_mock)
     api_base = st.text_input("API Base URL", value=settings.api_base, disabled=use_mock)
-    model_name = st.selectbox("推理模型", ["deepseek-chat", "deepseek-reasoner", "qwen-max", "glm-4"], index=0, disabled=use_mock)
-    
-    # Update harness LLM adapter if changed
-    llm_adapter = DeepSeekLLMAdapter(api_key=api_key, api_base=api_base, model_name=model_name, use_mock=use_mock)
+    model_name = st.selectbox("推理模型", ["deepseek-chat", "deepseek-reasoner", "qwen-max"], index=0, disabled=use_mock)
+
+    # Initialize or update LLM adapter
+    llm_adapter = DeepSeekLLMAdapter(
+        api_key=api_key,
+        api_base=api_base,
+        model_name=model_name,
+        mode=current_mode
+    )
     st.session_state.harness.llm = llm_adapter
 
     st.markdown("---")
-    st.markdown("### 🧩 智能体插件选择 (Plugin)")
-    plugins_meta = st.session_state.harness.registry.list_plugins()
-    plugin_options = {p["name"]: p["id"] for p in plugins_meta}
-    selected_plugin_name = st.selectbox("选择业务插件", list(plugin_options.keys()))
-    selected_plugin_id = plugin_options[selected_plugin_name]
+    st.markdown("### 📁 数据源与案例选择")
+    data_source_mode = st.radio("数据来源:", ["预置实战竞赛案例", "上传本地财务文件 (Excel/CSV)"])
+
+    cases = get_benchmark_cases()
+    if data_source_mode == "预置实战竞赛案例":
+        case_names = [f"{c.case_id} - {c.company_name}" for c in cases]
+        selected_case_idx = st.selectbox("选择实战案例", range(len(cases)), format_func=lambda i: case_names[i])
+        active_case = cases[selected_case_idx]
+    else:
+        active_case = st.session_state.uploaded_case if st.session_state.uploaded_case else cases[0]
 
     st.markdown("---")
-    st.markdown("### 📁 测试案例选择")
-    cases = get_benchmark_cases()
-    case_names = [f"{c.case_id} - {c.company_name}" for c in cases]
-    selected_case_idx = st.selectbox("预置实战案例", range(len(cases)), format_func=lambda i: case_names[i])
-    selected_case = cases[selected_case_idx]
+    with st.expander("🧩 扩展功能区 (管理会计 CVP)", expanded=False):
+        st.caption("管理会计插件可执行量本利敏感性分析，保留为评委答辩扩展模块。")
+        st.write("已就绪算子: `calculate_breakeven_point`, `calc_target_profit_volume`")
 
     st.caption("2026年北京市大学生数智会计创新应用竞赛")
 
 
-# ----------------- MAIN CONTENT -----------------
-st.markdown('<div class="main-header">⚖️ DeepSeek-AuditMind: 复杂业财融合与舞弊穿透智能体</div>', unsafe_allow_html=True)
-st.markdown(f'<div class="sub-header">当前执行插件: <b>{selected_plugin_name}</b> | 核心引擎: <b>{"离线高精度规则引擎" if use_mock else model_name}</b></div>', unsafe_allow_html=True)
+# ----------------- MAIN CONTENT HEADER -----------------
+mode_badge = '<span class="mode-badge-online">🟢 真实在线推理模式 (DeepSeek-V3)</span>' if not use_mock else '<span class="mode-badge-mock">🟡 离线确定性演示模式 (Demo Mode)</span>'
 
-tab_dashboard, tab_agent, tab_workpaper, tab_benchmark, tab_export = st.tabs([
-    "🎯 数据问题穿透大屏 (Anomaly Dashboard)",
+st.markdown('<div class="main-header">⚖️ DeepSeek-AuditMind: 复杂业财融合与舞弊穿透智能体</div>', unsafe_allow_html=True)
+st.markdown(
+    f'<div class="sub-header">当前执行模式: {mode_badge} | 核心业务主线: <b>数智审计与舞弊穿透 (Audit & Fraud Penetration)</b></div>',
+    unsafe_allow_html=True
+)
+
+# Five Core Mainline Tabs
+tab_data, tab_agent, tab_dashboard, tab_workpaper, tab_benchmark, tab_export = st.tabs([
+    "📁 数据导入与案例预览 (Data)",
     "🔍 智能体穿透研判 (Live Execution)", 
+    "🎯 数据问题穿透大屏 (Anomaly Dashboard)",
     "📋 标准审计底稿 (Workpapers)", 
     "📊 评测基座与评分卡 (Benchmark Harness)", 
     "💾 结构化成果导出 (Export)"
 ])
 
-# ----------------- TAB 0: DATA ANOMALY DASHBOARD -----------------
-with tab_dashboard:
-    render_data_anomaly_dashboard(selected_case, st.session_state.current_report)
+# ----------------- TAB 0: DATA INGESTION & PREVIEW -----------------
+with tab_data:
+    if data_source_mode == "预置实战竞赛案例":
+        st.markdown(f"### 🏢 案例基本信息: {active_case.company_name}")
+        c_i1, c_i2, c_i3 = st.columns([1, 1, 2])
+        with c_i1:
+            st.write(f"**所属行业:** {active_case.industry}")
+            st.write(f"**核算/审计期间:** {active_case.audit_period}")
+        with c_i2:
+            st.write(f"**抽查凭证数:** {len(active_case.vouchers)} 张")
+            st.write(f"**关联单据数:** {len(active_case.contracts) + len(active_case.invoices) + len(active_case.bank_flows)} 份")
+        with c_i3:
+            st.info(f"**业务背景:** {active_case.description}")
+
+        st.markdown("#### 📑 凭证分录抽查明细预览")
+        v_rows = []
+        for v in active_case.vouchers:
+            for e in v.entries:
+                v_rows.append({
+                    "凭证号": v.voucher_id,
+                    "记账日期": v.voucher_date,
+                    "科目代码": e.account_code,
+                    "科目名称": e.account_name,
+                    "借方金额(元)": e.debit,
+                    "贷方金额(元)": e.credit,
+                    "摘要": e.summary,
+                    "关联单据": v.associated_doc_id or "无"
+                })
+        if v_rows:
+            st.dataframe(pd.DataFrame(v_rows), use_container_width=True)
+
+    else:
+        st.markdown("### 📤 上传真实财务数据 (Excel / CSV)")
+        st.write("系统支持解析记账凭证表、增值税发票清单及银行流水，提供字段级精确校验。")
+
+        col_t1, col_t2, col_t3 = st.columns(3)
+        with col_t1:
+            with open(templates_dir / "企业记账凭证模板.xlsx", "rb") as f:
+                st.download_button("📥 下载凭证导入模板 (.xlsx)", data=f.read(), file_name="企业记账凭证模板.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        with col_t2:
+            with open(templates_dir / "增值税发票清单模板.csv", "rb") as f:
+                st.download_button("📥 下载发票清单模板 (.csv)", data=f.read(), file_name="增值税发票清单模板.csv", mime="text/csv")
+        with col_t3:
+            with open(templates_dir / "银行对账单明细模板.csv", "rb") as f:
+                st.download_button("📥 下载银行流水模板 (.csv)", data=f.read(), file_name="银行对账单明细模板.csv", mime="text/csv")
+
+        st.markdown("---")
+        up_col1, up_col2, up_col3 = st.columns(3)
+        with up_col1:
+            voucher_file = st.file_uploader("1. 上传记账凭证表 (.xlsx / .csv)", type=["xlsx", "csv"])
+        with up_col2:
+            invoice_file = st.file_uploader("2. 上传发票清单 (.csv / .xlsx)", type=["csv", "xlsx"])
+        with up_col3:
+            bank_file = st.file_uploader("3. 上传银行对账单 (.csv / .xlsx)", type=["csv", "xlsx"])
+
+        new_vouchers = []
+        new_invoices = []
+        new_bank_flows = []
+        has_error = False
+
+        if voucher_file:
+            v_list, v_val = parse_vouchers_file(voucher_file, filename=voucher_file.name)
+            if v_val.is_valid:
+                st.success(f"✅ 凭证表解析成功: {v_val.summary}")
+                new_vouchers = v_list
+            else:
+                has_error = True
+                for err in v_val.errors:
+                    st.error(f"❌ 凭证校验错误: {err}")
+
+        if invoice_file:
+            i_list, i_val = parse_invoices_file(invoice_file, filename=invoice_file.name)
+            if i_val.is_valid:
+                st.success(f"✅ 发票清单解析成功: {i_val.summary}")
+                new_invoices = i_list
+            else:
+                has_error = True
+                for err in i_val.errors:
+                    st.error(f"❌ 发票校验错误: {err}")
+
+        if bank_file:
+            b_list, b_val = parse_bank_flows_file(bank_file, filename=bank_file.name)
+            if b_val.is_valid:
+                st.success(f"✅ 银行流水解析成功: {b_val.summary}")
+                new_bank_flows = b_list
+            else:
+                has_error = True
+                for err in b_val.errors:
+                    st.error(f"❌ 流水校验错误: {err}")
+
+        if new_vouchers and not has_error:
+            custom_case = AccountingCaseData(
+                case_id="UPLOADED_CUSTOM_001",
+                company_name="用户自主导入审计目标公司",
+                industry="自主上传自定义企业",
+                audit_period="2025年度",
+                description="由用户现场上传的外部财务总账、发票明细及银行对账单数据集。",
+                vouchers=new_vouchers,
+                invoices=new_invoices,
+                bank_flows=new_bank_flows
+            )
+            st.session_state.uploaded_case = custom_case
+            active_case = custom_case
+            st.info("🎉 上传数据已成功装载至审计执行引擎！请切换至【🔍 智能体穿透研判】启动分析。")
+
 
 # ----------------- TAB 1: LIVE AGENT EXECUTION -----------------
 with tab_agent:
-    st.markdown(f"#### 🏢 案例基本信息: {selected_case.company_name}")
-    col_info1, col_info2, col_info3 = st.columns([1, 1, 2])
-    with col_info1:
-        st.write(f"**所属行业:** {selected_case.industry}")
-        st.write(f"**核算/审计期间:** {selected_case.audit_period}")
-    with col_info2:
-        st.write(f"**抽样凭证数:** {len(selected_case.vouchers)} 张")
-        st.write(f"**关联单据数:** {len(selected_case.contracts) + len(selected_case.invoices) + len(selected_case.bank_flows)} 份")
-    with col_info3:
-        st.info(f"**业务背景简述:** {selected_case.description}")
+    st.markdown(f"#### 🚀 正在审计: **{active_case.company_name}** ({active_case.case_id})")
 
     # Run Button
-    if st.button("🚀 启动数智智能体穿透核查", type="primary", use_container_width=True):
-        with st.status("🤖 DeepSeek Multi-Agent 正在协同穿透执行中...", expanded=True) as status:
-            st.write("1️⃣ [业财数据治理智能体] 正在清洗凭证、提取分录并执行三单勾稽比对...")
-            st.write("2️⃣ [财务计算算子] 正在计算 Beneish M-Score 8变量指标与借贷平衡...")
-            st.write("3️⃣ [审计推理智能体] 正在依据 CSA 1141 与 CAS 14 准则构建 CoT 证据链...")
-            st.write("4️⃣ [确定性校验卫士] 正在校验数字一致性并生成标准化审计底稿...")
+    if st.button("🚀 启动数智智能体穿透核查 (Run AuditMind Agent)", type="primary", use_container_width=True):
+        with st.status("🤖 DeepSeek Multi-Agent 正在协同穿透核查中...", expanded=True) as status:
+            st.write("1️⃣ [业财数据治理智能体] 正在提取凭证分录并执行三单勾稽客观比对...")
+            st.write("2️⃣ [确定性审计算子] 正在计算 Beneish M-Score 8变量指标与借贷平衡...")
+            st.write(f"3️⃣ [审计推理智能体] 正在通过 {st.session_state.harness.llm.mode.value.upper()} 模式调用大模型准则推断...")
+            st.write("4️⃣ [确定性校验卫士] 正在校验数字一致性并构建三层证据链...")
             
-            report = st.session_state.harness.run_case(selected_case, plugin_id=selected_plugin_id)
-            st.session_state.current_report = report
-            status.update(label="✅ 智能体穿透核查完成！", state="complete", expanded=False)
+            try:
+                report = st.session_state.harness.run_case(active_case, plugin_id="audit_fraud_detection")
+                st.session_state.current_report = report
+                status.update(label="✅ 智能体穿透核查顺利完成！", state="complete", expanded=False)
+            except DeepSeekAPIError as err:
+                status.update(label="❌ 严格在线模式执行失败！", state="error", expanded=True)
+                st.error(f"🚨 **DeepSeek API 严格在线调用异常**: {str(err)}")
+                st.warning("⚠️ 严格在线模式已禁止自动降级为 Mock，请检查网络连接、API Key 或在侧边栏切换至【离线确定性演示模式】。")
+            except Exception as e:
+                status.update(label="❌ 执行异常！", state="error", expanded=True)
+                st.error(f"执行发生错误: {str(e)}")
 
     # Display Results if Available
-    if st.session_state.current_report and st.session_state.current_report.case_id == selected_case.case_id:
+    if st.session_state.current_report and st.session_state.current_report.case_id == active_case.case_id:
         rep = st.session_state.current_report
         
         st.markdown("---")
@@ -165,7 +321,6 @@ with tab_agent:
         
         c1, c2, c3, c4, c5 = st.columns(5)
         with c1:
-            risk_color = "red" if rep.overall_risk_rating == RiskLevel.HIGH else ("orange" if rep.overall_risk_rating == RiskLevel.MEDIUM else "green")
             st.metric("综合风险评级", rep.overall_risk_rating.value, delta="高危预警" if rep.overall_risk_rating == RiskLevel.HIGH else "合规正常")
         with c2:
             m_score_display = f"{rep.beneish_m_score:.2f}" if rep.beneish_m_score is not None else "N/A"
@@ -176,32 +331,38 @@ with tab_agent:
         with c4:
             st.metric("执行耗时", f"{rep.execution_time_seconds:.3f} s")
         with c5:
-            st.metric("Token消耗", f"{rep.token_usage.get('total', 0)}")
+            st.metric("运行模式", rep.execution_mode.value.upper(), delta="在线真实" if rep.execution_mode != ExecutionMode.MOCK and not rep.fallback_occurred else "离线模拟")
 
         st.markdown("#### 📝 管理层与主审评委摘要")
         st.success(rep.executive_summary)
 
-        st.markdown("#### 🚨 重点风险发现与准则穿透依据 (Risk Findings)")
+        st.markdown("#### 🚨 重点风险发现清单与三层证据链 (Three-Layer Evidence Trail)")
         if not rep.findings:
-            st.info("🎉 未发现重大异常风险，各项业财勾稽指标与财务数据均符合会计准则要求。")
+            st.info("🎉 各项业财单据匹配高度吻合，未检出重大错报或舞弊迹象。")
         else:
             for f in rep.findings:
-                risk_style = "risk-high" if f.risk_level == RiskLevel.HIGH else "risk-clean"
-                with st.expander(f"【{f.finding_id}】{f.title} ({f.risk_level.value} - 涉嫌金额: ¥{f.impact_amount:,.2f})", expanded=True):
+                with st.expander(f"【{f.finding_id}】{f.title} ({f.risk_level.value} - 涉及金额: ¥{f.impact_amount:,.2f})", expanded=True):
                     st.markdown(f"**📖 依据会计/审计准则:** `{f.accounting_standard}`")
-                    st.markdown(f"**🔍 疑点手法剖析:** {f.suspected_mechanism}")
                     
-                    st.markdown("**⛓️ 结构化证据链条 (Evidence Trail):**")
+                    # Three Evidence Layers
+                    st.markdown(f"**1️⃣ 【确定性事实 (规则计算)】:** `{f.rule_evidence or f.suspected_mechanism}`")
+                    st.markdown(f"**2️⃣ 【DeepSeek 大模型深度研判】:** {f.model_explanation or f.suspected_mechanism}")
+                    st.markdown(f"**3️⃣ 【待注册会计师现场核实程序】:** `{f.human_verification_flag or f.suggested_procedure}`")
+                    
+                    st.markdown("**⛓️ 关联原始单据索引:**")
                     for ev in f.evidences:
-                        st.markdown(f"- 📌 **[{ev.evidence_type}]** 单据源: `{ev.source_ref}` ➔ {ev.detail}")
-                    
-                    st.markdown(f"**💡 建议执行的实质性审计程序:** `{f.suggested_procedure}`")
+                        st.markdown(f"- 📌 `[{ev.evidence_type}]` 单据引用: **{ev.source_ref}** | 来源文件: `{ev.source_file or '标准凭证库'}`")
 
 
-# ----------------- TAB 2: AUDIT WORKPAPERS -----------------
+# ----------------- TAB 2: ANOMALY DASHBOARD -----------------
+with tab_dashboard:
+    render_data_anomaly_dashboard(active_case, st.session_state.current_report)
+
+
+# ----------------- TAB 3: AUDIT WORKPAPERS -----------------
 with tab_workpaper:
-    if not st.session_state.current_report:
-        st.info("👈 请先在第一个标签页点击【启动数智智能体穿透核查】生成审计底稿。")
+    if not st.session_state.current_report or st.session_state.current_report.case_id != active_case.case_id:
+        st.info("👈 请先在【智能体穿透研判】标签页点击启动核查以生成审计工作底稿。")
     else:
         rep = st.session_state.current_report
         st.markdown(f"### 📋 {rep.company_name} - 审计工作底稿库")
@@ -214,22 +375,33 @@ with tab_workpaper:
             col_w3.write(f"**确认异常金额:** ¥{wp.abnormal_amount:,.2f}")
 
             if wp.rows:
-                df_rows = pd.DataFrame([r.model_dump() for r in wp.rows])
-                df_rows.columns = ["凭证号", "记账日期", "业务摘要", "账面金额(元)", "核实确认金额(元)", "差异金额(元)", "审计核查结论"]
+                df_rows = pd.DataFrame([
+                    {
+                        "凭证号": r.voucher_no,
+                        "记账日期": r.date,
+                        "业务摘要": r.summary,
+                        "账面金额(元)": r.ledger_amount,
+                        "核实确认金额(元)": r.verified_amount,
+                        "差异金额(元)": r.discrepancy,
+                        "审计结论": r.audit_conclusion,
+                        "证据溯源索引": r.evidence_trace or r.source_file or "业务单据库"
+                    }
+                    for r in wp.rows
+                ])
                 st.dataframe(df_rows, use_container_width=True)
 
             st.caption(f"**底稿综合意见:** {wp.audit_opinion_summary}")
             st.markdown("---")
 
 
-# ----------------- TAB 3: BENCHMARK HARNESS -----------------
+# ----------------- TAB 4: BENCHMARK HARNESS -----------------
 with tab_benchmark:
     st.markdown("### 📊 智能体评测基座 (DeepSeek Evaluation Harness)")
-    st.write("自动化对 4 个实战案例进行端到端测试，考核指标包括：查准率(Precision)、查全率(Recall)、F1-Score、JSON结构合规率与零算术幻觉率。")
+    st.write("执行严格字段级与金额级（误差≤1%）基准测试，考核指标包括：查准率、查全率、金额准确率、类型命中率及零误报率。")
 
-    if st.button("⚡ 运行全套自动化评测基准 (Run Benchmark Suite)", type="primary"):
+    if st.button("⚡ 运行全套严格评测基准 (Run Rigorous Benchmark Suite)", type="primary"):
         with st.spinner("正在逐一评测基准数据集..."):
-            summary = run_benchmark_suite(st.session_state.harness, plugin_id=selected_plugin_id)
+            summary = run_benchmark_suite(st.session_state.harness, plugin_id="audit_fraud_detection")
             st.session_state.benchmark_summary = summary
 
     if st.session_state.benchmark_summary:
@@ -237,21 +409,21 @@ with tab_benchmark:
         
         b1, b2, b3, b4, b5 = st.columns(5)
         b1.metric("评测通过率", f"{b_sum.passed_cases}/{b_sum.total_cases} ({b_sum.passed_cases/b_sum.total_cases:.0%})")
-        b2.metric("平均 F1-Score", f"{b_sum.mean_f1_score:.4f}")
-        b3.metric("平均查全率(Recall)", f"{b_sum.mean_recall:.1%}")
-        b4.metric("零算术幻觉达标率", f"{b_sum.math_accuracy_rate:.0%}")
-        b5.metric("平均端到端耗时", f"{b_sum.mean_latency:.3f} s")
+        b2.metric("平均 F1-Score", f"{b_sum.mean_f1_score:.2f}")
+        b3.metric("金额精准率 (≤1%)", f"{b_sum.mean_amount_accuracy:.1%}")
+        b4.metric("类型命中率", f"{b_sum.mean_type_accuracy:.1%}")
+        b5.metric("对照组误报率", f"{b_sum.false_positive_rate:.1%}")
 
-        st.markdown("#### 🏆 案例详细评分卡 (Case Scorecard)")
+        st.markdown("#### 🏆 字段级与金额级详细评分卡 (Rigorous Scorecard)")
         df_bench = pd.DataFrame([
             {
                 "案例编号": s.case_id,
                 "企业名称": s.case_name,
-                "查准率(P)": f"{s.precision:.1%}",
-                "查全率(R)": f"{s.recall:.1%}",
+                "类型命中": f"{s.type_accuracy_rate:.1%}",
+                "金额精准度": f"{s.amount_accuracy_rate:.1%}",
+                "证据溯源": f"{s.evidence_hit_rate:.1%}",
                 "F1-Score": f"{s.f1_score:.2f}",
-                "JSON合规": "✓ 100%" if s.json_schema_valid else "✗",
-                "零算术幻觉": "✓ 100%" if s.math_accuracy_rate == 1.0 else "✗",
+                "误报数": s.false_positive_count,
                 "耗时(s)": f"{s.latency_seconds:.3f}",
                 "考核状态": "✅ PASSED" if s.passed else "❌ FAILED"
             }
@@ -260,14 +432,14 @@ with tab_benchmark:
         st.dataframe(df_bench, use_container_width=True)
 
 
-# ----------------- TAB 4: EXPORT ARTIFACTS -----------------
+# ----------------- TAB 5: EXPORT ARTIFACTS -----------------
 with tab_export:
     if not st.session_state.current_report:
         st.info("👈 请先运行案例生成结构化报告后即可在此处一键导出。")
     else:
         rep = st.session_state.current_report
         st.markdown("### 💾 竞赛成果文件一键导出")
-        st.write("满足比赛硬性要求：输出结构化结果（JSON / Excel底稿 / PDF报告），可供评审专家现场查阅。")
+        st.write("满足比赛硬性要求：输出结构化结果（JSON / 包含三层证据链的 Excel底稿 / PDF报告），供现场评委即时下载。")
 
         out_dir = settings.output_dir
         excel_path = out_dir / f"{rep.company_name}_审计底稿.xlsx"
@@ -279,7 +451,6 @@ with tab_export:
         export_report_to_json(rep, json_path)
 
         col_d1, col_d2, col_d3 = st.columns(3)
-        
         with col_d1:
             with open(excel_path, "rb") as f:
                 st.download_button(

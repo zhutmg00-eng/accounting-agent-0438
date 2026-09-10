@@ -1,12 +1,14 @@
 """
 Standard Benchmark Test Cases with Ground Truth Annotations.
-Simulates real-world audit scenarios (Revenue fraud, Ghost inventory, Related-party loop, Clean baseline).
+Simulates real-world audit scenarios (Revenue cutoff fraud, Ghost inventory, Related-party loop, Clean baseline).
+Equipped with strongly-typed GroundTruthRiskItem for field-level & amount-level rigorous evaluation.
 """
 
 from typing import List
 from src.core.schemas import (
     AccountingCaseData, FinancialStatementsSummary, AccountingVoucher, 
-    JournalEntryLine, BusinessContract, InvoiceItem, BankFlowRecord
+    JournalEntryLine, BusinessContract, InvoiceItem, BankFlowRecord,
+    GroundTruthRiskItem, RiskLevel
 )
 
 
@@ -19,6 +21,15 @@ def get_benchmark_cases() -> List[AccountingCaseData]:
         audit_period="2025年度",
         description="华创科技在2025年12月30日突击确认多笔大额系统集成项目收入，但实际客户终验报告签署于2026年1月，涉嫌通过跨期调节收入以达成对赌业绩目标。",
         ground_truth_risks=["跨期提前确认营业收入", "三单勾稽时间差异常", "应收账款虚增"],
+        ground_truth_findings=[
+            GroundTruthRiskItem(
+                finding_type="跨期提前确认营业收入与应收账款虚增",
+                expected_risk_level=RiskLevel.HIGH,
+                expected_amount=12500000.0,
+                expected_vouchers=["202512-记-0042", "INV-20260110-001"],
+                standard_clause="CAS 14 - 收入准则"
+            )
+        ],
         financial_summary=FinancialStatementsSummary(
             period="2025年度",
             revenue=120000000.0,
@@ -38,7 +49,8 @@ def get_benchmark_cases() -> List[AccountingCaseData]:
                 total_amount=12500000.0,
                 payment_terms="合同生效付30%，终验合格付65%，质保金5%",
                 delivery_condition="以双方签署的《最终验收与控制权转移报告》为准",
-                is_related_party=False
+                is_related_party=False,
+                source_file="业务合同库.xlsx"
             )
         ],
         invoices=[
@@ -50,7 +62,8 @@ def get_benchmark_cases() -> List[AccountingCaseData]:
                 amount_without_tax=11061946.90,
                 tax_amount=1438053.10,
                 total_amount=12500000.0,
-                goods_or_service="大数据分析平台集成服务"
+                goods_or_service="大数据分析平台集成服务",
+                source_file="销项发票清单.csv"
             )
         ],
         bank_flows=[
@@ -61,7 +74,8 @@ def get_benchmark_cases() -> List[AccountingCaseData]:
                 counterparty_account="6222***001",
                 amount=3750000.0,
                 balance_after=25000000.0,
-                remark="HT-2025-089首期项目款"
+                remark="HT-2025-089首期项目款",
+                source_file="企业网银流水.csv"
             )
         ],
         vouchers=[
@@ -71,6 +85,8 @@ def get_benchmark_cases() -> List[AccountingCaseData]:
                 preparer="王财务",
                 checker="赵主管",
                 associated_doc_id="INV-20260110-001",
+                source_file="记账凭证表.xlsx",
+                row_index=42,
                 entries=[
                     JournalEntryLine(account_code="1122", account_name="应收账款-华东大数据", debit=12500000.0, credit=0.0, summary="确认华东大数据集成项目尾款收入"),
                     JournalEntryLine(account_code="6001", account_name="主营业务收入", debit=0.0, credit=11061946.90, summary="确认华东大数据集成项目尾款收入"),
@@ -88,6 +104,15 @@ def get_benchmark_cases() -> List[AccountingCaseData]:
         audit_period="2025年度",
         description="恒远重工年末大额采购特种钢材并在途挂账860万元，供应商为新成立空壳企业，库房无入库记录与物流记录。",
         ground_truth_risks=["虚假采购", "存货在途挂账异常", "入库单缺失"],
+        ground_truth_findings=[
+            GroundTruthRiskItem(
+                finding_type="虚假采购与存货在途挂账异常(入库单缺失)",
+                expected_risk_level=RiskLevel.HIGH,
+                expected_amount=8600000.0,
+                expected_vouchers=["202512-记-0089", "CG-2025-110"],
+                standard_clause="CAS 1 - 存货准则 及 CSA 1141 - 舞弊风险应对"
+            )
+        ],
         financial_summary=FinancialStatementsSummary(
             period="2025年度",
             revenue=85000000.0,
@@ -102,170 +127,211 @@ def get_benchmark_cases() -> List[AccountingCaseData]:
         contracts=[
             BusinessContract(
                 contract_id="CG-2025-110",
-                customer_or_vendor="鑫泰新材料商贸（成立2个月）",
-                sign_date="2025-12-01",
+                customer_or_vendor="鑫泰新材料商贸部",
+                sign_date="2025-12-20",
                 total_amount=8600000.0,
-                payment_terms="预付100%全款发货",
-                delivery_condition="厂区车板交货",
-                is_related_party=False
+                payment_terms="合同签署后3日内付清全款",
+                delivery_condition="供方代办托运，厂区库房签收",
+                is_related_party=False,
+                source_file="采购合同库.xlsx"
             )
         ],
         invoices=[
             InvoiceItem(
-                invoice_no="INV-20251220-888",
-                invoice_date="2025-12-20",
+                invoice_no="INV-20251224-889",
+                invoice_date="2025-12-24",
                 buyer_name="恒远重工制造有限公司",
-                seller_name="鑫泰新材料商贸",
+                seller_name="鑫泰新材料商贸部",
                 amount_without_tax=7610619.47,
                 tax_amount=989380.53,
                 total_amount=8600000.0,
-                goods_or_service="特种合金钢材"
+                goods_or_service="特种高强度合金钢板",
+                source_file="进项发票明细.csv"
             )
         ],
         bank_flows=[
             BankFlowRecord(
-                transaction_id="BK-20251210-99",
-                transaction_time="2025-12-10 14:20",
-                counterparty_name="鑫泰新材料商贸",
-                counterparty_account="6217***888",
+                transaction_id="BK-20251224-03",
+                transaction_time="2025-12-24 14:20",
+                counterparty_name="鑫泰新材料商贸部",
+                counterparty_account="6214***888",
                 amount=-8600000.0,
-                balance_after=4500000.0,
-                remark="支付特种合金钢材采购预付款"
+                balance_after=3500000.0,
+                remark="支付钢材采购款",
+                source_file="企业网银流水.csv"
             )
         ],
         vouchers=[
             AccountingVoucher(
                 voucher_id="202512-记-0089",
                 voucher_date="2025-12-25",
-                preparer="孙会计",
-                checker="周主管",
-                associated_doc_id="INV-20251220-888",
+                preparer="李会计",
+                checker="赵主管",
+                associated_doc_id="CG-2025-110",
+                source_file="记账凭证表.xlsx",
+                row_index=89,
                 entries=[
-                    JournalEntryLine(account_code="1401", account_name="在途物资-特种钢材", debit=7610619.47, credit=0.0, summary="采购特种合金钢材"),
+                    JournalEntryLine(account_code="1401", account_name="材料采购-在途物资", debit=7610619.47, credit=0.0, summary="采购特种合金钢材在途"),
                     JournalEntryLine(account_code="2221", account_name="应交税费-应交增值税(进项税额)", debit=989380.53, credit=0.0, summary="进项税额"),
-                    JournalEntryLine(account_code="1002", account_name="银行存款", debit=0.0, credit=8600000.0, summary="付鑫泰新材料款")
+                    JournalEntryLine(account_code="1002", account_name="银行存款", debit=0.0, credit=8600000.0, summary="支付鑫泰钢材款")
                 ]
             )
         ]
     )
 
-    # Case 3: Related Party Circular Fund Loop
-    case_related = AccountingCaseData(
+    # Case 3: Related-Party Money Loop (Capital Circulation)
+    case_related_party = AccountingCaseData(
         case_id="CASE_2025_003",
-        company_name="天辰供应链科技集团",
-        industry="商贸与供应链物流",
+        company_name="天辰供应链科技股份有限公司",
+        industry="现代物流与供应链服务",
         audit_period="2025年度",
-        description="天辰供应链通过隐蔽关联方控制的公司进行无实物空转贸易，资金在三日内原路经由关联借款返还，涉嫌虚增贸易规模。",
-        ground_truth_risks=["关联方隐蔽重大交易", "资金体外循环", "商业实质缺失"],
-        contracts=[
-            BusinessContract(
-                contract_id="SCM-2025-77",
-                customer_or_vendor="天宇合力实业（实控人表弟持股90%）",
-                sign_date="2025-11-10",
-                total_amount=15000000.0,
-                payment_terms="发货前付清",
-                delivery_condition="仓单静态转让",
-                is_related_party=True
+        description="天辰供应链向关联方天宇合力大额划款1500万元并在短期内以借款退回，无真实业务物流，涉嫌资金体外循环与虚假交易。",
+        ground_truth_risks=["资金体外循环", "关联方重大交易未披露", "商业实质缺失"],
+        ground_truth_findings=[
+            GroundTruthRiskItem(
+                finding_type="关联方隐蔽重大交易与资金体外循环(商业实质缺失)",
+                expected_risk_level=RiskLevel.HIGH,
+                expected_amount=15000000.0,
+                expected_vouchers=["202511-记-0033", "BK-20251112-01"],
+                standard_clause="CAS 36 - 关联方披露准则 及 CSA 1141 - 舞弊审计准则"
             )
         ],
+        financial_summary=FinancialStatementsSummary(
+            period="2025年度",
+            revenue=210000000.0,
+            cost_of_sales=185000000.0,
+            gross_margin=0.1190,
+            net_profit=4500000.0,
+            accounts_receivable=78000000.0,
+            inventory=8000000.0,
+            total_assets=310000000.0,
+            operating_cash_flow=-12000000.0
+        ),
+        contracts=[
+            BusinessContract(
+                contract_id="WL-2025-055",
+                customer_or_vendor="天宇合力贸易有限公司",
+                sign_date="2025-11-10",
+                total_amount=15000000.0,
+                payment_terms="预付100%全款",
+                delivery_condition="电子仓单转让",
+                is_related_party=True,
+                source_file="关联交易合同.xlsx"
+            )
+        ],
+        invoices=[],
         bank_flows=[
             BankFlowRecord(
                 transaction_id="BK-20251112-01",
-                transaction_time="2025-11-12 09:00",
-                counterparty_name="天宇合力实业",
-                counterparty_account="6228***777",
+                transaction_time="2025-11-12 09:15",
+                counterparty_name="天宇合力贸易有限公司",
+                counterparty_account="6225***901",
                 amount=-15000000.0,
                 balance_after=8000000.0,
-                remark="采购仓单货款"
+                remark="预付大宗化工原料采购款",
+                source_file="网银对账单.csv"
             ),
             BankFlowRecord(
                 transaction_id="BK-20251115-02",
-                transaction_time="2025-11-15 16:30",
-                counterparty_name="天宇合力实业",
-                counterparty_account="6228***777",
+                transaction_time="2025-11-15 16:40",
+                counterparty_name="天宇合力贸易有限公司",
+                counterparty_account="6225***901",
                 amount=15000000.0,
                 balance_after=23000000.0,
-                remark="退款/短期资金拆借还款"
+                remark="采购未成退回款项及短期拆借款",
+                source_file="网银对账单.csv"
             )
         ],
         vouchers=[
             AccountingVoucher(
                 voucher_id="202511-记-0033",
                 voucher_date="2025-11-12",
-                associated_doc_id="SCM-2025-77",
+                preparer="陈会计",
+                checker="赵主管",
+                associated_doc_id="WL-2025-055",
+                source_file="记账凭证表.xlsx",
+                row_index=33,
                 entries=[
-                    JournalEntryLine(account_code="1221", account_name="其他应收款-天宇合力", debit=15000000.0, credit=0.0, summary="暂付贸易往来款"),
-                    JournalEntryLine(account_code="1002", account_name="银行存款", debit=0.0, credit=15000000.0, summary="电汇天宇合力")
+                    JournalEntryLine(account_code="1221", account_name="其他应收款-天宇合力", debit=15000000.0, credit=0.0, summary="暂付天宇合力贸易往来款"),
+                    JournalEntryLine(account_code="1002", account_name="银行存款", debit=0.0, credit=15000000.0, summary="网银转账支付")
                 ]
             )
         ]
     )
 
-    # Case 4: Clean Baseline Company
+    # Case 4: Clean Compliance Baseline Control (No fraud, all matching)
     case_clean = AccountingCaseData(
         case_id="CASE_2025_004",
         company_name="北方精密工业股份有限公司",
-        industry="高端精密仪器制造",
+        industry="专用仪器仪表制造",
         audit_period="2025年度",
-        description="北方精密工业内控完善，三单勾稽一致，收入严格按照完工验收确认，银行流水充沛真实，属于合规企业基准对照组。",
+        description="合规对照组企业：内部控制完善，合同、发票、凭证与银行流水三单高度吻合，款项全部通过银行结算，无跨期或虚构交易。",
         ground_truth_risks=[],
+        ground_truth_findings=[],
         financial_summary=FinancialStatementsSummary(
             period="2025年度",
-            revenue=98000000.0,
+            revenue=95000000.0,
             cost_of_sales=55000000.0,
-            gross_margin=0.4388,
-            net_profit=16500000.0,
+            gross_margin=0.4211,
+            net_profit=16000000.0,
             accounts_receivable=18000000.0,
             inventory=12000000.0,
             total_assets=180000000.0,
-            operating_cash_flow=19000000.0
+            operating_cash_flow=17500000.0
         ),
         contracts=[
             BusinessContract(
-                contract_id="BF-2025-001",
-                customer_or_vendor="国家电网智能电网研究院",
-                sign_date="2025-03-10",
+                contract_id="HT-2025-032",
+                customer_or_vendor="国网智能电网研究院",
+                sign_date="2025-04-10",
                 total_amount=5000000.0,
-                payment_terms="终验后电汇",
-                delivery_condition="客户现场验收合格签署签收单",
-                is_related_party=False
+                payment_terms="交货终验后30日内付清全款",
+                delivery_condition="客户库房签收并出具验收合格报告",
+                is_related_party=False,
+                source_file="合规销售合同.xlsx"
             )
         ],
         invoices=[
             InvoiceItem(
                 invoice_no="INV-20250915-001",
                 invoice_date="2025-09-15",
-                buyer_name="国家电网智能电网研究院",
+                buyer_name="国网智能电网研究院",
                 seller_name="北方精密工业股份有限公司",
                 amount_without_tax=4424778.76,
                 tax_amount=575221.24,
                 total_amount=5000000.0,
-                goods_or_service="精密测量传感器系统"
+                goods_or_service="智能电网高精度传感器阵列",
+                source_file="增值税专用发票明细.csv"
             )
         ],
         bank_flows=[
             BankFlowRecord(
                 transaction_id="BK-20250920-01",
-                transaction_time="2025-09-20 11:00",
-                counterparty_name="国家电网智能电网研究院",
-                counterparty_account="6225***999",
+                transaction_time="2025-09-20 11:20",
+                counterparty_name="国网智能电网研究院",
+                counterparty_account="6228***112",
                 amount=5000000.0,
-                balance_after=35000000.0,
-                remark="支付BF-2025-001项目全款"
+                balance_after=32000000.0,
+                remark="付HT-2025-032传感器货款",
+                source_file="企业网银对账单.csv"
             )
         ],
         vouchers=[
             AccountingVoucher(
                 voucher_id="202509-记-0015",
                 voucher_date="2025-09-15",
+                preparer="孙会计",
+                checker="赵主管",
                 associated_doc_id="INV-20250915-001",
+                source_file="记账凭证表.xlsx",
+                row_index=15,
                 entries=[
                     JournalEntryLine(account_code="1002", account_name="银行存款", debit=5000000.0, credit=0.0, summary="收到国网智研院传感器系统款"),
-                    JournalEntryLine(account_code="6001", account_name="主营业务收入", debit=0.0, credit=4424778.76, summary="传感器系统销售收入"),
+                    JournalEntryLine(account_code="6001", account_name="主营业务收入", debit=0.0, credit=4424778.76, summary="确认传感器销售收入"),
                     JournalEntryLine(account_code="2221", account_name="应交税费-应交增值税(销项税额)", debit=0.0, credit=575221.24, summary="销项税额")
                 ]
             )
         ]
     )
 
-    return [case_revenue, case_inventory, case_related, case_clean]
+    return [case_revenue, case_inventory, case_related_party, case_clean]

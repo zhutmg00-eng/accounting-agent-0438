@@ -1,0 +1,30 @@
+name: 参赛产品功能与可靠性优化
+description: 提交参赛作品的功能演进、可靠性或审计专业度改进建议
+title: "[产品/功能/可靠性]: "
+labels: ["enhancement", "competition"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢为 2026年北京市大学生数智会计创新应用竞赛 参赛作品 AuditMind 提交反馈！
+  - type: input
+    id: issue_title
+    attributes:
+      label: 优化模块与目标
+      placeholder: 例如：[产品] 明确首版主线：数智审计与舞弊穿透
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: 优化内容与痛点描述
+      placeholder: 详细描述当前存在的问题及建议改动...
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: 验收标准 (Acceptance Criteria)
+      placeholder: 列出可量化的验收条件...
+    validations:
+      required: true

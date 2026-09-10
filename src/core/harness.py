@@ -5,7 +5,10 @@ Orchestrates Plugins, LLM Invocation, Verification Guards, and Benchmark Scoring
 
 import time
 from typing import Dict, Any, Optional, List
-from src.core.schemas import AccountingCaseData, AnalysisReportResult, CaseEvalScore
+from src.core.schemas import (
+    AccountingCaseData, AnalysisReportResult, CaseEvalScore, 
+    GroundTruthRiskItem, RiskLevel, ExecutionMode
+)
 from src.core.llm_adapter import DeepSeekLLMAdapter
 from src.core.plugin_registry import registry, PluginRegistry
 from src.core.cordis_kernel import Context, SessionLogger
@@ -54,13 +57,6 @@ class AccountingAgentHarness:
     ) -> AnalysisReportResult:
         """
         Execute full end-to-end accounting pipeline on a given case within a Cordis Session Context.
-        Workflow:
-        1. Fork Session Context & Append-Only SessionLogger
-        2. Execute Deterministic Tools (No hallucination)
-        3. Build CoT Prompts
-        4. Invoke DeepSeek LLM
-        5. Verify & Structure Output (Verification Guard)
-        6. Record Audit Trail in SessionLogger
         """
         start_time = time.perf_counter()
         session_ctx = self.ctx.create_session(session_id=f"session-{case.case_id}-{int(time.time())}")
@@ -85,7 +81,7 @@ class AccountingAgentHarness:
         ]
 
         # Step 3: LLM Inference
-        session_ctx.emit("llm.inference.start", {"model": self.llm.model_name})
+        session_ctx.emit("llm.inference.start", {"model": self.llm.model_name, "mode": self.llm.mode.value})
         llm_resp = self.llm.chat_completion(
             messages=messages,
             temperature=temperature,
@@ -102,7 +98,7 @@ class AccountingAgentHarness:
             case=case
         )
 
-        # Step 5: Attach Telemetry & Audit Session Traces
+        # Step 5: Attach Telemetry & Reliability Trace Metadata (Issue 3)
         elapsed = time.perf_counter() - start_time
         report.execution_time_seconds = max(round(elapsed, 4), 0.001)
         report.token_usage = {
@@ -110,11 +106,16 @@ class AccountingAgentHarness:
             "completion_tokens": llm_resp.completion_tokens,
             "total": llm_resp.total_tokens
         }
+        report.execution_mode = llm_resp.execution_mode
+        report.model_name = llm_resp.model_name
+        report.fallback_occurred = llm_resp.fallback_occurred
+        report.fallback_reason = llm_resp.fallback_reason
 
         session_ctx.emit("case.complete", {
             "overall_risk": report.overall_risk_rating.value,
             "findings_count": len(report.findings),
-            "execution_time_seconds": report.execution_time_seconds
+            "execution_time_seconds": report.execution_time_seconds,
+            "mode": report.execution_mode.value
         })
 
         return report
@@ -122,49 +123,95 @@ class AccountingAgentHarness:
     def evaluate_case(
         self,
         case: AccountingCaseData,
-        ground_truth_risks: Optional[List[str]] = None,
         plugin_id: str = "audit_fraud_detection"
     ) -> CaseEvalScore:
         """
-        Benchmark Evaluation Harness:
-        Evaluates the agent against ground truth risks, checking Precision, Recall, F1, Schema validity, and Math accuracy.
+        Rigorous Field-Level & Amount-Level Benchmark Evaluation (Issue 4):
+        Verifies:
+        1. Exact Risk Type matching
+        2. Risk Level alignment (HIGH/MEDIUM/LOW)
+        3. Amount Error Rate (|pred - expected| / expected <= 1%)
+        4. Evidence Document Source (Voucher / Invoice / Bank Flow IDs)
+        5. False Positive Rate on clean baseline cases
         """
-        gt_risks = ground_truth_risks or case.ground_truth_risks or []
         report = self.run_case(case, plugin_id=plugin_id)
+        gt_findings = case.ground_truth_findings or []
 
-        all_report_text = f"{report.executive_summary} " + " ".join([
-            f"{f.title} {f.suspected_mechanism} {' '.join(e.detail for e in f.evidences)}"
-            for f in report.findings
-        ])
-        
-        # Calculate Recall & Precision
-        if not gt_risks:
-            # Clean case check
-            is_clean = len(report.findings) == 0 or report.overall_risk_rating.value in ("CLEAN", "LOW")
-            recall = 1.0 if is_clean else 0.0
-            precision = 1.0 if is_clean else 0.0
-            f1 = 1.0 if is_clean else 0.0
-        else:
-            matched_gt = set()
-            for idx, gt in enumerate(gt_risks):
-                keywords = [k.strip() for k in gt.replace("/", " ").split() if len(k.strip()) >= 2]
-                if any(kw in all_report_text for kw in keywords):
-                    matched_gt.add(idx)
+        # 1. Clean Baseline Case Evaluation
+        if len(gt_findings) == 0:
+            false_positives = len([f for f in report.findings if f.risk_level in (RiskLevel.HIGH, RiskLevel.MEDIUM)])
+            is_clean = (false_positives == 0)
+            return CaseEvalScore(
+                case_id=case.case_id,
+                case_name=case.company_name,
+                precision=1.0 if is_clean else 0.0,
+                recall=1.0 if is_clean else 0.0,
+                f1_score=1.0 if is_clean else 0.0,
+                type_accuracy_rate=1.0 if is_clean else 0.0,
+                risk_level_accuracy_rate=1.0 if is_clean else 0.0,
+                amount_accuracy_rate=1.0 if is_clean else 0.0,
+                evidence_hit_rate=1.0 if is_clean else 0.0,
+                false_positive_count=false_positives,
+                json_schema_valid=True,
+                math_accuracy_rate=1.0,
+                standards_accuracy_rate=1.0,
+                latency_seconds=report.execution_time_seconds,
+                total_tokens=report.token_usage.get("total", 0),
+                passed=is_clean
+            )
 
-            recall = min(len(matched_gt) / max(len(gt_risks), 1), 1.0)
-            precision = 1.0 if len(report.findings) > 0 and len(matched_gt) > 0 else 0.0
-            f1 = (2 * precision * recall) / max(precision + recall, 1e-6)
+        # 2. Fraud & Discrepancy Case Evaluation
+        type_hits = 0
+        level_hits = 0
+        amount_hits = 0
+        evidence_hits = 0
+        total_evidences_expected = sum(len(gt.expected_vouchers) for gt in gt_findings)
 
-        # Schema Validity Check
-        json_valid = len(report.findings) > 0 or report.overall_risk_rating is not None
+        for gt in gt_findings:
+            matched_pred = None
+            gt_keywords = [w for w in gt.finding_type.replace("与", " ").replace("及", " ").replace("(", " ").replace(")", " ").split() if len(w) >= 2]
+            
+            for pred in report.findings:
+                pred_text = f"{pred.title} {pred.suspected_mechanism}"
+                # Check type keywords
+                if any(kw in pred_text for kw in gt_keywords):
+                    matched_pred = pred
+                    break
+            
+            if matched_pred:
+                type_hits += 1
+                if matched_pred.risk_level == gt.expected_risk_level:
+                    level_hits += 1
+                
+                # Check amount accuracy (|pred - expected| / expected <= 0.01)
+                amount_diff_ratio = abs(matched_pred.impact_amount - gt.expected_amount) / max(gt.expected_amount, 1.0)
+                if amount_diff_ratio <= 0.01:
+                    amount_hits += 1
 
-        # Mathematical Calculation Accuracy
+                # Check evidence document citations
+                all_evidence_str = " ".join([
+                    f"{e.source_ref} {e.detail} {pred.rule_evidence} {e.source_file}"
+                    for e in matched_pred.evidences
+                ])
+                for v_id in gt.expected_vouchers:
+                    if v_id in all_evidence_str:
+                        evidence_hits += 1
+
+        n_gt = len(gt_findings)
+        type_acc = type_hits / n_gt
+        level_acc = level_hits / n_gt
+        amount_acc = amount_hits / n_gt
+        evidence_hit_rate = (evidence_hits / total_evidences_expected) if total_evidences_expected > 0 else 1.0
+
+        precision = type_hits / max(len(report.findings), 1)
+        recall = type_hits / n_gt
+        f1 = (2 * precision * recall) / max(precision + recall, 1e-6)
+
+        json_valid = len(report.findings) > 0 and report.overall_risk_rating is not None
         math_acc = 1.0 if (report.beneish_m_score is None or isinstance(report.beneish_m_score, float)) else 0.0
-
-        # Standards Reference Accuracy
         standards_valid = all(len(f.accounting_standard) > 3 for f in report.findings) if report.findings else True
 
-        passed = (f1 >= 0.70) and json_valid and (math_acc == 1.0)
+        passed = (f1 >= 0.70) and (amount_acc >= 0.90) and json_valid and (math_acc == 1.0)
 
         return CaseEvalScore(
             case_id=case.case_id,
@@ -172,6 +219,11 @@ class AccountingAgentHarness:
             precision=round(precision, 4),
             recall=round(recall, 4),
             f1_score=round(f1, 4),
+            type_accuracy_rate=round(type_acc, 4),
+            risk_level_accuracy_rate=round(level_acc, 4),
+            amount_accuracy_rate=round(amount_acc, 4),
+            evidence_hit_rate=round(evidence_hit_rate, 4),
+            false_positive_count=0,
             json_schema_valid=json_valid,
             math_accuracy_rate=math_acc,
             standards_accuracy_rate=1.0 if standards_valid else 0.0,
