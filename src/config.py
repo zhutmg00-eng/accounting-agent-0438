@@ -1,6 +1,7 @@
 """
 Global Configuration for DeepSeek Accounting Agent Harness.
-Supports DeepSeek-V3 / DeepSeek-R1 API, domestic OpenAI-compatible endpoints, and offline mock mode.
+Supports DeepSeek-V4.1 Flash (ultra-fast agent reasoning), DeepSeek-V4 Pro (complex CoT reasoning),
+domestic OpenAI-compatible endpoints, and offline mock mode.
 """
 
 import os
@@ -23,8 +24,8 @@ class Settings(BaseModel):
     # LLM Settings
     api_key: str = Field(default_factory=lambda: os.getenv("DEEPSEEK_API_KEY", "mock-key"))
     api_base: str = Field(default_factory=lambda: os.getenv("DEEPSEEK_API_BASE", "https://api.deepseek.com"))
-    model_name: str = Field(default_factory=lambda: os.getenv("DEEPSEEK_MODEL", "deepseek-chat"))
-    reasoner_model_name: str = Field(default_factory=lambda: os.getenv("DEEPSEEK_REASONER_MODEL", "deepseek-reasoner"))
+    model_name: str = Field(default_factory=lambda: os.getenv("DEEPSEEK_MODEL", "deepseek-v4.1-flash"))
+    reasoner_model_name: str = Field(default_factory=lambda: os.getenv("DEEPSEEK_REASONER_MODEL", "deepseek-v4-pro"))
     temperature: float = Field(default_factory=lambda: float(os.getenv("TEMPERATURE", "0.1")))
     max_tokens: int = Field(default_factory=lambda: int(os.getenv("MAX_TOKENS", "4096")))
     

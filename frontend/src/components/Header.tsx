@@ -98,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({
                 MOCK (离线确定性引擎)
               </option>
               <option value="ONLINE" className="bg-slate-900 text-slate-200">
-                ONLINE (DeepSeek-V3 在线)
+                ONLINE (DeepSeek-V4.1 Flash 在线)
               </option>
               <option value="STRICT_ONLINE" className="bg-slate-900 text-slate-200">
                 STRICT_ONLINE (严格在线)

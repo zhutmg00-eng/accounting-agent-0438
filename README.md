@@ -2,28 +2,29 @@
 
 > **2026年北京市大学生数智会计创新应用竞赛 参赛作品**  
 > 主办单位：北京市教育委员会 | 承办单位：中央财经大学会计学院  
+> 赛事渊源：前身为“北京市大学生ERP管理会计应用决策大赛”，2026年起正式更名并调整为两年一届  
 > 团队开源仓库：[https://github.com/zhutmg00-eng/accounting-agent-0438](https://github.com/zhutmg00-eng/accounting-agent-0438)
 
 ---
 
 ## 🎯 参赛主线与系统定位 (Core Mission)
 
-本项目聚焦竞赛核心场景——**「数智审计与舞弊穿透 (AuditMind)」**，打造从财务数据导入到审计底稿生成的完整闭环：
+本项目紧扣竞赛核心主赛道——**「注册会计师审计、数智审计与舞弊穿透 (AuditMind)」**，打造从企业异构业财数据解析到穿透式审计底稿生成的完整闭环智能体：
 
 ```
-[企业财务总账/明细/流水] 
+[企业财务总账/明细/发票/银行流水] 
        │
        ▼
-[确定性审计算子] ────► 借贷试算平衡、三单时序勾稽倒挂比对、Beneish M-Score 8变量操纵指数
+[确定性审计算子矩阵] ──► 借贷试算平衡、三单时序勾稽倒挂比对、Beneish M-Score 8变量操纵指数
        │
        ▼
-[DeepSeek 大模型研判] ─► 依据 CAS 14(新收入)、CAS 1(存货)、CAS 36(关联方)、CSA 1141 准则深度定性
+[DeepSeek V4.1 大模型研判] ─► 依据 CAS 14(新收入)、CAS 1(存货)、CAS 36(关联方)、CSA 1141 准则深度定性
        │
        ▼
-[数智穿透仪表盘] ───► 具体数据问题精准下钻（时序倒挂天数、借贷差额、8维雷达、体外资金闭环）
+[数智全景审计指挥舱] ──► 具体数据问题精准下钻（时序倒挂天数、借贷差额、8维雷达、体外资金闭环拓扑）
        │
        ▼
-[结构化成果一键导出] ─► 标准审计工作底稿 (.xlsx)、数智穿透报告 (.pdf)、全量结构化数据 (.json)
+[结构化成果一键导出] ──► 标准审计工作底稿 (.xlsx)、数智穿透报告 (.pdf)、全量结构化数据 (.json)
 ```
 
 > **功能划分说明**：
@@ -52,14 +53,14 @@
 
 ---
 
-## 🏆 满足竞赛硬性要求对照表
+## 🏆 满足竞赛通知硬性要求对照表 (官方权威核对)
 
-| 竞赛通知硬性要求 | 本项目实现与落地保障 | 对应模块/文件 |
+| 竞赛通知硬性要求 | 本项目实现与落地保障 (2026 最新前沿) | 对应模块/文件 |
 | :--- | :--- | :--- |
-| **1. 核心模型**：必须使用至少一个大语言模型 | 原生集成 **DeepSeek-V3 / DeepSeek-R1**，提供严格在线模式与离线模式显式切换 | `src/core/llm_adapter.py` |
-| **2. 输出格式**：必须输出结构化结果（表格/PDF） | 自动生成 **Excel 标准审计工作底稿 (.xlsx)**、**PDF 审计穿透报告** 与 **JSON** | `src/exporters/` |
-| **3. 演示原型**：现场可实时处理样例数据 | 提供 **Streamlit 现代化 Web 演示大屏** 与 **run.bat 一键启动器**，支持现场上传真实文件 | `src/ui/app.py` & `run.bat` |
-| **4. 专业深度**：围绕注会审计、舞弊场景 | 深度融入《中国注册会计师审计准则》(CSA 1141)、《企业会计准则》(CAS 14、CAS 1、CAS 36) 及 Beneish M-Score 模型 | `src/plugins/audit_fraud_plugin/` |
+| **1. 核心模型**：必须使用至少一个大语言模型（推荐国产模型） | 原生集成 **DeepSeek-V4.1-Flash**（2026年9月最新架构，427 tokens/s 极致吞吐，原生多模态）与 **DeepSeek-V4-Pro**（1.6T MoE 深度逻辑推理链与 CoT 思维链推演，支持 1M 超长上下文与 `reasoning_content`），全面支持 STRICT_ONLINE / ONLINE / MOCK 三档热切换 | `src/core/llm_adapter.py`<br>`src/config.py` |
+| **2. 输出格式**：必须输出结构化结果（表格/PDF） | 自动生成 **Excel 标准审计工作底稿 (.xlsx)**、**PDF 审计穿透分析报告** 与 **JSON 结构化数据集**（包含审定明细行、调整分录与三层证据链） | `src/exporters/` |
+| **3. 演示原型**：现场可实时处理样例数据，具备交互系统 | 提供 **现代金融赛博风全景审计指挥舱 SPA (React 18 + Vite + Tailwind CSS + Framer Motion + ECharts)**，由高性能 FastAPI 统一单端口 (8501) 托管；配套 `run.bat` 一键极速启动，支持现场上传真实 Excel 凭证与 CSV 发票流水 | `frontend/src/`<br>`src/api/server.py`<br>`run.bat` |
+| **4. 专业深度**：围绕注会审计、舞弊穿透场景 | 深度融入《中国注册会计师审计准则第1141号——财务报表审计中与舞弊相关的责任》(CSA 1141)、《企业会计准则》(CAS 14、CAS 1、CAS 36) 及 Beneish M-Score 模型，涵盖康美药业、康得新、瑞幸咖啡等 **28 例真实证监会 (CSRC) 行政处罚决定书真实案例** | `src/plugins/audit_fraud_plugin/`<br>`data/cases/` |
 
 ---
 
@@ -76,14 +77,14 @@ git clone https://github.com/zhutmg00-eng/accounting-agent-0438.git
 cd accounting-agent-0438
 uv sync   # 或 pip install -e .
 
-# 2. 运行严谨评测基准套件 (自动化评分卡)
+# 2. 启动单端口整合服务 (FastAPI + React 18 全景指挥舱)
+uv run uvicorn src.api.server:app --host 0.0.0.0 --port 8501
+
+# 3. 运行严谨评测基准套件 (28 案例自动化评分卡)
 uv run python src/benchmark/benchmark_runner.py
 
-# 3. 运行自动化单元测试 (全部通过)
+# 4. 运行自动化测试套件 (全部 20 项测试通过)
 uv run pytest -v
-
-# 4. 启动 Streamlit 数据问题穿透大屏
-uv run streamlit run src/ui/app.py
 ```
 
 ---
@@ -92,28 +93,28 @@ uv run streamlit run src/ui/app.py
 
 ```
 accounting-agent-0438/
-├── run.bat                     # Windows 一键启动脚本
-├── start_demo.ps1              # 演示增强自检启动脚本
-├── ROADMAP.md                  # 产品演进与 Issue 清单
+├── run.bat                     # Windows 一键极速启动脚本
 ├── pyproject.toml              # 现代依赖与配置锁
 ├── data/
 │   ├── templates/              # 供用户下载的标准 Excel/CSV 导入模板
-│   └── cases/                  # 4 大实战基准案例数据
+│   └── cases/                  # 28 例中国证监会真实处罚决定书案例数据集
+├── frontend/                   # 现代 React 18 全景审计指挥舱 SPA 源码
+│   ├── src/                    # UI 组件 (审计舱、勾稽飞轮、资金拓扑、CoT终端、竞技场)
+│   └── dist/                   # 生产环境编译构建产物 (由 FastAPI 直接托管)
 ├── src/
-│   ├── config.py               # 配置与环境变量管理
+│   ├── config.py               # DeepSeek-V4.1 Flash / V4 Pro 全局配置
+│   ├── api/
+│   │   └── server.py           # FastAPI 高性能后端与 SSE 流式推理推送
 │   ├── core/                   # 核心智能体基座与微内核
 │   │   ├── schemas.py          # 强类型数据模型与证据链定义
-│   │   ├── llm_adapter.py      # 区分严格在线与模拟的三模 LLM 适配器
+│   │   ├── llm_adapter.py      # DeepSeek V4.1/V4 Pro 三模自适应适配器
 │   │   └── harness.py          # 智能体执行流水线与严谨评测引擎
-│   ├── data_loader/            # 真实文件导入与校验器 (Issue 2)
+│   ├── data_loader/            # 真实文件导入与字段校验器
 │   │   └── file_importer.py    # Excel 凭证、CSV 发票与银行流水解析器
 │   ├── plugins/                # 业务插件中心
 │   │   ├── audit_fraud_plugin/ # 【主线】数智审计与舞弊穿透 (AuditMind)
 │   │   └── cost_analysis_plugin/#【扩展】管理会计本量利决策 (CostAgent)
-│   ├── ui/                     # 交互界面与仪表盘
-│   │   ├── app.py              # Streamlit 比赛主线演示大屏
-│   │   └── dashboard_view.py   # 数据问题穿透大屏 (8维雷达/时序倒挂/资金闭环)
 │   ├── exporters/              # 成果导出器 (Excel/PDF/JSON)
-│   └── benchmark/              # 评测基座与 4 大实战案例集
-└── tests/                      # 自动化测试用例套件
+│   └── benchmark/              # 评测基座与 28 大实战案例集
+└── tests/                      # 自动化测试用例套件 (20/20 通过)
 ```

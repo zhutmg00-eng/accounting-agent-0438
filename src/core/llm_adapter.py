@@ -1,6 +1,10 @@
 """
-Unified LLM Adapter for DeepSeek-V3 / DeepSeek-R1 API, OpenAI-compatible endpoints,
+Unified LLM Adapter for DeepSeek-V4.1 Flash / DeepSeek-V4 Pro API, OpenAI-compatible endpoints,
 and Dynamic Domain-Aware Heuristic Engine (Mock Mode).
+Features native support for:
+- DeepSeek-V4.1-Flash (ultra-fast 427 tokens/s, multimodal native)
+- DeepSeek-V4-Pro (1.6T MoE, complex CoT thinking mode with reasoning_content)
+- Backwards compatible with DeepSeek-V3 / DeepSeek-R1 legacy endpoints
 Strictly separates:
 - STRICT_ONLINE: Disallows any silent mock fallback; raises DeepSeekAPIError upon failure.
 - ONLINE: Real model with explicit fallback recording.
@@ -31,7 +35,7 @@ class LLMResponse:
         prompt_tokens: int = 0,
         completion_tokens: int = 0,
         execution_mode: ExecutionMode = ExecutionMode.MOCK,
-        model_name: str = "deepseek-chat",
+        model_name: str = "deepseek-v4.1-flash",
         fallback_occurred: bool = False,
         fallback_reason: Optional[str] = None
     ):
