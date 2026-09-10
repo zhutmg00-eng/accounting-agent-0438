@@ -182,6 +182,7 @@ class AnalysisReportResult(BaseModel):
     findings: List[RiskFinding] = Field(default_factory=list)
     workpapers: List[AuditWorkpaper] = Field(default_factory=list)
     executive_summary: str = Field(description="管理层与评委摘要")
+    reasoning_content: Optional[str] = Field(default=None, description="DeepSeek-R1 / CoT 思维链推理内容")
     execution_time_seconds: float = Field(default=0.0)
     token_usage: Dict[str, int] = Field(default_factory=lambda: {"prompt_tokens": 0, "completion_tokens": 0, "total": 0})
     # 可靠性元数据 (Issue 3)

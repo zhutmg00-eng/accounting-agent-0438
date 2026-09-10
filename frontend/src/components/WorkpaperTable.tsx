@@ -108,8 +108,8 @@ export const WorkpaperTable: React.FC<WorkpaperTableProps> = ({ report, currentC
         <div className="flex items-center justify-between border-b border-white/10 pb-4 text-xs font-mono text-slate-400">
           <span className="font-bold text-white text-sm">核查样本明细行 ({wp.rows.length} 笔)</span>
           <span>
-            审定金额合计: ¥{wp.total_audited_amount.toLocaleString('zh-CN', { minimumFractionDigits: 2 })} | 
-            差异金额: <span className="text-rose-400 font-bold">¥{wp.abnormal_amount.toLocaleString('zh-CN', { minimumFractionDigits: 2 })}</span>
+            审定金额合计: ¥{Number(wp.total_audited_amount || 0).toLocaleString('zh-CN', { minimumFractionDigits: 2 })} | 
+            差异金额: <span className="text-rose-400 font-bold">¥{Number(wp.abnormal_amount || 0).toLocaleString('zh-CN', { minimumFractionDigits: 2 })}</span>
           </span>
         </div>
 
@@ -129,16 +129,16 @@ export const WorkpaperTable: React.FC<WorkpaperTableProps> = ({ report, currentC
             </thead>
             <tbody className="divide-y divide-white/5 text-slate-300">
               {wp.rows.map((r, i) => {
-                const hasDiscrepancy = Math.abs(r.discrepancy) > 0.01
+                const hasDiscrepancy = Math.abs(Number(r.discrepancy || 0)) > 0.01
                 return (
                   <tr key={i} className="hover:bg-white/5 transition-colors">
                     <td className="p-3 font-bold text-cyan-400">{r.voucher_no}</td>
                     <td className="p-3 text-slate-400">{r.date}</td>
                     <td className="p-3 text-white max-w-xs truncate">{r.summary}</td>
-                    <td className="p-3 text-right">¥{r.ledger_amount.toLocaleString('zh-CN', { minimumFractionDigits: 2 })}</td>
-                    <td className="p-3 text-right">¥{r.verified_amount.toLocaleString('zh-CN', { minimumFractionDigits: 2 })}</td>
+                    <td className="p-3 text-right">¥{Number(r.ledger_amount || 0).toLocaleString('zh-CN', { minimumFractionDigits: 2 })}</td>
+                    <td className="p-3 text-right">¥{Number(r.verified_amount || 0).toLocaleString('zh-CN', { minimumFractionDigits: 2 })}</td>
                     <td className={`p-3 text-right font-bold ${hasDiscrepancy ? 'text-rose-400' : 'text-emerald-400'}`}>
-                      ¥{r.discrepancy.toLocaleString('zh-CN', { minimumFractionDigits: 2 })}
+                      ¥{Number(r.discrepancy || 0).toLocaleString('zh-CN', { minimumFractionDigits: 2 })}
                     </td>
                     <td className="p-3">
                       <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${

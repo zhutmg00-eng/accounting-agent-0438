@@ -61,17 +61,33 @@ export interface BusinessContract {
   is_related_party: boolean
 }
 
+export interface EvidenceItem {
+  evidence_type?: string
+  source_ref?: string
+  detail?: string
+  source_file?: string
+  row_index?: number
+}
+
 export interface RiskFinding {
   finding_id: string
-  risk_category: string
   title: string
-  risk_level: 'CLEAN' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'
-  affected_accounts: string[]
-  abnormal_amount: number
-  confidence_score: number
-  audit_evidence: string
-  csrc_standard_clause: string
-  audit_procedure_recommendation: string
+  risk_level: string
+  risk_category?: string
+  accounting_standard?: string
+  csrc_standard_clause?: string
+  impact_amount?: number
+  abnormal_amount?: number
+  suspicious_amount?: number
+  confidence_score?: number
+  audit_evidence?: string
+  evidences?: EvidenceItem[]
+  suggested_procedure?: string
+  audit_procedure_recommendation?: string
+  suspected_mechanism?: string
+  rule_evidence?: string
+  model_explanation?: string
+  human_verification_flag?: string
 }
 
 export interface WorkpaperRow {
@@ -106,6 +122,8 @@ export interface AnalysisReportResult {
   case_category: string
   csrc_summary: string
   overall_risk_rating: string
+  beneish_m_score?: number | null
+  is_beneish_manipulator?: boolean | null
   executive_summary: string
   findings: RiskFinding[]
   workpapers: WorkpaperData[]

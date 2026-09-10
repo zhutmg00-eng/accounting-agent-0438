@@ -110,6 +110,7 @@ class AccountingAgentHarness:
         report.model_name = llm_resp.model_name
         report.fallback_occurred = llm_resp.fallback_occurred
         report.fallback_reason = llm_resp.fallback_reason
+        report.reasoning_content = llm_resp.reasoning_content
 
         session_ctx.emit("case.complete", {
             "overall_risk": report.overall_risk_rating.value,
