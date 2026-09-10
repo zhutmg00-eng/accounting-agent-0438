@@ -1,0 +1,31 @@
+{
+  "name": "dsh-plugin-accounting-audit",
+  "version": "1.0.0",
+  "description": "DeepSeek Harness (dsh) plugin for Intelligent Accounting & Audit Fraud Detection (2026年北京市大学生数智会计创新应用竞赛)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node test.js"
+  },
+  "dsh": {
+    "bundle": true,
+    "displayName": "数智审计与舞弊穿透智能体插件 (AuditMind)",
+    "description": "基于 DeepSeek 推理引擎与 Cordis 微内核的业财融合三单勾稽与财报舞弊穿透插件"
+  },
+  "cordis": {
+    "service": {
+      "implements": ["accounting-audit"],
+      "required": ["tools", "session"]
+    }
+  },
+  "keywords": [
+    "dsh-plugin",
+    "cordis",
+    "deepseek-harness",
+    "accounting-agent",
+    "audit"
+  ],
+  "author": "2026数智会计创新应用竞赛参赛团队",
+  "license": "MIT"
+}

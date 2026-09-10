@@ -1,0 +1,12 @@
+# Cordis composition manifest for DeepSeek Harness (dsh)
+# Auto-mounts the accounting audit plugin and registers domain tools into the dsh Context
+
+plugins:
+  group:accounting:
+    dsh-plugin-accounting-audit:
+      enabled: true
+      defaultStandard: "CAS 14"
+      enableBeneishAnalysis: true
+      enableThreeWayReconciliation: true
+      strictJsonMode: true
+      auditConfidenceThreshold: 0.85

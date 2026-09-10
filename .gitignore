@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info/
+.venv/
+.pytest_cache/
+
+# Package managers and cache
+.pnpm-store/
+.npm-cache/
+.npm-global/
+node_modules/
+docx_temp/
+dsh_home/
+
+# Cloned upstream repository (1.7GB, managed upstream at github.com/deepseek-ai/deepseek-harness)
+deepseek-harness/
+
+# Generated exports and secrets
+output/
+.env
