@@ -15,9 +15,9 @@ def test_mock_mode_execution():
     assert adapter.mode == ExecutionMode.MOCK
     assert adapter.use_mock is True
     
-    resp = adapter.chat_completion([{"role": "user", "content": "测试 CASE_2025_001"}])
+    resp = adapter.chat_completion([{"role": "user", "content": "测试 REAL_CSRC_001 康美药业"}])
     assert resp.execution_mode == ExecutionMode.MOCK
-    assert "华创数智" in resp.content or "RF-2025-001" in resp.content
+    assert "康美药业" in resp.content or "REAL_CSRC_001" in resp.content
 
 
 def test_strict_online_mode_failure_raises_error():

@@ -156,7 +156,7 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
                     total_abnormal_amount += v_amount
 
             # Matched to contract?
-            if doc_id in contract_map:
+            elif doc_id in contract_map:
                 contract = contract_map[doc_id]
                 if contract.is_related_party:
                     discrepancies.append({
@@ -167,16 +167,27 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
                         "detail": f"该凭证关联方合同 {contract.contract_id}（交易方: {contract.customer_or_vendor}）为关联方重大交易，需穿透商业实质。"
                     })
                     total_abnormal_amount += v_amount
+            else:
+                # Document linkage missing or forged doc
+                discrepancies.append({
+                    "type": "单据缺失或虚构/伪造业务单据",
+                    "voucher_id": voucher.voucher_id,
+                    "doc_id": doc_id,
+                    "amount": v_amount,
+                    "detail": f"记账凭证引用的单据号 '{doc_id}' 未在真实有效合同库、税务发票库或银行对账流水中登记，存在虚假做账或伪造单据重大嫌疑。"
+                })
+                total_abnormal_amount += v_amount
 
     # 3. Check Bank Flow reconciliation
+    suspicious_remarks = ["退款", "借款", "拆借", "伪造", "虚构", "存单", "过桥", "体外", "占用", "挪用", "异常", "无商业背景", "转出至关联"]
     for flow in case.bank_flows:
-        if abs(flow.amount) >= 1000000.0:  # >= 1M RMB
-            if "退款" in flow.remark or "借款" in flow.remark or "拆借" in flow.remark:
+        if abs(flow.amount) >= 100000.0:  # >= 100k RMB
+            if any(kw in flow.remark for kw in suspicious_remarks):
                 discrepancies.append({
-                    "type": "大额资金异常往来与体外循环嫌疑",
+                    "type": "大额资金异常往来与体外循环/造假嫌疑",
                     "voucher_id": "BANK-" + flow.transaction_id,
                     "amount": abs(flow.amount),
-                    "detail": f"大额银行流水({flow.amount:,.2f}元, 对手方: {flow.counterparty_name}) 附言为'{flow.remark}'，疑似资金体外闭环。"
+                    "detail": f"银行流水({flow.amount:,.2f}元, 对手方: {flow.counterparty_name}) 附言为'{flow.remark}'，疑似伪造存单或资金体外闭环。"
                 })
                 total_abnormal_amount += abs(flow.amount)
 

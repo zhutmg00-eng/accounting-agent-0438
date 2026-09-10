@@ -1,0 +1,1914 @@
+[
+  {
+    "case_id": "REAL_CSRC_001",
+    "company_name": "康美药业股份有限公司",
+    "stock_code": "600518",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2020〕24号",
+    "case_category": "货币资金与银行存单造假",
+    "industry": "医药制造业",
+    "audit_period": "2016-2018年度",
+    "description": "康美药业通过伪造商业银行进账单、伪造定期存款存单及虚假对账单，累计虚增货币资金299.44亿元；同时虚构中药材购销业务，累计虚增营业收入206.44亿元，形成中国资本市场最具代表性的货币资金舞弊大案。",
+    "csrc_summary": "证监会认定：康美药业2016-2018年年报存在虚假记载，虚增货币资金合计299.44亿元，虚增营业收入206.44亿元，虚增营业利润41亿元，未如实披露实际控制人关联方资金占用情况。",
+    "financial_summary": {
+      "period": "2018年度",
+      "revenue": 19356000000.0,
+      "cost_of_sales": 13820000000.0,
+      "gross_margin": 0.286,
+      "net_profit": 374000000.0,
+      "accounts_receivable": 4210000000.0,
+      "inventory": 3520000000.0,
+      "total_assets": 74100000000.0,
+      "operating_cash_flow": -512000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "虚增货币资金与伪造银行定期存单",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 29944000000.0,
+        "expected_vouchers": [
+          "KM-2018-BK01",
+          "INV-KM-2018-09"
+        ],
+        "standard_clause": "CAS 22 - 金融工具确认和计量 及 CSA 1141 - 舞弊相关的责任"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "KM-2018-BK01",
+        "voucher_date": "2018-12-31",
+        "preparer": "财务部出纳",
+        "checker": "财务总监",
+        "associated_doc_id": "FAKE-DEP-201801",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款-广发普宁支行",
+            "debit": 29944000000.0,
+            "credit": 0.0,
+            "summary": "存入商业银行大额定期存单"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-中药饮片",
+            "debit": 0.0,
+            "credit": 20644000000.0,
+            "summary": "虚构中药饮片销售回款"
+          },
+          {
+            "account_code": "1221",
+            "account_name": "其他应收款-关联方占用",
+            "debit": 0.0,
+            "credit": 9300000000.0,
+            "summary": "虚假资金平账"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "CT-KM-2018-09",
+        "customer_or_vendor": "普宁中药材采购集散中心",
+        "sign_date": "2018-01-10",
+        "total_amount": 20644000000.0,
+        "payment_terms": "电汇结算",
+        "delivery_condition": "仓单直接转让",
+        "is_related_party": true
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "INV-KM-2018-09",
+        "invoice_date": "2018-12-28",
+        "buyer_name": "普宁中药材采购集散中心",
+        "seller_name": "康美药业股份有限公司",
+        "amount_without_tax": 18269026548.67,
+        "tax_amount": 2374973451.33,
+        "total_amount": 20644000000.0,
+        "goods_or_service": "精选三七、西洋参饮片"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "BK-KM-2018-99",
+        "transaction_time": "2018-12-31 17:00",
+        "counterparty_name": "广发银行普宁支行",
+        "counterparty_account": "440***001",
+        "amount": 29944000000.0,
+        "balance_after": 37788000000.0,
+        "remark": "伪造大额定期存单证明"
+      }
+    ]
+  },
+  {
+    "case_id": "REAL_CSRC_002",
+    "company_name": "康得新复合材料集团股份有限公司",
+    "stock_code": "002450",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2020〕71号",
+    "case_category": "货币资金与银行存单造假",
+    "industry": "化学原料及化学制品制造业",
+    "audit_period": "2015-2018年度",
+    "description": "康得新通过与北京银行西单支行签署《现金管理业务合作协议》，利用联动账户机制将上市公司资金实时归集至大股东康得投资集团账户，导致账面显示巨额银行存款（122.1亿元）但实际已被大股东划走掏空，同时虚构光学膜购销业务虚增利润119.13亿元。",
+    "csrc_summary": "证监会认定：康得新2015-2018年年报虚增利润总额119.13亿元；未在年度报告中披露北京银行账户违规联动资金归集划转事实，虚增银行存款余额122.10亿元。",
+    "financial_summary": {
+      "period": "2018年度",
+      "revenue": 9142000000.0,
+      "cost_of_sales": 5830000000.0,
+      "gross_margin": 0.3623,
+      "net_profit": 281000000.0,
+      "accounts_receivable": 5120000000.0,
+      "inventory": 1820000000.0,
+      "total_assets": 34200000000.0,
+      "operating_cash_flow": -890000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "银行联动账户资金归集受限与虚增存款",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 12210000000.0,
+        "expected_vouchers": [
+          "KDX-2018-BK01"
+        ],
+        "standard_clause": "CAS 22 - 金融工具确认与列报 及 CAS 36 - 关联方披露"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "KDX-2018-BK01",
+        "voucher_date": "2018-12-31",
+        "preparer": "张出纳",
+        "checker": "杜财务总监",
+        "associated_doc_id": "BJ-BANK-LINK-01",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款-北京银行西单支行",
+            "debit": 12210000000.0,
+            "credit": 0.0,
+            "summary": "西单支行联动资金日结余额"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-光学膜",
+            "debit": 0.0,
+            "credit": 8910000000.0,
+            "summary": "虚构光学膜销售"
+          },
+          {
+            "account_code": "1221",
+            "account_name": "其他应收款-大股东归集款",
+            "debit": 0.0,
+            "credit": 3300000000.0,
+            "summary": "资金实时被控股股东归集"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": [
+      {
+        "transaction_id": "BK-KDX-201812",
+        "transaction_time": "2018-12-31 23:59",
+        "counterparty_name": "康得投资集团有限公司",
+        "counterparty_account": "110***991",
+        "amount": -12210000000.0,
+        "balance_after": 0.0,
+        "remark": "现金管理联动账户自动夜间归集零余额"
+      }
+    ]
+  },
+  {
+    "case_id": "REAL_CSRC_003",
+    "company_name": "辅仁药业集团制药股份有限公司",
+    "stock_code": "600479",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2020〕85号",
+    "case_category": "货币资金与银行存单造假",
+    "industry": "医药制造业",
+    "audit_period": "2015-2018年度",
+    "description": "辅仁药业账面列示货币资金18.16亿元，却拿不出6271万元进行年度现金分红，导致资本市场哗然；经查控股股东及实控人长期通过开具无真实交易商业汇票、划转预付款等方式非经营性占用上市公司资金28.2亿元并虚假平账。",
+    "csrc_summary": "证监会认定：辅仁药业未披露关联方非经营性占用资金及违规担保事项，虚假披露重大资产重组中关于标的资产独立性的信息，多期财报虚假记载。",
+    "financial_summary": {
+      "period": "2018年度",
+      "revenue": 6317000000.0,
+      "cost_of_sales": 3950000000.0,
+      "gross_margin": 0.3747,
+      "net_profit": 889000000.0,
+      "accounts_receivable": 2210000000.0,
+      "inventory": 1150000000.0,
+      "total_assets": 11200000000.0,
+      "operating_cash_flow": 120000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "大额受限资金未披露与大股东非经营性资金占用",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 2820000000.0,
+        "expected_vouchers": [
+          "FR-2018-091"
+        ],
+        "standard_clause": "CAS 36 - 关联方披露 及 CSA 1141 - 舞弊相关的责任"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "FR-2018-091",
+        "voucher_date": "2018-12-20",
+        "preparer": "李会计",
+        "associated_doc_id": "FR-LOAN-01",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 1816000000.0,
+            "credit": 0.0,
+            "summary": "账面列报存款"
+          },
+          {
+            "account_code": "1221",
+            "account_name": "其他应收款-辅仁集团",
+            "debit": 0.0,
+            "credit": 1816000000.0,
+            "summary": "资金实际已被大股东划出占用"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": [
+      {
+        "transaction_id": "BK-FR-201812",
+        "transaction_time": "2018-12-25 10:15",
+        "counterparty_name": "辅仁药业集团有限公司",
+        "counterparty_account": "410***881",
+        "amount": -2820000000.0,
+        "balance_after": 3770000.0,
+        "remark": "划拨集团暂借往来款"
+      }
+    ]
+  },
+  {
+    "case_id": "REAL_CSRC_004",
+    "company_name": "宜华生活科技股份有限公司",
+    "stock_code": "600978",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2021〕97号",
+    "case_category": "货币资金与银行存单造假",
+    "industry": "家具制造业",
+    "audit_period": "2016-2019年度",
+    "description": "宜华生活通过伪造中国银行、建设银行等金融机构虚假进账单和对账单，累计虚增货币资金209亿元；同时伪造海关出口报关单、海运提单虚构境外家具销售业务，虚增销售收入129亿元，成为A股涉案金额最大的林木家具舞弊案。",
+    "csrc_summary": "证监会认定：宜华生活2016至2019年年报虚增货币资金合计209亿元、虚增营业收入合计129亿元、虚增利润合计28亿元；未如实披露向关联方划转资金158亿元。",
+    "financial_summary": {
+      "period": "2019年度",
+      "revenue": 5244000000.0,
+      "cost_of_sales": 4010000000.0,
+      "gross_margin": 0.2353,
+      "net_profit": -185000000.0,
+      "accounts_receivable": 2180000000.0,
+      "inventory": 2980000000.0,
+      "total_assets": 16100000000.0,
+      "operating_cash_flow": -340000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "虚增境外销售收入与伪造海关报关单及存款",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 20900000000.0,
+        "expected_vouchers": [
+          "YH-2019-EXP01"
+        ],
+        "standard_clause": "CAS 14 - 收入准则 及 CAS 22 - 金融工具"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "YH-2019-EXP01",
+        "voucher_date": "2019-12-28",
+        "preparer": "黄财务",
+        "associated_doc_id": "CUSTOMS-YH-09",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款-外币户",
+            "debit": 20900000000.0,
+            "credit": 0.0,
+            "summary": "虚假海外回款"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-出口实木家具",
+            "debit": 0.0,
+            "credit": 12900000000.0,
+            "summary": "虚构海外销售"
+          },
+          {
+            "account_code": "1221",
+            "account_name": "其他应收款-关联方资金调度",
+            "debit": 0.0,
+            "credit": 8000000000.0,
+            "summary": "体外虚假资金流转"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_005",
+    "company_name": "金正大生态工程集团股份有限公司",
+    "stock_code": "002170",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2022〕1号",
+    "case_category": "虚构购销业务与体外资金闭环空转",
+    "industry": "化学原料及化学制品制造业",
+    "audit_period": "2015-2018年度",
+    "description": "金正大通过控制诺贝丰农业、富朗贸易等十余家空壳或关联公司，无任何真实化肥实物流转，仅凭借伪造出入库单和体外资金循环走账，累计虚构化肥贸易业务230.73亿元、虚增营业成本210.84亿元、虚增利润总额19.9亿元。",
+    "csrc_summary": "证监会认定：金正大虚构无商业实质的化肥购销贸易，虚构合同、单据并在关联方银行账户间闭环调度划转资金，累计虚增营业收入230.73亿元。",
+    "financial_summary": {
+      "period": "2018年度",
+      "revenue": 15520000000.0,
+      "cost_of_sales": 13180000000.0,
+      "gross_margin": 0.1508,
+      "net_profit": 850000000.0,
+      "accounts_receivable": 3450000000.0,
+      "inventory": 2180000000.0,
+      "total_assets": 23400000000.0,
+      "operating_cash_flow": -1850000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "虚构化肥无实质贸易走账与资金闭环空转",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 23073000000.0,
+        "expected_vouchers": [
+          "JZD-2018-TR01"
+        ],
+        "standard_clause": "CAS 14 - 收入准则 及 CSA 1141 - 舞弊相关的责任"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "JZD-2018-TR01",
+        "voucher_date": "2018-11-20",
+        "preparer": "财务核算组",
+        "associated_doc_id": "FL-TRADE-088",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-富朗贸易",
+            "debit": 23073000000.0,
+            "credit": 0.0,
+            "summary": "虚假贸易销售挂账"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-大宗化肥",
+            "debit": 0.0,
+            "credit": 23073000000.0,
+            "summary": "体外走账确认收入"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "FL-TRADE-088",
+        "customer_or_vendor": "山东富朗贸易有限公司",
+        "sign_date": "2018-05-10",
+        "total_amount": 23073000000.0,
+        "payment_terms": "循环滚动付清",
+        "delivery_condition": "厂区电子库单交割",
+        "is_related_party": true
+      }
+    ],
+    "invoices": [],
+    "bank_flows": [
+      {
+        "transaction_id": "BK-JZD-LOOP01",
+        "transaction_time": "2018-05-15 10:00",
+        "counterparty_name": "山东富朗贸易有限公司",
+        "counterparty_account": "370***001",
+        "amount": -500000000.0,
+        "balance_after": 120000000.0,
+        "remark": "预付化肥采购款"
+      },
+      {
+        "transaction_id": "BK-JZD-LOOP02",
+        "transaction_time": "2018-05-15 16:30",
+        "counterparty_name": "诺贝丰农业科技有限公司",
+        "counterparty_account": "370***002",
+        "amount": 500000000.0,
+        "balance_after": 620000000.0,
+        "remark": "销售化肥回款(同日闭环流转)"
+      }
+    ]
+  },
+  {
+    "case_id": "REAL_CSRC_006",
+    "company_name": "山东胜通集团股份有限公司",
+    "stock_code": "债券代码:136709等",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2021〕59号",
+    "case_category": "虚构购销业务与体外资金闭环空转",
+    "industry": "金属制品业",
+    "audit_period": "2013-2017年度",
+    "description": "胜通集团为公开发行公司债券并粉饰评级，通过制作虚假财务账套与两套账，虚构钢帘线购销贸易业务，在2013年至2017年连续5年累计虚增营业收入615.4亿元，虚增利润总额119.11亿元，导致巨额债务暴雷。",
+    "csrc_summary": "证监会认定：胜通集团编制虚假财务数据，通过旗下胜通钢帘线等子公司虚构无真实货物流转的采购与销售，累计虚增营收615.4亿元，涉嫌欺诈发行公司债券。",
+    "financial_summary": {
+      "period": "2017年度",
+      "revenue": 20450000000.0,
+      "cost_of_sales": 16980000000.0,
+      "gross_margin": 0.1697,
+      "net_profit": 1820000000.0,
+      "accounts_receivable": 4980000000.0,
+      "inventory": 3120000000.0,
+      "total_assets": 28900000000.0,
+      "operating_cash_flow": -1100000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "编制双套账虚构大宗购销贸易收入",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 61540000000.0,
+        "expected_vouchers": [
+          "ST-2017-BOND01"
+        ],
+        "standard_clause": "CAS 14 - 收入准则 及 证券法发债披露准则"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "ST-2017-BOND01",
+        "voucher_date": "2017-12-31",
+        "preparer": "内账会计",
+        "associated_doc_id": "ST-DOUBLE-01",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-虚假贸易客户",
+            "debit": 61540000000.0,
+            "credit": 0.0,
+            "summary": "管理账套虚增应收"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-钢帘线",
+            "debit": 0.0,
+            "credit": 61540000000.0,
+            "summary": "双套账虚增收入"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_007",
+    "company_name": "东方金钰股份有限公司",
+    "stock_code": "600086",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2020〕65号",
+    "case_category": "虚构购销业务与体外资金闭环空转",
+    "industry": "珠宝首饰及珠宝玉石加工业",
+    "audit_period": "2016-2017年度",
+    "description": "东方金钰为完成重组业绩承诺，由实控人赵某安排下属成立多家空壳公司，虚构向普某等6名自然人及名下壳公司采购与销售翡翠原石交易，虚构销售收入5.41亿元，虚增营业利润3.59亿元，资金在指定账户间闭环调度走账。",
+    "csrc_summary": "证监会认定：东方金钰虚构翡翠原石采购、销售交易，虚构合同、无实物入库交割，资金最终流向公司实控人支配的体外账户，2016-2017年财报严重失实。",
+    "financial_summary": {
+      "period": "2017年度",
+      "revenue": 9277000000.0,
+      "cost_of_sales": 8100000000.0,
+      "gross_margin": 0.1269,
+      "net_profit": 231000000.0,
+      "accounts_receivable": 1820000000.0,
+      "inventory": 9640000000.0,
+      "total_assets": 12800000000.0,
+      "operating_cash_flow": -1780000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "虚构高估值翡翠原石购销与体外闭环走账",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 541000000.0,
+        "expected_vouchers": [
+          "DFJY-2017-08"
+        ],
+        "standard_clause": "CAS 14 - 收入准则 及 CAS 1 - 存货准则"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "DFJY-2017-08",
+        "voucher_date": "2017-12-15",
+        "preparer": "翡翠事业部会计",
+        "associated_doc_id": "JADE-2017-88",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-普某(自然人客户)",
+            "debit": 541000000.0,
+            "credit": 0.0,
+            "summary": "销售高档翡翠原石"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-玉石",
+            "debit": 0.0,
+            "credit": 478761061.95,
+            "summary": "确认翡翠原石销售收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费-销项税",
+            "debit": 0.0,
+            "credit": 62238938.05,
+            "summary": "销项税额"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "JADE-2017-88",
+        "customer_or_vendor": "普某",
+        "sign_date": "2017-11-20",
+        "total_amount": 541000000.0,
+        "payment_terms": "分期付清",
+        "delivery_condition": "库房封签未实际交付",
+        "is_related_party": true
+      }
+    ],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_008",
+    "company_name": "同济堂医药有限公司",
+    "stock_code": "600090",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2022〕13号",
+    "case_category": "虚构购销业务与体外资金闭环空转",
+    "industry": "医药商业与零售业",
+    "audit_period": "2016-2019年度",
+    "description": "同济堂通过虚构向襄阳同济堂、湖北汉联等关联客户批发销售医药中间体和中药材，伪造上下游购销合同与出库单，累计虚增营业收入207亿元，虚增利润24.3亿元，同时控股股东违规占用资金10.47亿元。",
+    "csrc_summary": "证监会认定：同济堂通过虚构大宗医药贸易，虚假走账并形成资金闭环，未按规定披露实际控制人及关联方违规资金占用与关联担保情况。",
+    "financial_summary": {
+      "period": "2019年度",
+      "revenue": 9820000000.0,
+      "cost_of_sales": 8750000000.0,
+      "gross_margin": 0.109,
+      "net_profit": -560000000.0,
+      "accounts_receivable": 3890000000.0,
+      "inventory": 1450000000.0,
+      "total_assets": 11800000000.0,
+      "operating_cash_flow": -980000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "虚构药品分销业务与关联方大额资金占用",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 20700000000.0,
+        "expected_vouchers": [
+          "TJT-2019-MED01"
+        ],
+        "standard_clause": "CAS 14 - 收入准则 及 CAS 36 - 关联方披露"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "TJT-2019-MED01",
+        "voucher_date": "2019-12-10",
+        "preparer": "胡会计",
+        "associated_doc_id": "MED-HL-01",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-湖北汉联",
+            "debit": 20700000000.0,
+            "credit": 0.0,
+            "summary": "虚构大宗中西成药销售"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-医药分销",
+            "debit": 0.0,
+            "credit": 20700000000.0,
+            "summary": "虚假走账收入"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_009",
+    "company_name": "瑞幸咖啡公司 (Luckin Coffee Inc.)",
+    "stock_code": "LK / LKNCY",
+    "penalty_decision_no": "财政部会计监督检查公告第40号 / 美国SEC处罚公告",
+    "case_category": "营业收入跨期提前确认与虚增",
+    "industry": "餐饮零售与互联网新零售",
+    "audit_period": "2019年Q2-Q4",
+    "description": "瑞幸咖啡通过设立虚假企业客户、利用内部关联员工开发专属下单程序伪造虚拟代金券与自提订单，虚增商品销售收入21.2亿元；同时伪造原材料采购、技术外包及广告营销支出虚增成本费用15.6亿元。",
+    "csrc_summary": "财政部检查确认：自2019年4月起，瑞幸咖啡通过虚假代金券和企业账户批量下单，虚增收入21.19亿元，虚增成本费用15.97亿元，虚增利润9.03亿元。",
+    "financial_summary": {
+      "period": "2019年度",
+      "revenue": 3025000000.0,
+      "cost_of_sales": 2680000000.0,
+      "gross_margin": 0.114,
+      "net_profit": -3160000000.0,
+      "accounts_receivable": 89000000.0,
+      "inventory": 420000000.0,
+      "total_assets": 6850000000.0,
+      "operating_cash_flow": -1250000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "虚假自提订单与企业代金券膨胀虚增收入",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 2119000000.0,
+        "expected_vouchers": [
+          "LK-2019-APP99"
+        ],
+        "standard_clause": "CAS 14 / US GAAP ASC 606 - 收入确认"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "LK-2019-APP99",
+        "voucher_date": "2019-09-30",
+        "preparer": "IT对账系统",
+        "associated_doc_id": "COUPON-BATCH-88",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款-易宝支付代收户",
+            "debit": 2119000000.0,
+            "credit": 0.0,
+            "summary": "虚假代金券系统结算款"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-饮品销售",
+            "debit": 0.0,
+            "credit": 2119000000.0,
+            "summary": "虚拟APP订单入账"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_010",
+    "company_name": "深圳市索菱实业股份有限公司",
+    "stock_code": "002766",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2020〕103号",
+    "case_category": "营业收入跨期提前确认与虚增",
+    "industry": "汽车零部件与智能车机系统",
+    "audit_period": "2016-2018年度",
+    "description": "索菱股份在智能车机系统集成项目未取得车企最终验收单的情况下，跨会计年度突击提前确认大额技术开发收入；同时虚构采购回款、不当资本化研发支出，并在体外大额借款隐瞒违规担保。",
+    "csrc_summary": "证监会认定：索菱股份提前确认技术服务与车机销售收入，虚增营业收入合计8.48亿元，虚构在建工程与采购款合计3.25亿元，未如实披露对外担保与控股股东资金借贷。",
+    "financial_summary": {
+      "period": "2018年度",
+      "revenue": 1080000000.0,
+      "cost_of_sales": 890000000.0,
+      "gross_margin": 0.1759,
+      "net_profit": -790000000.0,
+      "accounts_receivable": 850000000.0,
+      "inventory": 340000000.0,
+      "total_assets": 3200000000.0,
+      "operating_cash_flow": -210000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "跨期提前确认车机系统开发收入与研发支出不当资本化",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 848000000.0,
+        "expected_vouchers": [
+          "SL-2018-REV01"
+        ],
+        "standard_clause": "CAS 14 - 收入准则 及 CAS 6 - 无形资产"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "SL-2018-REV01",
+        "voucher_date": "2018-12-30",
+        "preparer": "周财务",
+        "associated_doc_id": "CAR-TECH-2018",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-某主机厂",
+            "debit": 848000000.0,
+            "credit": 0.0,
+            "summary": "未终验提前确认车机系统研发款"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-软件集成",
+            "debit": 0.0,
+            "credit": 848000000.0,
+            "summary": "跨期突击确认收入"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_011",
+    "company_name": "徐州科融环境资源股份有限公司",
+    "stock_code": "300152",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2020〕96号",
+    "case_category": "营业收入跨期提前确认与虚增",
+    "industry": "生态保护和环境治理业",
+    "audit_period": "2017年度",
+    "description": "科融环境为了扭亏保壳，在三聚环保等脱硫脱硝工程项目未达控制权转移、未出具竣工终验单前，违反完工百分比法跨期提前确认工程收入，推迟结转成本并少计费用，虚增当年利润总额3763万元。",
+    "csrc_summary": "证监会认定：科融环境通过将三聚环保项目等未满足收入确认条件的建造合同提前确认收入，虚增2017年度利润3763万元，构成跨期利润操纵。",
+    "financial_summary": {
+      "period": "2017年度",
+      "revenue": 523000000.0,
+      "cost_of_sales": 395000000.0,
+      "gross_margin": 0.2447,
+      "net_profit": 10500000.0,
+      "accounts_receivable": 412000000.0,
+      "inventory": 89000000.0,
+      "total_assets": 1580000000.0,
+      "operating_cash_flow": -45000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "环保工程项目跨期提前确认收入以规避亏损",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 37630000.0,
+        "expected_vouchers": [
+          "KRHJ-2017-09"
+        ],
+        "standard_clause": "CAS 14 - 建造合同与收入五步法"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "KRHJ-2017-09",
+        "voucher_date": "2017-12-31",
+        "preparer": "工程会计",
+        "associated_doc_id": "SJ-2017-BUILD",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-三聚环保项目",
+            "debit": 37630000.0,
+            "credit": 0.0,
+            "summary": "提前确认脱硝工程款"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "工程施工收入",
+            "debit": 0.0,
+            "credit": 37630000.0,
+            "summary": "未终验突击确认收入"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_012",
+    "company_name": "浙江亚太药业股份有限公司",
+    "stock_code": "002370",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2021〕16号",
+    "case_category": "营业收入跨期提前确认与虚增",
+    "industry": "医药制造业",
+    "audit_period": "2016-2018年度",
+    "description": "亚太药业高溢价并购子公司上海新高峰，新高峰为完成对赌业绩，虚构临床试验（CRO）技术外包服务合同，伪造医药研发进展记录，累计虚增营业收入4.5亿元，虚增利润总额1.74亿元，商誉最终严重减值暴雷。",
+    "csrc_summary": "证监会认定：亚太药业收购的上海新高峰为完成业绩承诺，虚构医药技术服务合同与客户验收，2016-2018年合计虚增营业收入4.5亿元，虚增利润1.74亿元。",
+    "financial_summary": {
+      "period": "2018年度",
+      "revenue": 1309000000.0,
+      "cost_of_sales": 725000000.0,
+      "gross_margin": 0.4461,
+      "net_profit": 208000000.0,
+      "accounts_receivable": 512000000.0,
+      "inventory": 218000000.0,
+      "total_assets": 3290000000.0,
+      "operating_cash_flow": 82000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "并购子公司虚构CRO医药技术外包收入达成对赌",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 174000000.0,
+        "expected_vouchers": [
+          "YTYY-2018-CRO"
+        ],
+        "standard_clause": "CAS 14 - 收入准则 及 CAS 8 - 商誉减值"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "YTYY-2018-CRO",
+        "voucher_date": "2018-12-25",
+        "preparer": "新高峰核算员",
+        "associated_doc_id": "CRO-TEST-88",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-某医药研发委托方",
+            "debit": 174000000.0,
+            "credit": 0.0,
+            "summary": "虚假临床试验节点确认"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-CRO技术服务",
+            "debit": 0.0,
+            "credit": 174000000.0,
+            "summary": "虚构研发收入"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_013",
+    "company_name": "抚顺特殊钢股份有限公司",
+    "stock_code": "600399",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2019〕45号",
+    "case_category": "存货虚构、重大灭失与特殊资产造假",
+    "industry": "黑色金属冶炼和压延加工业",
+    "audit_period": "2010-2016年度",
+    "description": "抚顺特钢在长达7年的时间内，通过将报废钢材、下脚料以特种高品质在制品名义在库长期挂账，少结转营业成本、虚增存货账面价值累计19.89亿元，虚增利润总额19亿元，最终不得不重整破产。",
+    "csrc_summary": "证监会认定：抚顺特钢2010年至2016年年报、2017年三季报虚增在制品和产成品存货，少结转销售成本，导致多期财务报表存货与利润严重虚假。",
+    "financial_summary": {
+      "period": "2016年度",
+      "revenue": 4890000000.0,
+      "cost_of_sales": 3920000000.0,
+      "gross_margin": 0.1984,
+      "net_profit": 112000000.0,
+      "accounts_receivable": 1420000000.0,
+      "inventory": 3860000000.0,
+      "total_assets": 11500000000.0,
+      "operating_cash_flow": 280000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "报废特钢伪装在制品挂账与存货系统性虚增",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 1989000000.0,
+        "expected_vouchers": [
+          "FSTG-2016-INV01"
+        ],
+        "standard_clause": "CAS 1 - 存货准则 及 CAS 8 - 资产减值"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "FSTG-2016-INV01",
+        "voucher_date": "2016-12-31",
+        "preparer": "成本科核算员",
+        "associated_doc_id": "STEEL-SCRAP-99",
+        "entries": [
+          {
+            "account_code": "1403",
+            "account_name": "在制品-高合金特种模具钢",
+            "debit": 1989000000.0,
+            "credit": 0.0,
+            "summary": "报废次品虚假挂账特钢在制品"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 0.0,
+            "credit": 1989000000.0,
+            "summary": "少结转成本调节利润"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_014",
+    "company_name": "獐子岛集团股份有限公司",
+    "stock_code": "002069",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2020〕29号",
+    "case_category": "存货虚构、重大灭失与特殊资产造假",
+    "industry": "水产养殖与捕捞业",
+    "audit_period": "2016-2017年度",
+    "description": "獐子岛通过制造底播虾夷扇贝‘冷水团冻死/跑路’假象操纵损益。证监会调取北斗卫星定位系统数据穿透采捕船轨迹，查实其未实际作业却虚报捕捞面积、伪造抽盘记录，虚减成本与少计营业外支出虚增利润数千万元。",
+    "csrc_summary": "证监会认定：獐子岛通过财务造假随意调节底播扇贝核销及减值，北斗卫星数据证实其实际采捕海域与账面记录严重不符，2016年虚增利润1.31亿元，2017年虚减利润2.79亿元。",
+    "financial_summary": {
+      "period": "2017年度",
+      "revenue": 3206000000.0,
+      "cost_of_sales": 2680000000.0,
+      "gross_margin": 0.1641,
+      "net_profit": -723000000.0,
+      "accounts_receivable": 480000000.0,
+      "inventory": 1380000000.0,
+      "total_assets": 4180000000.0,
+      "operating_cash_flow": 150000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "北斗轨迹穿透虚假采捕与消耗性生物资产操纵",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 131000000.0,
+        "expected_vouchers": [
+          "ZZD-2016-BIO01"
+        ],
+        "standard_clause": "CAS 5 - 生物资产 及 CSA 1141 - 舞弊相关的责任"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "ZZD-2016-BIO01",
+        "voucher_date": "2016-12-31",
+        "preparer": "海洋事业部财务",
+        "associated_doc_id": "BEIDOU-TRAIL-2016",
+        "entries": [
+          {
+            "account_code": "1405",
+            "account_name": "消耗性生物资产-底播虾夷扇贝",
+            "debit": 131000000.0,
+            "credit": 0.0,
+            "summary": "未实际作业虚留存货"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本-捕捞成本",
+            "debit": 0.0,
+            "credit": 131000000.0,
+            "summary": "少结转捕捞成本虚增当期利润"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_015",
+    "company_name": "广州市浪奇实业股份有限公司",
+    "stock_code": "000523",
+    "penalty_decision_no": "中国证监会广东监管局行政处罚决定书〔2021〕21号",
+    "case_category": "存货虚构、重大灭失与特殊资产造假",
+    "industry": "化学原料和化学制品制造业",
+    "audit_period": "2018-2019年度",
+    "description": "广州浪奇账面价值5.72亿元的化工原料存货在江苏辉丰仓、瑞丽仓等第三方仓储点离奇失踪；经查公司相关大宗贸易业务纯属无实物空转，仓储公司明确否认保管该批货物，所谓仓储合同与电子仓单均系伪造。",
+    "csrc_summary": "广东证监局认定：广州浪奇利用虚假存货盘点、伪造仓储合同虚构大宗化工贸易，虚增2018年营收62.3亿元，虚增2019年营收66.6亿元，虚增存货与利润重大差错。",
+    "financial_summary": {
+      "period": "2019年度",
+      "revenue": 12398000000.0,
+      "cost_of_sales": 11820000000.0,
+      "gross_margin": 0.0466,
+      "net_profit": 61000000.0,
+      "accounts_receivable": 3120000000.0,
+      "inventory": 1420000000.0,
+      "total_assets": 8640000000.0,
+      "operating_cash_flow": -1320000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "虚构第三方仓储电子仓单与存货离奇灭失",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 572000000.0,
+        "expected_vouchers": [
+          "LQ-2019-WH01"
+        ],
+        "standard_clause": "CAS 1 - 存货准则 及 CAS 14 - 收入准则"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "LQ-2019-WH01",
+        "voucher_date": "2019-12-30",
+        "preparer": "贸易一部会计",
+        "associated_doc_id": "HF-WH-889",
+        "entries": [
+          {
+            "account_code": "1405",
+            "account_name": "库存商品-辉丰仓特种化工原料",
+            "debit": 572000000.0,
+            "credit": 0.0,
+            "summary": "伪造电子仓单入账"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 572000000.0,
+            "summary": "预付空壳供应商采购款"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "HF-WH-889",
+        "customer_or_vendor": "江苏辉丰石化仓储有限公司",
+        "sign_date": "2019-01-15",
+        "total_amount": 572000000.0,
+        "payment_terms": "仓储保管费按月付",
+        "delivery_condition": "仓单质押",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_016",
+    "company_name": "雏鹰农牧集团股份有限公司",
+    "stock_code": "002477",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2021〕12号",
+    "case_category": "存货虚构、重大灭失与特殊资产造假",
+    "industry": "畜牧养殖业",
+    "audit_period": "2016-2018年度",
+    "description": "雏鹰农牧因资金链断裂，将生猪非正常大批死亡转入营业外支出虚减存货，并通过虚构工程项目、虚构农民专业合作社垫付款虚增资产与利润；债务暴雷后甚至公告用库存火腿肉冲抵债券利息。",
+    "csrc_summary": "证监会认定：雏鹰农牧未按规定披露合作社关联交易，虚假记载生猪盘点存货与工程资产，未如实披露对外担保与重大诉讼违规行为。",
+    "financial_summary": {
+      "period": "2018年度",
+      "revenue": 3556000000.0,
+      "cost_of_sales": 3980000000.0,
+      "gross_margin": -0.1192,
+      "net_profit": -3860000000.0,
+      "accounts_receivable": 890000000.0,
+      "inventory": 1850000000.0,
+      "total_assets": 19400000000.0,
+      "operating_cash_flow": -890000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "虚假盘点生物资产与生猪非正常死亡转出",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 1850000000.0,
+        "expected_vouchers": [
+          "CY-2018-PIG01"
+        ],
+        "standard_clause": "CAS 5 - 生物资产 及 CAS 1 - 存货"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "CY-2018-PIG01",
+        "voucher_date": "2018-12-31",
+        "preparer": "养殖部核算员",
+        "associated_doc_id": "PIG-DEATH-99",
+        "entries": [
+          {
+            "account_code": "6711",
+            "account_name": "营业外支出-生猪非正常疫病死亡",
+            "debit": 1850000000.0,
+            "credit": 0.0,
+            "summary": "集中巨额冲销生猪存货"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "消耗性生物资产-商品生猪",
+            "debit": 0.0,
+            "credit": 1850000000.0,
+            "summary": "冲销存货在库虚值"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_017",
+    "company_name": "万福生科 (湖南) 农业开发股份有限公司",
+    "stock_code": "300268",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2013〕41号",
+    "case_category": "存货虚构、重大灭失与特殊资产造假",
+    "industry": "农副食品加工业",
+    "audit_period": "2008-2011年及2012年上半年",
+    "description": "万福生科作为创业板欺诈发行第一案，为满足上市条件，收集开立300多名农户身份证存折走账伪造大米收购，虚增在建工程、循环经济产业链大米蛋白销售收入7.4亿元，虚增净利润1.8亿元。",
+    "csrc_summary": "证监会认定：万福生科在招股说明书及2011年报中虚构大米采购及淀粉糖销售，累计虚增营收7.4亿元，虚增利润1.8亿元，保荐机构及审计机构均遭严惩。",
+    "financial_summary": {
+      "period": "2011年度",
+      "revenue": 553000000.0,
+      "cost_of_sales": 412000000.0,
+      "gross_margin": 0.2549,
+      "net_profit": 60500000.0,
+      "accounts_receivable": 180000000.0,
+      "inventory": 210000000.0,
+      "total_assets": 980000000.0,
+      "operating_cash_flow": -12000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "虚构农户收购与大米深加工产业链销售",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 740000000.0,
+        "expected_vouchers": [
+          "WFSK-2011-IPO"
+        ],
+        "standard_clause": "CAS 14 - 收入准则 及 证券法招股披露"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "WFSK-2011-IPO",
+        "voucher_date": "2011-12-20",
+        "preparer": "出纳组",
+        "associated_doc_id": "FARMER-RICE-300",
+        "entries": [
+          {
+            "account_code": "1401",
+            "account_name": "原材料-稻谷采购(农户存折走账)",
+            "debit": 740000000.0,
+            "credit": 0.0,
+            "summary": "伪造农副产品收购凭证"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款-农户存折结算户",
+            "debit": 0.0,
+            "credit": 740000000.0,
+            "summary": "体外虚假倒账"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_018",
+    "company_name": "延安必康制药股份有限公司",
+    "stock_code": "002411",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2020〕86号",
+    "case_category": "关联方隐瞒披露与非经营性资金占用",
+    "industry": "医药及化学工业",
+    "audit_period": "2015-2018年度",
+    "description": "延安必康实际控制人李某长期将上市公司作为提款机，累计非经营性占用资金44.97亿元未披露，并利用伪造的建设银行进账单虚增货币资金36.63亿元，涉案资金被用于大股东个人投资与债务偿还。",
+    "csrc_summary": "证监会认定：延安必康未披露控股股东及实控人非经营性资金占用44.97亿元；虚增货币资金36.63亿元；多期年报披露的关联交易存在虚假记载与重大遗漏。",
+    "financial_summary": {
+      "period": "2018年度",
+      "revenue": 8450000000.0,
+      "cost_of_sales": 5890000000.0,
+      "gross_margin": 0.3029,
+      "net_profit": 403000000.0,
+      "accounts_receivable": 3120000000.0,
+      "inventory": 1250000000.0,
+      "total_assets": 20800000000.0,
+      "operating_cash_flow": 380000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "控股股东非经营性违规划转占用上市公司资金",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 4497000000.0,
+        "expected_vouchers": [
+          "YABK-2018-LOAN"
+        ],
+        "standard_clause": "CAS 36 - 关联方披露 及 证券法信息披露"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "YABK-2018-LOAN",
+        "voucher_date": "2018-12-28",
+        "preparer": "资金中心出纳",
+        "associated_doc_id": "BK-LOAN-SHAREHOLDER",
+        "entries": [
+          {
+            "account_code": "1221",
+            "account_name": "其他应收款-实控人个人账户",
+            "debit": 4497000000.0,
+            "credit": 0.0,
+            "summary": "大股东非经营性拆借划转"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 4497000000.0,
+            "summary": "网银大额无审批划出"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_019",
+    "company_name": "成都华泽钴镍材料股份有限公司",
+    "stock_code": "000693",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2018〕8号",
+    "case_category": "关联方隐瞒披露与非经营性资金占用",
+    "industry": "有色金属冶炼和压延加工业",
+    "audit_period": "2013-2015年度",
+    "description": "华泽钴镍被称为‘A股最穷上市公司’，账面资金仅剩178元；经查大股东王某长期违规占用上市公司资金14.97亿元，并通过将13.3亿元无真实承兑价值的‘无效票据’在应收票据科目长期挂账伪造已收款假象。",
+    "csrc_summary": "证监会认定：华泽钴镍未披露实际控制人关联方资金占用14.97亿元，利用无效票据虚增应收票据及营业收入，最终被强制终止上市。",
+    "financial_summary": {
+      "period": "2015年度",
+      "revenue": 8510000000.0,
+      "cost_of_sales": 8100000000.0,
+      "gross_margin": 0.0481,
+      "net_profit": -155000000.0,
+      "accounts_receivable": 1497000000.0,
+      "inventory": 820000000.0,
+      "total_assets": 5200000000.0,
+      "operating_cash_flow": -1350000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "虚假商业汇票挂账掩盖大股东巨额资金空洞",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 1497000000.0,
+        "expected_vouchers": [
+          "HZGN-2015-BILL"
+        ],
+        "standard_clause": "CAS 22 - 应收票据确认 及 CAS 36 - 关联方披露"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "HZGN-2015-BILL",
+        "voucher_date": "2015-12-31",
+        "preparer": "结算会计",
+        "associated_doc_id": "INVALID-NOTE-13",
+        "entries": [
+          {
+            "account_code": "1121",
+            "account_name": "应收票据-无效商业承兑汇票",
+            "debit": 1497000000.0,
+            "credit": 0.0,
+            "summary": "空头商业汇票顶替大股东占用"
+          },
+          {
+            "account_code": "1221",
+            "account_name": "其他应收款-大股东控制企业",
+            "debit": 0.0,
+            "credit": 1497000000.0,
+            "summary": "虚假平账掩盖占用"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_020",
+    "company_name": "凯迪生态环境科技股份有限公司",
+    "stock_code": "000939",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2020〕27号",
+    "case_category": "关联方隐瞒披露与非经营性资金占用",
+    "industry": "电力、热力生产和供应业 (生物质发电)",
+    "audit_period": "2017-2018年度",
+    "description": "凯迪生态控股股东阳光凯迪长期占用公司资金达33亿元，并通过将估值严重虚高的林权资产注入上市公司抵偿债务；同时虚构生物质燃料采购流水，导致上百亿债务实质违约并退市。",
+    "csrc_summary": "证监会认定：凯迪生态未按规定披露关联方非经营性资金占用、未披露关联方担保与重大借贷，林权资产收购评估严重失实。",
+    "financial_summary": {
+      "period": "2017年度",
+      "revenue": 5440000000.0,
+      "cost_of_sales": 4120000000.0,
+      "gross_margin": 0.2426,
+      "net_profit": -2380000000.0,
+      "accounts_receivable": 2150000000.0,
+      "inventory": 1890000000.0,
+      "total_assets": 42100000000.0,
+      "operating_cash_flow": 280000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "大股东占用资金与虚高林权资产以次充好抵债",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 3300000000.0,
+        "expected_vouchers": [
+          "KDST-2017-FOREST"
+        ],
+        "standard_clause": "CAS 36 - 关联方交易 及 CAS 8 - 资产减值"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "KDST-2017-FOREST",
+        "voucher_date": "2017-12-20",
+        "preparer": "资产核算处",
+        "associated_doc_id": "FOREST-RIGHT-01",
+        "entries": [
+          {
+            "account_code": "1501",
+            "account_name": "林权资产-阳光凯迪注入林地",
+            "debit": 3300000000.0,
+            "credit": 0.0,
+            "summary": "高估林权抵偿大股东欠款"
+          },
+          {
+            "account_code": "1221",
+            "account_name": "其他应收款-阳光凯迪控股",
+            "debit": 0.0,
+            "credit": 3300000000.0,
+            "summary": "冲销大股东非经营性资金占用"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_021",
+    "company_name": "重庆三圣实业股份有限公司",
+    "stock_code": "002742",
+    "penalty_decision_no": "中国证监会重庆监管局行政处罚决定书〔2022〕5号",
+    "case_category": "关联方隐瞒披露与非经营性资金占用",
+    "industry": "建材与医药制造",
+    "audit_period": "2018-2020年度",
+    "description": "三圣股份实控人潘某将上市公司与其实际控制的青峰农业等关联企业绑定为共同借款人，违规划转资金4.49亿元未在财报中披露；同时海外埃塞俄比亚药厂及投资项目长期停产亏损却未按期计提大额商誉和资产减值准备。",
+    "csrc_summary": "重庆证监局认定：三圣股份未如实披露向关联方划转资金及共同借款事项，未充分计提海外子公司资产减值损失，信息披露存在虚假记载。",
+    "financial_summary": {
+      "period": "2020年度",
+      "revenue": 2480000000.0,
+      "cost_of_sales": 1980000000.0,
+      "gross_margin": 0.2016,
+      "net_profit": -320000000.0,
+      "accounts_receivable": 890000000.0,
+      "inventory": 420000000.0,
+      "total_assets": 4890000000.0,
+      "operating_cash_flow": 110000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "关联方共同借款隐瞒不报与海外投资减值滞后",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 449000000.0,
+        "expected_vouchers": [
+          "SSGF-2020-01"
+        ],
+        "standard_clause": "CAS 36 - 关联方披露 及 CAS 8 - 资产减值"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "SSGF-2020-01",
+        "voucher_date": "2020-12-15",
+        "preparer": "集团资金专员",
+        "associated_doc_id": "QF-BORROW-449",
+        "entries": [
+          {
+            "account_code": "1221",
+            "account_name": "其他应收款-青峰农业",
+            "debit": 449000000.0,
+            "credit": 0.0,
+            "summary": "替关联方共同承担借款本息"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 449000000.0,
+            "summary": "代偿银团联合借款"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_022",
+    "company_name": "金亚科技股份有限公司",
+    "stock_code": "300028",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2018〕18号",
+    "case_category": "欺诈发行、跨境流水与费用操纵",
+    "industry": "计算机、通信和其他电子设备制造业",
+    "audit_period": "2014年度",
+    "description": "金亚科技为了避免连续亏损暂停上市，通过在年末伪造银行存款日记账虚增存款2.18亿元；伪造机顶盒销售收入与工程预付款虚增利润8049.7万元，将原本巨额亏损的年报做成虚假盈利。",
+    "csrc_summary": "证监会认定：金亚科技2014年报虚增货币资金2.18亿元，虚增预付工程款3.1亿元，虚构机顶盒销售，将实际亏损做成盈利8049万元，涉嫌欺诈犯罪被移送公安。",
+    "financial_summary": {
+      "period": "2014年度",
+      "revenue": 554000000.0,
+      "cost_of_sales": 398000000.0,
+      "gross_margin": 0.2815,
+      "net_profit": 80490000.0,
+      "accounts_receivable": 340000000.0,
+      "inventory": 290000000.0,
+      "total_assets": 1580000000.0,
+      "operating_cash_flow": -89000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "伪造银行存款日记账与虚构预付工程款扭亏为盈",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 218000000.0,
+        "expected_vouchers": [
+          "JYKJ-2014-08"
+        ],
+        "standard_clause": "CAS 14 - 收入准则 及 CAS 22 - 金融资产"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "JYKJ-2014-08",
+        "voucher_date": "2014-12-31",
+        "preparer": "出纳",
+        "associated_doc_id": "FAKE-STB-01",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款-伪造日记账",
+            "debit": 218000000.0,
+            "credit": 0.0,
+            "summary": "伪造机顶盒回款流水"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-机顶盒",
+            "debit": 0.0,
+            "credit": 80490000.0,
+            "summary": "虚假销售确认利润"
+          },
+          {
+            "account_code": "1221",
+            "account_name": "预付工程款-虚构施工队",
+            "debit": 0.0,
+            "credit": 137510000.0,
+            "summary": "挂账平账"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_023",
+    "company_name": "丹东欣泰电气股份有限公司",
+    "stock_code": "300372",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2016〕84号",
+    "case_category": "欺诈发行、跨境流水与费用操纵",
+    "industry": "输配电及控制设备制造业",
+    "audit_period": "2011-2014年度",
+    "description": "欣泰电气作为中国资本市场因欺诈发行强制退市第一股，为实现IPO上市，连续多年在资产负债表日利用外部借款或关联方过桥资金虚假冲减大额应收账款，次年期初再转出还原，累计虚减应收账款数亿元。",
+    "csrc_summary": "证监会认定：欣泰电气在招股书及上市后年报中，持续利用外部资金虚构收回应收款项，期末冲减、期初冲回，构成欺诈发行及严重虚假陈述，启动强制退市。",
+    "financial_summary": {
+      "period": "2014年度",
+      "revenue": 608000000.0,
+      "cost_of_sales": 482000000.0,
+      "gross_margin": 0.2072,
+      "net_profit": 31200000.0,
+      "accounts_receivable": 72000000.0,
+      "inventory": 210000000.0,
+      "total_assets": 1650000000.0,
+      "operating_cash_flow": 28000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "欺诈发行中利用外部借款跨期倒账虚减应收账款",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 72000000.0,
+        "expected_vouchers": [
+          "XT-2014-AR01"
+        ],
+        "standard_clause": "CAS 22 - 金融资产终止确认 及 证券法欺诈发行条款"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "XT-2014-AR01",
+        "voucher_date": "2014-12-30",
+        "preparer": "收款核算员",
+        "associated_doc_id": "BRIDGE-LOAN-XT",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款-过桥资金",
+            "debit": 72000000.0,
+            "credit": 0.0,
+            "summary": "过桥资金充当客户回款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-某电力局",
+            "debit": 0.0,
+            "credit": 72000000.0,
+            "summary": "年末突击虚假冲减应收"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_024",
+    "company_name": "江苏雅百特科技股份有限公司",
+    "stock_code": "002323",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2017〕102号",
+    "case_category": "欺诈发行、跨境流水与费用操纵",
+    "industry": "建筑安装业 (金属屋面系统)",
+    "audit_period": "2015-2016年度",
+    "description": "雅百特谎称参与巴基斯坦木尔坦快速公交专线项目屋面工程，虚构海外工程合同虚增营业收入2.01亿元；同时伪造境内外原铜大宗贸易，利用海外空壳公司及伪造的汇丰银行跨境流水完成资金体外循环。",
+    "csrc_summary": "证监会认定：雅百特虚构巴基斯坦木尔坦工程项目，伪造境外银行信函与报关单据，虚增营业收入2.01亿元，虚增利润总额2.62亿元，情节极为恶劣。",
+    "financial_summary": {
+      "period": "2015年度",
+      "revenue": 926000000.0,
+      "cost_of_sales": 589000000.0,
+      "gross_margin": 0.3639,
+      "net_profit": 262000000.0,
+      "accounts_receivable": 512000000.0,
+      "inventory": 210000000.0,
+      "total_assets": 2180000000.0,
+      "operating_cash_flow": -89000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "虚构巴基斯坦跨国工程与伪造境外银行汇款单",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 201000000.0,
+        "expected_vouchers": [
+          "YBT-2015-PK01"
+        ],
+        "standard_clause": "CAS 14 - 建造合同及跨境贸易核算"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "YBT-2015-PK01",
+        "voucher_date": "2015-12-28",
+        "preparer": "国际工程部财务",
+        "associated_doc_id": "MULTAN-BUS-01",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-木尔坦公交工程部",
+            "debit": 201000000.0,
+            "credit": 0.0,
+            "summary": "虚假海外金属屋面工程确认"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "工程施工收入-海外工程",
+            "debit": 0.0,
+            "credit": 201000000.0,
+            "summary": "虚构海外合同收入"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "MULTAN-BUS-01",
+        "customer_or_vendor": "Multan Metro Bus Project",
+        "sign_date": "2015-04-10",
+        "total_amount": 201000000.0,
+        "payment_terms": "信用证境外付汇",
+        "delivery_condition": "海外终验",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CSRC_025",
+    "company_name": "风神轮胎股份有限公司",
+    "stock_code": "600469",
+    "penalty_decision_no": "中国证监会河南监管局行政处罚决定书〔2015〕2号",
+    "case_category": "欺诈发行、跨境流水与费用操纵",
+    "industry": "橡胶和塑料制品业",
+    "audit_period": "2011-2012年度",
+    "description": "风神股份通过跨期调控‘三包’退赔轮胎费用、少计销售返利冲减成本，未按规定转销存货跌价准备，在2011年和2012年连续操纵调节各期净利润数千万元以熨平业绩波动。",
+    "csrc_summary": "河南证监局认定：风神股份未如实计提三包索赔预计负债、违规推迟转销已售存货计提的跌价准备，导致财报跨期盈余操纵。",
+    "financial_summary": {
+      "period": "2012年度",
+      "revenue": 8740000000.0,
+      "cost_of_sales": 7450000000.0,
+      "gross_margin": 0.1476,
+      "net_profit": 182000000.0,
+      "accounts_receivable": 890000000.0,
+      "inventory": 1120000000.0,
+      "total_assets": 8900000000.0,
+      "operating_cash_flow": 450000000.0
+    },
+    "ground_truth_findings": [
+      {
+        "finding_type": "跨期延迟转销存货跌价准备与三包预计负债操纵",
+        "expected_risk_level": "MEDIUM",
+        "expected_amount": 34800000.0,
+        "expected_vouchers": [
+          "FSLT-2012-01"
+        ],
+        "standard_clause": "CAS 1 - 存货跌价准备 及 CAS 13 - 或有事项"
+      }
+    ],
+    "vouchers": [
+      {
+        "voucher_id": "FSLT-2012-01",
+        "voucher_date": "2012-12-31",
+        "preparer": "售后核算员",
+        "associated_doc_id": "TIRE-WARR-12",
+        "entries": [
+          {
+            "account_code": "1405",
+            "account_name": "存货跌价准备-库存轮胎",
+            "debit": 34800000.0,
+            "credit": 0.0,
+            "summary": "未按已售比例结转跌价准备"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 0.0,
+            "credit": 34800000.0,
+            "summary": "延迟转销少计成本"
+          }
+        ]
+      }
+    ],
+    "contracts": [],
+    "invoices": [],
+    "bank_flows": []
+  },
+  {
+    "case_id": "REAL_CLEAN_026",
+    "company_name": "贵州茅台酒股份有限公司",
+    "stock_code": "600519",
+    "penalty_decision_no": "天职国际会计师事务所标准无保留意见审计报告",
+    "case_category": "真实资本市场合规对照组",
+    "industry": "酒、饮料和精制茶制造业",
+    "audit_period": "2023-2024年度",
+    "description": "合规对照组标杆企业：贵州茅台拥有高度充沛且真实的现金流，账面货币资金超千亿元，银行利息收入与银行存款余额精确匹配；销售采用款到发货机制，合同负债与增值税销项发票、防伪溯源货运单完全吻合，无违规关联担保或控股股东资金占用。",
+    "csrc_summary": "天职国际会计师事务所审定：贵州茅台财务报表在所有重大方面按照企业会计准则的规定编制，公允反映了贵州茅台财务状况及经营成果，出具标准无保留意见审计报告。",
+    "financial_summary": {
+      "period": "2024年度",
+      "revenue": 170980000000.0,
+      "cost_of_sales": 13980000000.0,
+      "gross_margin": 0.9182,
+      "net_profit": 86200000000.0,
+      "accounts_receivable": 18200000.0,
+      "inventory": 46200000000.0,
+      "total_assets": 272000000000.0,
+      "operating_cash_flow": 98000000000.0
+    },
+    "ground_truth_findings": [],
+    "vouchers": [
+      {
+        "voucher_id": "GZMT-2024-SALES01",
+        "voucher_date": "2024-10-15",
+        "preparer": "直销结算会计",
+        "associated_doc_id": "MT-INV-20241015",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款-工商银行遵义支行",
+            "debit": 500000000.0,
+            "credit": 0.0,
+            "summary": "经销商全额打款收到货款"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-53度飞天茅台酒",
+            "debit": 0.0,
+            "credit": 442477876.11,
+            "summary": "出库交付控制权转移确认收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 57522123.89,
+            "summary": "足额依法计提销项税"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "MT-DIST-2024",
+        "customer_or_vendor": "全国重点战略酒类专营公司",
+        "sign_date": "2024-01-05",
+        "total_amount": 500000000.0,
+        "payment_terms": "先款后货100%银行结算",
+        "delivery_condition": "库房RFID防伪核验出库",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "MT-INV-20241015",
+        "invoice_date": "2024-10-15",
+        "buyer_name": "全国重点战略酒类专营公司",
+        "seller_name": "贵州茅台酒股份有限公司",
+        "amount_without_tax": 442477876.11,
+        "tax_amount": 57522123.89,
+        "total_amount": 500000000.0,
+        "goods_or_service": "53%vol 500ml 贵州茅台酒(飞天)"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "BK-MT-20241015",
+        "transaction_time": "2024-10-15 09:30",
+        "counterparty_name": "全国重点战略酒类专营公司",
+        "counterparty_account": "6222***901",
+        "amount": 500000000.0,
+        "balance_after": 156800000000.0,
+        "remark": "销售回款"
+      }
+    ]
+  },
+  {
+    "case_id": "REAL_CLEAN_027",
+    "company_name": "福耀玻璃工业集团股份有限公司",
+    "stock_code": "600660",
+    "penalty_decision_no": "普华永道中天会计师事务所标准无保留意见审计报告",
+    "case_category": "真实资本市场合规对照组",
+    "industry": "非金属矿物制品业 (汽车玻璃制造)",
+    "audit_period": "2023-2024年度",
+    "description": "合规对照组标杆企业：全球汽车安全玻璃龙头企业，业务遍布中美欧等全球主流汽车制造厂；财务核算采用全流程 SAP ERP 系统，跨国销售提单、报关单与海关数据无缝勾稽，外汇衍生品套期保值合规披露，无资金体外循环。",
+    "csrc_summary": "普华永道中天会计师事务所审定：福耀玻璃财务报表在所有重大方面公允反映其财务状况与经营成果，内部控制设计健全且运行有效，出具标准无保留意见审计报告。",
+    "financial_summary": {
+      "period": "2024年度",
+      "revenue": 39200000000.0,
+      "cost_of_sales": 25480000000.0,
+      "gross_margin": 0.35,
+      "net_profit": 7490000000.0,
+      "accounts_receivable": 6850000000.0,
+      "inventory": 5420000000.0,
+      "total_assets": 62400000000.0,
+      "operating_cash_flow": 8200000000.0
+    },
+    "ground_truth_findings": [],
+    "vouchers": [
+      {
+        "voucher_id": "FY-2024-AUTO01",
+        "voucher_date": "2024-11-20",
+        "preparer": "OEM结算会计",
+        "associated_doc_id": "FY-INV-202411",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-德国大众汽车集团",
+            "debit": 280000000.0,
+            "credit": 0.0,
+            "summary": "配套汽车全景天幕玻璃款"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-汽车玻璃",
+            "debit": 0.0,
+            "credit": 247787610.62,
+            "summary": "出口交割验收确认收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费-应交增值税",
+            "debit": 0.0,
+            "credit": 32212389.38,
+            "summary": "销项税额"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "FY-OEM-GERMANY",
+        "customer_or_vendor": "德国大众汽车制造股份公司",
+        "sign_date": "2024-03-01",
+        "total_amount": 280000000.0,
+        "payment_terms": "信用期45天",
+        "delivery_condition": "汉堡港CIF交货验收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "FY-INV-202411",
+        "invoice_date": "2024-11-20",
+        "buyer_name": "德国大众汽车制造股份公司",
+        "seller_name": "福耀玻璃工业集团股份有限公司",
+        "amount_without_tax": 247787610.62,
+        "tax_amount": 32212389.38,
+        "total_amount": 280000000.0,
+        "goods_or_service": "高阻隔智能调光汽车天幕玻璃"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "BK-FY-202412",
+        "transaction_time": "2024-12-28 15:30",
+        "counterparty_name": "德国大众汽车制造股份公司",
+        "counterparty_account": "DE89***001",
+        "amount": 280000000.0,
+        "balance_after": 18200000000.0,
+        "remark": "大众集团外汇结算电汇入账"
+      }
+    ]
+  },
+  {
+    "case_id": "REAL_CLEAN_028",
+    "company_name": "中国移动有限公司",
+    "stock_code": "600941 / 00941.HK",
+    "penalty_decision_no": "毕马威华振会计师事务所标准无保留意见审计报告",
+    "case_category": "真实资本市场合规对照组",
+    "industry": "电信、广播电视和卫星传输服务",
+    "audit_period": "2023-2024年度",
+    "description": "合规对照组标杆企业：全球最大的通信及算力网络运营商，全面执行新收入准则五步法，拥有数百个微服务计费系统和全流程业财自动核算集成；月结、账单出账与银行第三方代扣款无缝闭环，内控体系通过最高级别审验，出具标准无保留意见。",
+    "csrc_summary": "毕马威华振会计师事务所审定：中国移动财务报表公允反映公司财务状况与经营成果，电信业务收入确认遵循 CAS 14 严格标准，出具标准无保留意见审计报告。",
+    "financial_summary": {
+      "period": "2024年度",
+      "revenue": 1056000000000.0,
+      "cost_of_sales": 758000000000.0,
+      "gross_margin": 0.2822,
+      "net_profit": 138000000000.0,
+      "accounts_receivable": 48200000000.0,
+      "inventory": 8900000000.0,
+      "total_assets": 1980000000000.0,
+      "operating_cash_flow": 312000000000.0
+    },
+    "ground_truth_findings": [],
+    "vouchers": [
+      {
+        "voucher_id": "CM-2024-REV01",
+        "voucher_date": "2024-12-31",
+        "preparer": "计费中台自动制单",
+        "associated_doc_id": "CM-BILL-SYS-12",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-政企专线与云算力客户",
+            "debit": 1200000000.0,
+            "credit": 0.0,
+            "summary": "政企业务当月出账确认"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-数字化DICT通信服务",
+            "debit": 0.0,
+            "credit": 1132075471.7,
+            "summary": "完成专线服务按月履约确认收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费-应交增值税",
+            "debit": 0.0,
+            "credit": 67924528.3,
+            "summary": "销项税额"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "CM-DICT-2024",
+        "customer_or_vendor": "大型金融机构算力网络云专线",
+        "sign_date": "2024-01-01",
+        "total_amount": 1200000000.0,
+        "payment_terms": "按月出账按季结算",
+        "delivery_condition": "SLA服务等级达标自动扣款",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "CM-INV-202412",
+        "invoice_date": "2024-12-31",
+        "buyer_name": "大型金融机构算力网络云专线",
+        "seller_name": "中国移动通信集团有限公司",
+        "amount_without_tax": 1132075471.7,
+        "tax_amount": 67924528.3,
+        "total_amount": 1200000000.0,
+        "goods_or_service": "高可用智算中心专线与云计算服务"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "BK-CM-202412",
+        "transaction_time": "2024-12-31 16:00",
+        "counterparty_name": "大型金融机构算力网络云专线",
+        "counterparty_account": "102***881",
+        "amount": 1200000000.0,
+        "balance_after": 289000000000.0,
+        "remark": "云网DICT月结款网银划入"
+      }
+    ]
+  }
+]

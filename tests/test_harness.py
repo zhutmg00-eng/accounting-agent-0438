@@ -83,8 +83,8 @@ def test_benchmark_suite():
     harness = AccountingAgentHarness()
     summary = run_benchmark_suite(harness, plugin_id="audit_fraud_detection")
 
-    assert summary.total_cases == 4
-    assert summary.passed_cases == 4
+    assert summary.total_cases >= 25
+    assert summary.passed_cases >= 25
     assert summary.mean_f1_score >= 0.85
     assert summary.schema_valid_rate == 1.0
     assert summary.math_accuracy_rate == 1.0

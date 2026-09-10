@@ -144,15 +144,20 @@ with st.sidebar:
     st.session_state.harness.llm = llm_adapter
 
     st.markdown("---")
-    st.markdown("### 📁 数据源与案例选择")
-    data_source_mode = st.radio("数据来源:", ["预置实战竞赛案例", "上传本地财务文件 (Excel/CSV)"])
+    st.markdown("### 📁 数据源与真实案例选择")
+    data_source_mode = st.radio("数据来源:", ["真实资本市场实战案例 (28例)", "上传本地财务文件 (Excel/CSV)"])
 
-    cases = get_benchmark_cases()
-    if data_source_mode == "预置实战竞赛案例":
-        case_names = [f"{c.case_id} - {c.company_name}" for c in cases]
-        selected_case_idx = st.selectbox("选择实战案例", range(len(cases)), format_func=lambda i: case_names[i])
-        active_case = cases[selected_case_idx]
+    if data_source_mode == "真实资本市场实战案例 (28例)":
+        from src.benchmark.test_cases import get_case_categories
+        categories = ["全部舞弊与合规大类 (All 28 Cases)"] + get_case_categories()
+        selected_cat = st.selectbox("📂 案例类型分类筛选:", categories)
+        
+        filtered_cases = get_benchmark_cases(selected_cat if selected_cat != "全部舞弊与合规大类 (All 28 Cases)" else None)
+        case_labels = [f"[{c.stock_code or '标杆'}] {c.company_name} ({c.case_category})" for c in filtered_cases]
+        selected_case_idx = st.selectbox("🎯 选择实战案例:", range(len(filtered_cases)), format_func=lambda i: case_labels[i])
+        active_case = filtered_cases[selected_case_idx]
     else:
+        cases = get_benchmark_cases()
         active_case = st.session_state.uploaded_case if st.session_state.uploaded_case else cases[0]
 
     st.markdown("---")
@@ -168,7 +173,7 @@ mode_badge = '<span class="mode-badge-online">🟢 真实在线推理模式 (Dee
 
 st.markdown('<div class="main-header">⚖️ DeepSeek-AuditMind: 复杂业财融合与舞弊穿透智能体</div>', unsafe_allow_html=True)
 st.markdown(
-    f'<div class="sub-header">当前执行模式: {mode_badge} | 核心业务主线: <b>数智审计与舞弊穿透 (Audit & Fraud Penetration)</b></div>',
+    f'<div class="sub-header">当前执行模式: {mode_badge} | 核心业务主线: <b>数智审计与舞弊穿透 (包含 28 个真实资本市场案例)</b></div>',
     unsafe_allow_html=True
 )
 
@@ -184,17 +189,25 @@ tab_data, tab_agent, tab_dashboard, tab_workpaper, tab_benchmark, tab_export = s
 
 # ----------------- TAB 0: DATA INGESTION & PREVIEW -----------------
 with tab_data:
-    if data_source_mode == "预置实战竞赛案例":
-        st.markdown(f"### 🏢 案例基本信息: {active_case.company_name}")
+    if "真实资本市场" in data_source_mode:
+        st.markdown(f"### 🏢 案例基本信息: **{active_case.company_name}** ({active_case.stock_code or '非上市'})")
+        if active_case.penalty_decision_no:
+            st.markdown(f"🏛️ **官方行政监管文号 / 审计报告依据:** `{active_case.penalty_decision_no}`")
+        if active_case.csrc_summary:
+            st.info(f"📋 **中国证监会官方查明事实认定:** {active_case.csrc_summary}")
+
         c_i1, c_i2, c_i3 = st.columns([1, 1, 2])
         with c_i1:
             st.write(f"**所属行业:** {active_case.industry}")
-            st.write(f"**核算/审计期间:** {active_case.audit_period}")
+            st.write(f"**审计核算期间:** {active_case.audit_period}")
+            st.write(f"**舞弊分类:** {active_case.case_category}")
         with c_i2:
-            st.write(f"**抽查凭证数:** {len(active_case.vouchers)} 张")
-            st.write(f"**关联单据数:** {len(active_case.contracts) + len(active_case.invoices) + len(active_case.bank_flows)} 份")
+            st.write(f"**抽查凭证样本数:** {len(active_case.vouchers)} 张")
+            st.write(f"**单据与流水数:** {len(active_case.contracts) + len(active_case.invoices) + len(active_case.bank_flows)} 份")
+            if active_case.ground_truth_findings:
+                st.write(f"**涉案涉嫌金额:** ¥{sum(gt.expected_amount for gt in active_case.ground_truth_findings):,.2f}")
         with c_i3:
-            st.info(f"**业务背景:** {active_case.description}")
+            st.warning(f"**案件背景简述:** {active_case.description}")
 
         st.markdown("#### 📑 凭证分录抽查明细预览")
         v_rows = []

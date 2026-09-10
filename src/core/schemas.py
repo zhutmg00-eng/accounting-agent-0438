@@ -108,6 +108,10 @@ class GroundTruthRiskItem(BaseModel):
 class AccountingCaseData(BaseModel):
     case_id: str = Field(description="案例唯一ID")
     company_name: str = Field(description="被审计/分析企业名称")
+    stock_code: Optional[str] = Field(default=None, description="真实上市公司股票代码 (如 600518, 002450)")
+    penalty_decision_no: Optional[str] = Field(default=None, description="中国证监会行政处罚决定书文号 / 财政部公告文号")
+    case_category: Optional[str] = Field(default="综合审计舞弊案例", description="舞弊类型大类")
+    csrc_summary: Optional[str] = Field(default=None, description="监管机构处罚决定官方认定摘要")
     industry: str = Field(default="制造业/软件与信息技术", description="所属行业")
     audit_period: str = Field(default="2025年度", description="审计或核算期间")
     description: str = Field(description="案例背景与简述")
