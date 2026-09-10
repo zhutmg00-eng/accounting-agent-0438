@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "fastapi>=0.141.1",
     "matplotlib>=3.11.1",
     "numpy>=2.5.2",
     "openpyxl>=3.1.5",
@@ -19,9 +20,15 @@ dependencies = [
     "scipy>=1.18.1",
     "streamlit>=1.62.0",
     "tabulate>=0.10.0",
+    "uvicorn>=0.52.4",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+]
 
