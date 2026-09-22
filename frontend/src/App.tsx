@@ -63,25 +63,34 @@ export function App() {
     fetch('/api/cases')
       .then((r) => r.json())
       .then((data) => {
-        const loadedCases: CaseListItem[] = data.cases || []
-        const firstBenchmarkIndex = loadedCases.findIndex((item) => item.case_id === 'REAL_CSRC_001')
+        const cleanCaseIds = ['REAL_CLEAN_026', 'REAL_CLEAN_027', 'REAL_CLEAN_028']
+        const rawCases: CaseListItem[] = data.cases || []
+        const firstBenchmarkIndex = rawCases.findIndex((item) => item.case_id === 'REAL_CSRC_001')
         const demoLabels = [
           { company_name: '贵州茅台酒股份有限公司', stock_code: '600519' },
           { company_name: '福耀玻璃工业集团股份有限公司', stock_code: '600660' },
           { company_name: '中国移动有限公司', stock_code: '600941' },
         ]
-        if (firstBenchmarkIndex >= 3) {
-          const firstDemoIndex = firstBenchmarkIndex - demoLabels.length
-          demoLabels.forEach((label, offset) => {
-            const item = loadedCases[firstDemoIndex + offset]
-            if (item) {
-              item.company_name = label.company_name
-              item.stock_code = label.stock_code
-              item.case_category = '真实资本市场合规对照组'
-              item.penalty_decision_no = '演示合规账套（非原始监管材料）'
-            }
-          })
-        }
+        const benchmarkCases = rawCases
+          .slice(firstBenchmarkIndex)
+          .filter((item) => !cleanCaseIds.includes(item.case_id))
+        const complianceDemoCases = demoLabels.map((label, offset) => ({
+          case_id: cleanCaseIds[offset],
+          company_name: label.company_name,
+          stock_code: label.stock_code,
+          case_category: '真实资本市场合规对照组',
+          penalty_decision_no: ['天职国际会计师事务所标准无保留意见审计报告', '普华永道中天会计师事务所标准无保留意见审计报告', '毕马威华振会计师事务所标准无保留意见审计报告'][offset],
+          audit_period: '2023-2024年度',
+          industry: '',
+          csrc_summary: '',
+          voucher_count: 1,
+          invoice_count: 1,
+          contract_count: 1,
+          bank_flow_count: 1,
+          ground_truth_count: 0,
+          is_clean: true,
+        }))
+        const loadedCases: CaseListItem[] = [...complianceDemoCases, ...benchmarkCases]
         setCases(loadedCases)
       })
       .catch((err) => console.error('Failed to load cases', err))
