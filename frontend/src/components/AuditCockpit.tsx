@@ -40,7 +40,10 @@ export const AuditCockpit: React.FC<AuditCockpitProps> = ({
 
   const mScoreData = report?.tool_outputs?.beneish_m_score || {}
   const reconData = report?.tool_outputs?.three_way_reconciliation || {}
-  const mScoreCalculable = mScoreData?.is_calculable !== false
+  const mScoreValue = report?.beneish_m_score ?? mScoreData?.m_score
+  const mScoreCalculable = mScoreData?.is_calculable === false
+    ? false
+    : mScoreData?.is_calculable === true || typeof mScoreValue === 'number'
   const mScoreManipulator = mScoreCalculable && Boolean(
     report?.is_beneish_manipulator ?? mScoreData?.is_manipulator
   )
@@ -212,8 +215,8 @@ export const AuditCockpit: React.FC<AuditCockpitProps> = ({
               <span className={`text-3xl font-extrabold font-mono ${
                 !mScoreCalculable ? 'text-slate-400' : mScoreManipulator ? 'text-rose-400 glow-crimson' : 'text-emerald-400 glow-emerald'
               }`}>
-                {mScoreCalculable && (report?.beneish_m_score ?? mScoreData?.m_score) !== undefined && (report?.beneish_m_score ?? mScoreData?.m_score) !== null
-                  ? Number(report?.beneish_m_score ?? mScoreData?.m_score).toFixed(2)
+                {mScoreCalculable && mScoreValue !== undefined && mScoreValue !== null
+                  ? Number(mScoreValue).toFixed(2)
                   : '--'}
               </span>
               <span className="text-xs font-semibold px-2 py-0.5 rounded bg-white/10 text-slate-300">
