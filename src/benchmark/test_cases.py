@@ -132,6 +132,15 @@ def get_all_cases(category: Optional[str] = None) -> List[AccountingCaseData]:
     custom = list(_DYNAMIC_CASES_STORE.values())
     if category and category != "全部案例 (All 28 Cases)":
         custom = [c for c in custom if c.case_category == category]
+
+    # Keep the three named compliance demo ledgers together at the top of the
+    # custom section so a video walkthrough can compare them before Kangmei.
+    showcase_order = {
+        "贵州茅台酒股份有限公司": 0,
+        "福耀玻璃工业集团股份有限公司": 1,
+        "中国移动有限公司": 2,
+    }
+    custom.sort(key=lambda case: (showcase_order.get(case.company_name, 99), case.company_name))
     return custom + benchmark
 
 
