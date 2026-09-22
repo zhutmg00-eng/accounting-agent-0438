@@ -40,6 +40,10 @@ export const AuditCockpit: React.FC<AuditCockpitProps> = ({
 
   const mScoreData = report?.tool_outputs?.beneish_m_score || {}
   const reconData = report?.tool_outputs?.three_way_reconciliation || {}
+  const mScoreCalculable = mScoreData?.is_calculable !== false
+  const mScoreManipulator = mScoreCalculable && Boolean(
+    report?.is_beneish_manipulator ?? mScoreData?.is_manipulator
+  )
 
   const getRiskColor = (rating: string = 'CLEAN') => {
     switch (rating.toUpperCase()) {
@@ -206,22 +210,28 @@ export const AuditCockpit: React.FC<AuditCockpitProps> = ({
             </div>
             <div className="flex items-baseline gap-3 mb-2">
               <span className={`text-3xl font-extrabold font-mono ${
-                (report?.is_beneish_manipulator ?? mScoreData?.is_manipulator) ? 'text-rose-400 glow-crimson' : 'text-emerald-400 glow-emerald'
+                !mScoreCalculable ? 'text-slate-400' : mScoreManipulator ? 'text-rose-400 glow-crimson' : 'text-emerald-400 glow-emerald'
               }`}>
-                {(report?.beneish_m_score ?? mScoreData?.m_score) !== undefined && (report?.beneish_m_score ?? mScoreData?.m_score) !== null
+                {mScoreCalculable && (report?.beneish_m_score ?? mScoreData?.m_score) !== undefined && (report?.beneish_m_score ?? mScoreData?.m_score) !== null
                   ? Number(report?.beneish_m_score ?? mScoreData?.m_score).toFixed(2)
                   : '--'}
               </span>
               <span className="text-xs font-semibold px-2 py-0.5 rounded bg-white/10 text-slate-300">
-                {(report?.is_beneish_manipulator ?? mScoreData?.is_manipulator) ? '高危操纵' : '正常无异常'}
+                {!mScoreCalculable ? '数据不足，暂不可计算' : mScoreManipulator ? '高危操纵' : '正常无异常'}
               </span>
             </div>
-            <div className="text-xs text-slate-400 grid grid-cols-2 gap-1 font-mono pt-2 border-t border-white/5">
-              <span>DSRI(应收): {mScoreData?.dsri ? mScoreData.dsri.toFixed(2) : '1.15'}</span>
-              <span>GMI(毛利): {mScoreData?.gmi ? mScoreData.gmi.toFixed(2) : '1.05'}</span>
-              <span>AQI(资产): {mScoreData?.aqi ? mScoreData.aqi.toFixed(2) : '1.02'}</span>
-              <span>SGI(增长): {mScoreData?.sgi ? mScoreData.sgi.toFixed(2) : '1.25'}</span>
-            </div>
+            {mScoreCalculable ? (
+              <div className="text-xs text-slate-400 grid grid-cols-2 gap-1 font-mono pt-2 border-t border-white/5">
+                <span>DSRI(应收): {mScoreData?.dsri?.toFixed(2) ?? '--'}</span>
+                <span>GMI(毛利): {mScoreData?.gmi?.toFixed(2) ?? '--'}</span>
+                <span>AQI(资产): {mScoreData?.aqi?.toFixed(2) ?? '--'}</span>
+                <span>SGI(增长): {mScoreData?.sgi?.toFixed(2) ?? '--'}</span>
+              </div>
+            ) : (
+              <div className="text-xs text-slate-400 pt-2 border-t border-white/5">
+                {mScoreData?.reason || '缺少必要财务数据，无法计算 Beneish M-Score。'}
+              </div>
+            )}
           </div>
 
           {/* 3-Way Reconciliation Card */}
