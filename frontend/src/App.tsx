@@ -63,7 +63,26 @@ export function App() {
     fetch('/api/cases')
       .then((r) => r.json())
       .then((data) => {
-        setCases(data.cases || [])
+        const loadedCases: CaseListItem[] = data.cases || []
+        const firstBenchmarkIndex = loadedCases.findIndex((item) => item.case_id === 'REAL_CSRC_001')
+        const demoLabels = [
+          { company_name: '贵州茅台酒股份有限公司', stock_code: '600519' },
+          { company_name: '福耀玻璃工业集团股份有限公司', stock_code: '600660' },
+          { company_name: '中国移动有限公司', stock_code: '600941' },
+        ]
+        if (firstBenchmarkIndex >= 3) {
+          const firstDemoIndex = firstBenchmarkIndex - demoLabels.length
+          demoLabels.forEach((label, offset) => {
+            const item = loadedCases[firstDemoIndex + offset]
+            if (item) {
+              item.company_name = label.company_name
+              item.stock_code = label.stock_code
+              item.case_category = '真实资本市场合规对照组'
+              item.penalty_decision_no = '演示合规账套（非原始监管材料）'
+            }
+          })
+        }
+        setCases(loadedCases)
       })
       .catch((err) => console.error('Failed to load cases', err))
 
