@@ -140,7 +140,7 @@ class AccountingAgentHarness:
 
         # 1. Clean Baseline Case Evaluation
         if len(gt_findings) == 0:
-            false_positives = len([f for f in report.findings if f.risk_level in (RiskLevel.HIGH, RiskLevel.MEDIUM)])
+            false_positives = len(report.findings)
             is_clean = (false_positives == 0)
             return CaseEvalScore(
                 case_id=case.case_id,
@@ -168,15 +168,19 @@ class AccountingAgentHarness:
         evidence_hits = 0
         total_evidences_expected = sum(len(gt.expected_vouchers) for gt in gt_findings)
 
+        matched_prediction_indexes = set()
         for gt in gt_findings:
             matched_pred = None
             gt_keywords = [w for w in gt.finding_type.replace("与", " ").replace("及", " ").replace("(", " ").replace(")", " ").split() if len(w) >= 2]
             
-            for pred in report.findings:
+            for pred_index, pred in enumerate(report.findings):
+                if pred_index in matched_prediction_indexes:
+                    continue
                 pred_text = f"{pred.title} {pred.suspected_mechanism}"
                 # Check type keywords
                 if any(kw in pred_text for kw in gt_keywords):
                     matched_pred = pred
+                    matched_prediction_indexes.add(pred_index)
                     break
             
             if matched_pred:
@@ -204,7 +208,8 @@ class AccountingAgentHarness:
         amount_acc = amount_hits / n_gt
         evidence_hit_rate = (evidence_hits / total_evidences_expected) if total_evidences_expected > 0 else 1.0
 
-        precision = type_hits / max(len(report.findings), 1)
+        false_positives = len(report.findings) - len(matched_prediction_indexes)
+        precision = type_hits / max(type_hits + false_positives, 1)
         recall = type_hits / n_gt
         f1 = (2 * precision * recall) / max(precision + recall, 1e-6)
 
@@ -212,7 +217,21 @@ class AccountingAgentHarness:
         math_acc = 1.0 if (report.beneish_m_score is None or isinstance(report.beneish_m_score, float)) else 0.0
         standards_valid = all(len(f.accounting_standard) > 3 for f in report.findings) if report.findings else True
 
-        passed = (f1 >= 0.70) and (amount_acc >= 0.90) and json_valid and (math_acc == 1.0)
+        # A case is only passed when the headline metrics and the material
+        # finding attributes are all reliable.  Previously risk-level and
+        # accounting-standard mismatches were reported but did not affect
+        # the pass/fail result.
+        passed = (
+            precision >= 0.70
+            and f1 >= 0.70
+            and type_acc >= 0.70
+            and level_acc >= 0.70
+            and amount_acc >= 0.90
+            and evidence_hit_rate >= 0.70
+            and json_valid
+            and (math_acc == 1.0)
+            and standards_valid
+        )
 
         return CaseEvalScore(
             case_id=case.case_id,
@@ -224,7 +243,7 @@ class AccountingAgentHarness:
             risk_level_accuracy_rate=round(level_acc, 4),
             amount_accuracy_rate=round(amount_acc, 4),
             evidence_hit_rate=round(evidence_hit_rate, 4),
-            false_positive_count=0,
+            false_positive_count=false_positives,
             json_schema_valid=json_valid,
             math_accuracy_rate=math_acc,
             standards_accuracy_rate=1.0 if standards_valid else 0.0,

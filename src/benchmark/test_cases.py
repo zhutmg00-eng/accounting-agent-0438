@@ -95,9 +95,9 @@ def _load_cases_from_json() -> List[AccountingCaseData]:
 _DYNAMIC_CASES_STORE: Dict[str, AccountingCaseData] = {}
 
 
-def _load_custom_cases_from_disk() -> None:
+def _load_custom_cases_from_disk(data_dir: Optional[Path] = None) -> None:
     """Load persisted custom cases from disk into _DYNAMIC_CASES_STORE."""
-    custom_dir = Path("data/cases/custom_cases")
+    custom_dir = (data_dir or Path(__file__).resolve().parent.parent.parent / "data" / "cases") / "custom_cases"
     if custom_dir.exists():
         for json_file in custom_dir.glob("*.json"):
             try:
@@ -107,10 +107,6 @@ def _load_custom_cases_from_disk() -> None:
                     _DYNAMIC_CASES_STORE[case.case_id] = case
             except Exception:
                 pass
-
-
-# Initialize custom cases from disk
-_load_custom_cases_from_disk()
 
 
 def register_custom_case(case: AccountingCaseData) -> None:

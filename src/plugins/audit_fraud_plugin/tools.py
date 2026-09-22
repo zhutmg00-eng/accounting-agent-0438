@@ -128,15 +128,37 @@ def calculate_beneish_from_case(case: AccountingCaseData) -> Dict[str, Any]:
             "conclusion": "缺少对比期财务数据，Beneish 动态模型不可计算（已如实标记，严禁伪造数据）"
         }
 
+    required_fields = {
+        "本期固定资产 (fixed_assets)": cur.fixed_assets,
+        "上期固定资产 (fixed_assets)": prev.fixed_assets,
+        "本期折旧与摊销 (depreciation)": cur.depreciation,
+        "上期折旧与摊销 (depreciation)": prev.depreciation,
+        "本期销售与管理费用 (sga_expenses)": cur.sga_expenses,
+        "上期销售与管理费用 (sga_expenses)": prev.sga_expenses,
+        "本期财务杠杆 (leverage_ratio)": cur.leverage_ratio,
+        "上期财务杠杆 (leverage_ratio)": prev.leverage_ratio,
+    }
+    missing_fields = [name for name, value in required_fields.items() if value is None]
+    if missing_fields:
+        return {
+            "is_calculable": False,
+            "m_score": None,
+            "is_manipulator": False,
+            "reason": "缺少 Beneish 8 因子所需的明细财务字段，未使用估算值",
+            "missing_fields": missing_fields,
+            "variables": {},
+            "conclusion": "财务字段不完整，Beneish 模型不可计算",
+        }
+
     # Both cur and prev are present: compute with true values
-    cur_ppe = cur.fixed_assets if cur.fixed_assets is not None else cur.total_assets * 0.3
-    prev_ppe = prev.fixed_assets if prev.fixed_assets is not None else prev.total_assets * 0.3
-    cur_depr = cur.depreciation if cur.depreciation is not None else cur.total_assets * 0.04
-    prev_depr = prev.depreciation if prev.depreciation is not None else prev.total_assets * 0.04
-    cur_sga = cur.sga_expenses if cur.sga_expenses is not None else cur.revenue * 0.10
-    prev_sga = prev.sga_expenses if prev.sga_expenses is not None else prev.revenue * 0.10
-    cur_lev = cur.leverage_ratio if cur.leverage_ratio is not None else 0.50
-    prev_lev = prev.leverage_ratio if prev.leverage_ratio is not None else 0.50
+    cur_ppe = cur.fixed_assets
+    prev_ppe = prev.fixed_assets
+    cur_depr = cur.depreciation
+    prev_depr = prev.depreciation
+    cur_sga = cur.sga_expenses
+    prev_sga = prev.sga_expenses
+    cur_lev = cur.leverage_ratio
+    prev_lev = prev.leverage_ratio
 
     res = calculate_beneish_m_score(
         cur_sales=cur.revenue, prev_sales=prev.revenue,

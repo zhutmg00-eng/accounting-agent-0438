@@ -90,6 +90,9 @@ export function App() {
           if (payload.report.reasoning_content) {
             setCotStream(payload.report.reasoning_content)
           }
+        } else if (payload.type === 'error') {
+          console.error(`Audit failed [${payload.code}]`, payload.detail)
+          setReport(null)
         }
       } catch (e) {
         console.error('Failed to parse SSE payload', e)
@@ -99,7 +102,7 @@ export function App() {
     eventSource.onerror = () => {
       eventSource.close()
       setIsRunning(false)
-      // Fallback to standard POST run if SSE had network error
+      // Retry only after a transport failure; server-sent business errors are handled above.
       fetch('/api/audit/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -109,7 +112,11 @@ export function App() {
           mode: executionMode
         })
       })
-        .then((r) => r.json())
+        .then(async (r) => {
+          const data = await r.json()
+          if (!r.ok) throw new Error(data.detail || `审计失败 (${r.status})`)
+          return data
+        })
         .then((data) => {
           setReport(data)
           if (data.reasoning_content) {

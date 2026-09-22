@@ -8,12 +8,14 @@ import io
 import json
 import time
 import asyncio
+import uuid
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from fastapi import FastAPI, Query, HTTPException, UploadFile, File, Form, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
+from starlette.concurrency import run_in_threadpool
 from pydantic import BaseModel
 
 from src.core.schemas import (
@@ -21,7 +23,7 @@ from src.core.schemas import (
     FinancialStatementsSummary
 )
 from src.core.harness import AccountingAgentHarness
-from src.core.llm_adapter import DeepSeekLLMAdapter
+from src.core.llm_adapter import DeepSeekLLMAdapter, DeepSeekAPIError
 from src.benchmark.test_cases import (
     get_benchmark_cases, get_all_cases, get_case_categories, get_case_by_id, register_custom_case
 )
@@ -36,6 +38,9 @@ from src.data_loader.file_importer import (
     parse_vouchers_file, parse_invoices_file, parse_bank_flows_file
 )
 from src.config import settings
+from src.benchmark.test_cases import _load_custom_cases_from_disk
+
+_load_custom_cases_from_disk(settings.data_dir)
 
 app = FastAPI(
     title="DeepSeek-AuditMind Agent API",
@@ -227,7 +232,13 @@ async def stream_audit(case_id: str = Query(...), mode: str = Query("MOCK")):
         yield f"data: {json.dumps({'stage': 4, 'title': 'DeepSeek 大模型准则深度研判', 'status': 'running', 'detail': '正在调用 DeepSeek 推理引擎进行 CAS 准则条款比对与商业实质穿透'})}\n\n"
         llm = DeepSeekLLMAdapter(mode=mode_enum)
         harness = AccountingAgentHarness(llm_adapter=llm)
-        report = harness.run_case(case, plugin_id="audit_fraud_detection")
+        try:
+            report = await run_in_threadpool(harness.run_case, case, "audit_fraud_detection")
+        except Exception as exc:
+            error_code = "MODEL_UNAVAILABLE" if isinstance(exc, DeepSeekAPIError) else "AUDIT_FAILED"
+            yield f"data: {json.dumps({'type': 'error', 'code': error_code, 'detail': str(exc)}, ensure_ascii=False)}\n\n"
+            yield "data: [DONE]\n\n"
+            return
 
         # Stream CoT text in chunks
         cot_text = report.reasoning_content or "DeepSeek 推理完成：业财数据已完成多模态综合研判。"
@@ -346,7 +357,7 @@ async def upload_files(
             detail="上传的文件未解析出任何有效凭证、发票或银行流水明细数据。"
         )
 
-    case_id = f"CASE-CUSTOM-{int(time.time())}"
+    case_id = f"CASE-CUSTOM-{uuid.uuid4().hex}"
     custom_case = AccountingCaseData(
         case_id=case_id,
         company_name=company_name,
@@ -367,10 +378,15 @@ async def upload_files(
     register_custom_case(custom_case)
 
     # 2. Persist to disk for reload persistence
-    custom_cases_dir = Path("data/cases/custom_cases")
-    custom_cases_dir.mkdir(parents=True, exist_ok=True)
-    with open(custom_cases_dir / f"{case_id}.json", "w", encoding="utf-8") as f:
-        json.dump(custom_case.model_dump(), f, ensure_ascii=False, indent=2)
+    custom_cases_dir = settings.data_dir / "custom_cases"
+    try:
+        custom_cases_dir.mkdir(parents=True, exist_ok=True)
+        with open(custom_cases_dir / f"{case_id}.json", "x", encoding="utf-8") as f:
+            json.dump(custom_case.model_dump(), f, ensure_ascii=False, indent=2)
+    except Exception as exc:
+        from src.benchmark import test_cases
+        test_cases._DYNAMIC_CASES_STORE.pop(case_id, None)
+        raise HTTPException(status_code=500, detail=f"自定义案例持久化失败: {exc}") from exc
 
     return {
         "status": "success",
