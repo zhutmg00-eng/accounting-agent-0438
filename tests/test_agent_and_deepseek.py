@@ -65,6 +65,22 @@ def test_agent_chat_endpoint_with_tools(client):
     assert "Beneish" in data["content"] or "勾稽" in data["content"]
 
 
+def test_agent_chat_voucher_search_uses_debit_credit_direction(client):
+    """Voucher search should derive 借/贷 from amounts, not a missing model field."""
+    resp = client.post("/api/agent/chat", json={
+        "case_id": "REAL_CSRC_001",
+        "messages": [{"role": "user", "content": "请核查本案例的凭证和分录。"}],
+        "tools_enabled": True,
+        "mode": "MOCK"
+    })
+    assert resp.status_code == 200
+    data = resp.json()
+    voucher_tool = next(tc for tc in data["tool_calls"] if tc["tool_name"] == "search_vouchers")
+    sample_vouchers = "\n".join(voucher_tool["tool_output"]["sample_vouchers"])
+    assert "借 " in sample_vouchers
+    assert "贷 " in sample_vouchers
+
+
 def test_agent_goal_endpoint(client):
     """Verify POST /api/agent/goal autonomously executes multi-step audit workflow."""
     resp = client.post("/api/agent/goal", json={

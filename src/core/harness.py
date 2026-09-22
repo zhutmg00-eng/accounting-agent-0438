@@ -314,7 +314,10 @@ class AccountingAgentHarness:
             if any(k in last_user_msg for k in ("凭证", "分录", "科目", "借贷")):
                 vouchers_summary = []
                 for v in case.vouchers[:5]:
-                    entries_text = ", ".join(f"{e.direction} {e.account_name} ¥{e.debit or e.credit:,.2f}" for e in v.entries)
+                    entries_text = ", ".join(
+                        f"{'借' if e.debit else '贷'} {e.account_name} ¥{(e.debit or e.credit):,.2f}"
+                        for e in v.entries
+                    )
                     vouchers_summary.append(f"凭证号:{v.voucher_id} | 日期:{v.voucher_date} | 分录:[{entries_text}]")
                 tool_calls.append({
                     "tool_name": "search_vouchers",
