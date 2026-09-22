@@ -24,7 +24,37 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
     let nodes: any[] = []
     let links: any[] = []
 
-    if (category.includes('货币资金') || category.includes('存单')) {
+    if (companyName.includes('康美')) {
+      nodes = [
+        { name: companyName, symbolSize: 65, category: 0, itemStyle: { color: '#00F2FE' } },
+        { name: '广发普宁支行·虚假存单池', symbolSize: 55, category: 1, itemStyle: { color: '#EF4444' } },
+        { name: '康美集团关联资金池', symbolSize: 50, category: 2, itemStyle: { color: '#A855F7' } },
+        { name: '普宁中药材采购集散中心', symbolSize: 45, category: 3, itemStyle: { color: '#F59E0B' } },
+        { name: '华南连锁药房及医药商业客户', symbolSize: 40, category: 4, itemStyle: { color: '#38BDF8' } },
+      ]
+      links = [
+        { source: companyName, target: '广发普宁支行·虚假存单池', value: '虚增存款 ¥299.44亿', lineStyle: { color: '#EF4444', width: 4, curveness: 0.2 } },
+        { source: '广发普宁支行·虚假存单池', target: '康美集团关联资金池', value: '关联方占用 ¥93亿', lineStyle: { color: '#A855F7', width: 3, curveness: 0.2 } },
+        { source: '康美集团关联资金池', target: '普宁中药材采购集散中心', value: '虚构采购回款闭环', lineStyle: { color: '#F59E0B', width: 2, curveness: 0.2 } },
+        { source: '普宁中药材采购集散中心', target: companyName, value: '虚构收入 ¥206.44亿', lineStyle: { color: '#00F2FE', width: 3, curveness: 0.2 } },
+        { source: companyName, target: '华南连锁药房及医药商业客户', value: '演示增强回款链路', lineStyle: { color: '#38BDF8', width: 2, curveness: 0.2 } },
+      ]
+    } else if (companyName.includes('辅仁')) {
+      nodes = [
+        { name: companyName, symbolSize: 65, category: 0, itemStyle: { color: '#00F2FE' } },
+        { name: '辅仁集团供应链', symbolSize: 55, category: 1, itemStyle: { color: '#EF4444' } },
+        { name: '关联方商业汇票兑付户', symbolSize: 50, category: 2, itemStyle: { color: '#A855F7' } },
+        { name: '大股东资金占用账户', symbolSize: 50, category: 3, itemStyle: { color: '#F59E0B' } },
+        { name: '河南医药商业客户', symbolSize: 42, category: 4, itemStyle: { color: '#38BDF8' } },
+      ]
+      links = [
+        { source: companyName, target: '辅仁集团供应链', value: '预付款划转 ¥7.60亿', lineStyle: { color: '#EF4444', width: 4, curveness: 0.2 } },
+        { source: '辅仁集团供应链', target: '大股东资金占用账户', value: '非经营性占用 ¥28.20亿', lineStyle: { color: '#A855F7', width: 3, curveness: 0.2 } },
+        { source: '大股东资金占用账户', target: '关联方商业汇票兑付户', value: '无真实交易票据 ¥5.20亿', lineStyle: { color: '#F59E0B', width: 3, curveness: 0.2 } },
+        { source: '关联方商业汇票兑付户', target: companyName, value: '虚假平账/资金回流', lineStyle: { color: '#00F2FE', width: 3, curveness: 0.2 } },
+        { source: '河南医药商业客户', target: companyName, value: '演示增强真实回款 ¥4.86亿', lineStyle: { color: '#38BDF8', width: 2, curveness: 0.2 } },
+      ]
+    } else if (category.includes('货币资金') || category.includes('存单')) {
       nodes = [
         { name: companyName, symbolSize: 65, category: 0, itemStyle: { color: '#00F2FE' } },
         { name: '北京银行联动账户/虚假存单池', symbolSize: 55, category: 1, itemStyle: { color: '#EF4444' } },

@@ -51,7 +51,7 @@ def _load_cases_from_json() -> List[AccountingCaseData]:
                 checker=v.get("checker", "财务总监"),
                 associated_doc_id=v.get("associated_doc_id"),
                 entries=entries,
-                source_file=item.get("company_name") + "官方会计凭证"
+                source_file=v.get("source_file") or (item.get("company_name") + "官方会计凭证")
             ))
 
         contracts = [BusinessContract(**c) for c in item.get("contracts", [])]

@@ -174,6 +174,9 @@ export const ReconciliationVisualizer: React.FC<ReconciliationVisualizerProps> =
                       {isBalanced ? '借贷平衡' : '借贷不平'}
                     </span>
                   </div>
+                  {v.source_file?.includes('演示增强') && (
+                    <div className="text-[10px] text-amber-300/80">演示增强数据 · 非原始监管材料</div>
+                  )}
                 </div>
               )
             })}

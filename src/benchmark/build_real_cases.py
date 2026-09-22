@@ -1188,11 +1188,104 @@ def generate_28_real_cases():
         }
     ]
 
+    _add_demo_showcase_detail(cases)
+
     out_file = Path("data/cases/real_cases_database.json")
     out_file.parent.mkdir(parents=True, exist_ok=True)
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(cases, f, ensure_ascii=False, indent=2)
     print(f"[Success] Built {len(cases)} authentic Chinese capital market accounting cases into {out_file}")
+
+
+def _add_demo_showcase_detail(cases):
+    """Add deterministic, clearly-labelled detail for the two video-demo cases."""
+    by_id = {case["case_id"]: case for case in cases}
+    enrichments = {
+        "REAL_CSRC_001": {
+            "vouchers": [
+                ("KM-2018-AR12", "2018-12-18", "KM-INV-181218", "应收账款-华南连锁药房", "主营业务收入-中药饮片", 3865000000.0, "演示增强：批量销售确认"),
+                ("KM-2018-BK07", "2018-12-24", "KM-BANK-181224", "银行存款-广发普宁支行", "其他应收款-关联方占用", 1280000000.0, "演示增强：关联方资金划转"),
+                ("KM-2018-INV03", "2018-12-28", "KM-INV-181228", "应收账款-普宁中药材采购集散中心", "主营业务收入-中药饮片", 2064400000.0, "演示增强：临近年末集中开票"),
+                ("KM-2018-ADJ09", "2018-12-31", "KM-ADJ-181231", "存货-三七饮片", "主营业务成本-中药材", 742800000.0, "演示增强：期末存货重分类"),
+            ],
+            "invoices": [
+                ("KM-INV-181218", "2018-12-20", "华南连锁药房有限公司", 3411504424.78, 453495575.22, 3865000000.0, "三七粉及西洋参饮片"),
+                ("KM-INV-181228", "2018-12-29", "普宁中药材采购集散中心", 1826902654.87, 237497345.13, 2064400000.0, "精选三七、西洋参饮片"),
+                ("KM-INV-181230", "2018-12-30", "粤东医药商业有限公司", 965309734.51, 125490265.49, 1090800000.0, "复方饮片及中药配方颗粒"),
+                ("KM-INV-181231", "2018-12-31", "华南连锁药房有限公司", 524778761.06, 68221138.94, 592999900.0, "年末促销组合药品"),
+            ],
+            "contracts": [
+                ("KM-CT-1812-A", "华南连锁药房有限公司", "2018-03-16", 3865000000.0, False),
+                ("KM-CT-1812-B", "普宁中药材采购集散中心", "2018-06-28", 2064400000.0, True),
+                ("KM-CT-1812-C", "粤东医药商业有限公司", "2018-09-11", 1090800000.0, False),
+            ],
+            "bank_flows": [
+                ("BK-KM-20181218", "2018-12-18 09:42", "华南连锁药房有限公司", "622***184", 3865000000.0, 41825000000.0, "批量货款入账"),
+                ("BK-KM-20181221", "2018-12-21 15:08", "普宁中药材采购集散中心", "622***702", 2064400000.0, 43889400000.0, "中药材采购回款"),
+                ("BK-KM-20181224", "2018-12-24 11:16", "康美集团关联资金池", "440***918", -1280000000.0, 42609400000.0, "关联方往来款划转"),
+                ("BK-KM-20181228", "2018-12-28 16:37", "粤东医药商业有限公司", "621***335", 1090800000.0, 43700200000.0, "医药商业回款"),
+                ("BK-KM-20181231", "2018-12-31 17:00", "广发银行普宁支行", "440***001", 29944000000.0, 37788000000.0, "原始案例：大额定期存单证明"),
+            ],
+        },
+        "REAL_CSRC_003": {
+            "vouchers": [
+                ("FR-2018-103", "2018-11-30", "FR-INV-181130", "应收账款-河南医药商业客户", "主营业务收入-处方药", 486000000.0, "演示增强：经销商季度结算"),
+                ("FR-2018-117", "2018-12-08", "FR-PREPAY-1208", "预付账款-辅仁集团供应链", "银行存款", 760000000.0, "演示增强：预付款划转"),
+                ("FR-2018-126", "2018-12-18", "FR-BILL-1218", "应收票据-关联方商业汇票", "应付票据", 520000000.0, "演示增强：无真实交易票据"),
+                ("FR-2018-138", "2018-12-28", "FR-DIV-1228", "应付股利", "银行存款", 62710000.0, "演示增强：现金分红付款"),
+            ],
+            "invoices": [
+                ("FR-INV-181130", "2018-12-02", "河南医药商业客户", 428318584.07, 57681415.93, 486000000.0, "抗感染及心脑血管制剂"),
+                ("FR-INV-181215", "2018-12-16", "周口连锁医院采购中心", 276106194.69, 35893805.31, 312000000.0, "注射剂及原料药"),
+                ("FR-INV-181220", "2018-12-22", "豫东医药配送有限公司", 193805309.73, 25194690.27, 219000000.0, "常规处方药及辅料"),
+            ],
+            "contracts": [
+                ("FR-CT-2018-A", "河南医药商业客户", "2018-04-10", 486000000.0, False),
+                ("FR-CT-2018-B", "辅仁集团供应链有限公司", "2018-07-19", 760000000.0, True),
+                ("FR-CT-2018-C", "豫东医药配送有限公司", "2018-09-06", 219000000.0, False),
+            ],
+            "bank_flows": [
+                ("BK-FR-20181130", "2018-11-30 14:26", "河南医药商业客户", "621***204", 486000000.0, 1267000000.0, "季度医药采购结算"),
+                ("BK-FR-20181208", "2018-12-08 10:12", "辅仁集团供应链有限公司", "410***881", -760000000.0, 507000000.0, "划拨集团暂借往来款"),
+                ("BK-FR-20181218", "2018-12-18 13:48", "关联方票据兑付户", "410***882", -520000000.0, -13000000.0, "商业汇票保证金划转"),
+                ("BK-FR-20181225", "2018-12-25 10:15", "辅仁药业集团有限公司", "410***881", -2820000000.0, 3770000.0, "原始案例：大股东资金占用"),
+                ("BK-FR-20181228", "2018-12-28 16:02", "河南省证券登记结算中心", "310***662", -62710000.0, -58833000.0, "年度现金分红支付"),
+            ],
+        },
+    }
+
+    for case_id, extra in enrichments.items():
+        case = by_id[case_id]
+        for voucher_id, date, doc_id, debit_name, credit_name, amount, note in extra["vouchers"]:
+            case["vouchers"].append({
+                "voucher_id": voucher_id, "voucher_date": date, "preparer": "演示审计账套",
+                "checker": "复核岗（演示）", "associated_doc_id": doc_id,
+                "source_file": "演示增强数据（非原始监管材料）",
+                "entries": [
+                    {"account_code": "1122", "account_name": debit_name, "debit": amount, "credit": 0.0, "summary": note},
+                    {"account_code": "6001", "account_name": credit_name, "debit": 0.0, "credit": amount, "summary": note},
+                ],
+            })
+        for inv_no, date, buyer, net, tax, total, goods in extra["invoices"]:
+            case["invoices"].append({
+                "invoice_no": inv_no, "invoice_date": date, "buyer_name": buyer,
+                "seller_name": case["company_name"], "amount_without_tax": net,
+                "tax_amount": tax, "total_amount": total, "goods_or_service": goods,
+                "source_file": "演示增强数据（非原始监管材料）",
+            })
+        for contract_id, party, date, amount, related in extra["contracts"]:
+            case["contracts"].append({
+                "contract_id": contract_id, "customer_or_vendor": party, "sign_date": date,
+                "total_amount": amount, "payment_terms": "月结/银行转账（演示）",
+                "delivery_condition": "验收单与回款流水匹配（演示）", "is_related_party": related,
+                "source_file": "演示增强数据（非原始监管材料）",
+            })
+        for tx_id, timestamp, party, account, amount, balance, remark in extra["bank_flows"]:
+            case["bank_flows"].append({
+                "transaction_id": tx_id, "transaction_time": timestamp, "counterparty_name": party,
+                "counterparty_account": account, "amount": amount, "balance_after": balance,
+                "remark": remark, "source_file": "演示增强数据（非原始监管材料）",
+            })
 
 if __name__ == "__main__":
     generate_28_real_cases()

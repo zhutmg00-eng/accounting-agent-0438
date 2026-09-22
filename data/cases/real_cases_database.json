@@ -62,6 +62,102 @@
             "summary": "虚假资金平账"
           }
         ]
+      },
+      {
+        "voucher_id": "KM-2018-AR12",
+        "voucher_date": "2018-12-18",
+        "preparer": "演示审计账套",
+        "checker": "复核岗（演示）",
+        "associated_doc_id": "KM-INV-181218",
+        "source_file": "演示增强数据（非原始监管材料）",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-华南连锁药房",
+            "debit": 3865000000.0,
+            "credit": 0.0,
+            "summary": "演示增强：批量销售确认"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-中药饮片",
+            "debit": 0.0,
+            "credit": 3865000000.0,
+            "summary": "演示增强：批量销售确认"
+          }
+        ]
+      },
+      {
+        "voucher_id": "KM-2018-BK07",
+        "voucher_date": "2018-12-24",
+        "preparer": "演示审计账套",
+        "checker": "复核岗（演示）",
+        "associated_doc_id": "KM-BANK-181224",
+        "source_file": "演示增强数据（非原始监管材料）",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "银行存款-广发普宁支行",
+            "debit": 1280000000.0,
+            "credit": 0.0,
+            "summary": "演示增强：关联方资金划转"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "其他应收款-关联方占用",
+            "debit": 0.0,
+            "credit": 1280000000.0,
+            "summary": "演示增强：关联方资金划转"
+          }
+        ]
+      },
+      {
+        "voucher_id": "KM-2018-INV03",
+        "voucher_date": "2018-12-28",
+        "preparer": "演示审计账套",
+        "checker": "复核岗（演示）",
+        "associated_doc_id": "KM-INV-181228",
+        "source_file": "演示增强数据（非原始监管材料）",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-普宁中药材采购集散中心",
+            "debit": 2064400000.0,
+            "credit": 0.0,
+            "summary": "演示增强：临近年末集中开票"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-中药饮片",
+            "debit": 0.0,
+            "credit": 2064400000.0,
+            "summary": "演示增强：临近年末集中开票"
+          }
+        ]
+      },
+      {
+        "voucher_id": "KM-2018-ADJ09",
+        "voucher_date": "2018-12-31",
+        "preparer": "演示审计账套",
+        "checker": "复核岗（演示）",
+        "associated_doc_id": "KM-ADJ-181231",
+        "source_file": "演示增强数据（非原始监管材料）",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "存货-三七饮片",
+            "debit": 742800000.0,
+            "credit": 0.0,
+            "summary": "演示增强：期末存货重分类"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务成本-中药材",
+            "debit": 0.0,
+            "credit": 742800000.0,
+            "summary": "演示增强：期末存货重分类"
+          }
+        ]
       }
     ],
     "contracts": [
@@ -73,6 +169,36 @@
         "payment_terms": "电汇结算",
         "delivery_condition": "仓单直接转让",
         "is_related_party": true
+      },
+      {
+        "contract_id": "KM-CT-1812-A",
+        "customer_or_vendor": "华南连锁药房有限公司",
+        "sign_date": "2018-03-16",
+        "total_amount": 3865000000.0,
+        "payment_terms": "月结/银行转账（演示）",
+        "delivery_condition": "验收单与回款流水匹配（演示）",
+        "is_related_party": false,
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "contract_id": "KM-CT-1812-B",
+        "customer_or_vendor": "普宁中药材采购集散中心",
+        "sign_date": "2018-06-28",
+        "total_amount": 2064400000.0,
+        "payment_terms": "月结/银行转账（演示）",
+        "delivery_condition": "验收单与回款流水匹配（演示）",
+        "is_related_party": true,
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "contract_id": "KM-CT-1812-C",
+        "customer_or_vendor": "粤东医药商业有限公司",
+        "sign_date": "2018-09-11",
+        "total_amount": 1090800000.0,
+        "payment_terms": "月结/银行转账（演示）",
+        "delivery_condition": "验收单与回款流水匹配（演示）",
+        "is_related_party": false,
+        "source_file": "演示增强数据（非原始监管材料）"
       }
     ],
     "invoices": [
@@ -85,6 +211,50 @@
         "tax_amount": 2374973451.33,
         "total_amount": 20644000000.0,
         "goods_or_service": "精选三七、西洋参饮片"
+      },
+      {
+        "invoice_no": "KM-INV-181218",
+        "invoice_date": "2018-12-20",
+        "buyer_name": "华南连锁药房有限公司",
+        "seller_name": "康美药业股份有限公司",
+        "amount_without_tax": 3411504424.78,
+        "tax_amount": 453495575.22,
+        "total_amount": 3865000000.0,
+        "goods_or_service": "三七粉及西洋参饮片",
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "invoice_no": "KM-INV-181228",
+        "invoice_date": "2018-12-29",
+        "buyer_name": "普宁中药材采购集散中心",
+        "seller_name": "康美药业股份有限公司",
+        "amount_without_tax": 1826902654.87,
+        "tax_amount": 237497345.13,
+        "total_amount": 2064400000.0,
+        "goods_or_service": "精选三七、西洋参饮片",
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "invoice_no": "KM-INV-181230",
+        "invoice_date": "2018-12-30",
+        "buyer_name": "粤东医药商业有限公司",
+        "seller_name": "康美药业股份有限公司",
+        "amount_without_tax": 965309734.51,
+        "tax_amount": 125490265.49,
+        "total_amount": 1090800000.0,
+        "goods_or_service": "复方饮片及中药配方颗粒",
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "invoice_no": "KM-INV-181231",
+        "invoice_date": "2018-12-31",
+        "buyer_name": "华南连锁药房有限公司",
+        "seller_name": "康美药业股份有限公司",
+        "amount_without_tax": 524778761.06,
+        "tax_amount": 68221138.94,
+        "total_amount": 592999900.0,
+        "goods_or_service": "年末促销组合药品",
+        "source_file": "演示增强数据（非原始监管材料）"
       }
     ],
     "bank_flows": [
@@ -96,6 +266,56 @@
         "amount": 29944000000.0,
         "balance_after": 37788000000.0,
         "remark": "伪造大额定期存单证明"
+      },
+      {
+        "transaction_id": "BK-KM-20181218",
+        "transaction_time": "2018-12-18 09:42",
+        "counterparty_name": "华南连锁药房有限公司",
+        "counterparty_account": "622***184",
+        "amount": 3865000000.0,
+        "balance_after": 41825000000.0,
+        "remark": "批量货款入账",
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "transaction_id": "BK-KM-20181221",
+        "transaction_time": "2018-12-21 15:08",
+        "counterparty_name": "普宁中药材采购集散中心",
+        "counterparty_account": "622***702",
+        "amount": 2064400000.0,
+        "balance_after": 43889400000.0,
+        "remark": "中药材采购回款",
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "transaction_id": "BK-KM-20181224",
+        "transaction_time": "2018-12-24 11:16",
+        "counterparty_name": "康美集团关联资金池",
+        "counterparty_account": "440***918",
+        "amount": -1280000000.0,
+        "balance_after": 42609400000.0,
+        "remark": "关联方往来款划转",
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "transaction_id": "BK-KM-20181228",
+        "transaction_time": "2018-12-28 16:37",
+        "counterparty_name": "粤东医药商业有限公司",
+        "counterparty_account": "621***335",
+        "amount": 1090800000.0,
+        "balance_after": 43700200000.0,
+        "remark": "医药商业回款",
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "transaction_id": "BK-KM-20181231",
+        "transaction_time": "2018-12-31 17:00",
+        "counterparty_name": "广发银行普宁支行",
+        "counterparty_account": "440***001",
+        "amount": 29944000000.0,
+        "balance_after": 37788000000.0,
+        "remark": "原始案例：大额定期存单证明",
+        "source_file": "演示增强数据（非原始监管材料）"
       }
     ]
   },
@@ -231,10 +451,171 @@
             "summary": "资金实际已被大股东划出占用"
           }
         ]
+      },
+      {
+        "voucher_id": "FR-2018-103",
+        "voucher_date": "2018-11-30",
+        "preparer": "演示审计账套",
+        "checker": "复核岗（演示）",
+        "associated_doc_id": "FR-INV-181130",
+        "source_file": "演示增强数据（非原始监管材料）",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款-河南医药商业客户",
+            "debit": 486000000.0,
+            "credit": 0.0,
+            "summary": "演示增强：经销商季度结算"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入-处方药",
+            "debit": 0.0,
+            "credit": 486000000.0,
+            "summary": "演示增强：经销商季度结算"
+          }
+        ]
+      },
+      {
+        "voucher_id": "FR-2018-117",
+        "voucher_date": "2018-12-08",
+        "preparer": "演示审计账套",
+        "checker": "复核岗（演示）",
+        "associated_doc_id": "FR-PREPAY-1208",
+        "source_file": "演示增强数据（非原始监管材料）",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "预付账款-辅仁集团供应链",
+            "debit": 760000000.0,
+            "credit": 0.0,
+            "summary": "演示增强：预付款划转"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 760000000.0,
+            "summary": "演示增强：预付款划转"
+          }
+        ]
+      },
+      {
+        "voucher_id": "FR-2018-126",
+        "voucher_date": "2018-12-18",
+        "preparer": "演示审计账套",
+        "checker": "复核岗（演示）",
+        "associated_doc_id": "FR-BILL-1218",
+        "source_file": "演示增强数据（非原始监管材料）",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收票据-关联方商业汇票",
+            "debit": 520000000.0,
+            "credit": 0.0,
+            "summary": "演示增强：无真实交易票据"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "应付票据",
+            "debit": 0.0,
+            "credit": 520000000.0,
+            "summary": "演示增强：无真实交易票据"
+          }
+        ]
+      },
+      {
+        "voucher_id": "FR-2018-138",
+        "voucher_date": "2018-12-28",
+        "preparer": "演示审计账套",
+        "checker": "复核岗（演示）",
+        "associated_doc_id": "FR-DIV-1228",
+        "source_file": "演示增强数据（非原始监管材料）",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应付股利",
+            "debit": 62710000.0,
+            "credit": 0.0,
+            "summary": "演示增强：现金分红付款"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 62710000.0,
+            "summary": "演示增强：现金分红付款"
+          }
+        ]
       }
     ],
-    "contracts": [],
-    "invoices": [],
+    "contracts": [
+      {
+        "contract_id": "FR-CT-2018-A",
+        "customer_or_vendor": "河南医药商业客户",
+        "sign_date": "2018-04-10",
+        "total_amount": 486000000.0,
+        "payment_terms": "月结/银行转账（演示）",
+        "delivery_condition": "验收单与回款流水匹配（演示）",
+        "is_related_party": false,
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "contract_id": "FR-CT-2018-B",
+        "customer_or_vendor": "辅仁集团供应链有限公司",
+        "sign_date": "2018-07-19",
+        "total_amount": 760000000.0,
+        "payment_terms": "月结/银行转账（演示）",
+        "delivery_condition": "验收单与回款流水匹配（演示）",
+        "is_related_party": true,
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "contract_id": "FR-CT-2018-C",
+        "customer_or_vendor": "豫东医药配送有限公司",
+        "sign_date": "2018-09-06",
+        "total_amount": 219000000.0,
+        "payment_terms": "月结/银行转账（演示）",
+        "delivery_condition": "验收单与回款流水匹配（演示）",
+        "is_related_party": false,
+        "source_file": "演示增强数据（非原始监管材料）"
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "FR-INV-181130",
+        "invoice_date": "2018-12-02",
+        "buyer_name": "河南医药商业客户",
+        "seller_name": "辅仁药业集团制药股份有限公司",
+        "amount_without_tax": 428318584.07,
+        "tax_amount": 57681415.93,
+        "total_amount": 486000000.0,
+        "goods_or_service": "抗感染及心脑血管制剂",
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "invoice_no": "FR-INV-181215",
+        "invoice_date": "2018-12-16",
+        "buyer_name": "周口连锁医院采购中心",
+        "seller_name": "辅仁药业集团制药股份有限公司",
+        "amount_without_tax": 276106194.69,
+        "tax_amount": 35893805.31,
+        "total_amount": 312000000.0,
+        "goods_or_service": "注射剂及原料药",
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "invoice_no": "FR-INV-181220",
+        "invoice_date": "2018-12-22",
+        "buyer_name": "豫东医药配送有限公司",
+        "seller_name": "辅仁药业集团制药股份有限公司",
+        "amount_without_tax": 193805309.73,
+        "tax_amount": 25194690.27,
+        "total_amount": 219000000.0,
+        "goods_or_service": "常规处方药及辅料",
+        "source_file": "演示增强数据（非原始监管材料）"
+      }
+    ],
     "bank_flows": [
       {
         "transaction_id": "BK-FR-201812",
@@ -244,6 +625,56 @@
         "amount": -2820000000.0,
         "balance_after": 3770000.0,
         "remark": "划拨集团暂借往来款"
+      },
+      {
+        "transaction_id": "BK-FR-20181130",
+        "transaction_time": "2018-11-30 14:26",
+        "counterparty_name": "河南医药商业客户",
+        "counterparty_account": "621***204",
+        "amount": 486000000.0,
+        "balance_after": 1267000000.0,
+        "remark": "季度医药采购结算",
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "transaction_id": "BK-FR-20181208",
+        "transaction_time": "2018-12-08 10:12",
+        "counterparty_name": "辅仁集团供应链有限公司",
+        "counterparty_account": "410***881",
+        "amount": -760000000.0,
+        "balance_after": 507000000.0,
+        "remark": "划拨集团暂借往来款",
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "transaction_id": "BK-FR-20181218",
+        "transaction_time": "2018-12-18 13:48",
+        "counterparty_name": "关联方票据兑付户",
+        "counterparty_account": "410***882",
+        "amount": -520000000.0,
+        "balance_after": -13000000.0,
+        "remark": "商业汇票保证金划转",
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "transaction_id": "BK-FR-20181225",
+        "transaction_time": "2018-12-25 10:15",
+        "counterparty_name": "辅仁药业集团有限公司",
+        "counterparty_account": "410***881",
+        "amount": -2820000000.0,
+        "balance_after": 3770000.0,
+        "remark": "原始案例：大股东资金占用",
+        "source_file": "演示增强数据（非原始监管材料）"
+      },
+      {
+        "transaction_id": "BK-FR-20181228",
+        "transaction_time": "2018-12-28 16:02",
+        "counterparty_name": "河南省证券登记结算中心",
+        "counterparty_account": "310***662",
+        "amount": -62710000.0,
+        "balance_after": -58833000.0,
+        "remark": "年度现金分红支付",
+        "source_file": "演示增强数据（非原始监管材料）"
       }
     ]
   },
