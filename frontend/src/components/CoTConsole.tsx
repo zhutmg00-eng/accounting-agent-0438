@@ -57,7 +57,7 @@ export const CoTConsole: React.FC<CoTConsoleProps> = ({
 
             <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 pl-2">
               <Terminal className="w-4 h-4" />
-              <span>DeepSeek-Reasoner CoT 思维链动态推演台 (Chain-of-Thought)</span>
+              <span>DeepSeek-Reasoner 可审计推理轨迹 (Evidence-Linked CoT)</span>
             </div>
           </div>
 
@@ -94,8 +94,8 @@ export const CoTConsole: React.FC<CoTConsoleProps> = ({
         <div className="mt-4 p-4 rounded-xl bg-slate-900/60 border border-white/5 text-xs text-slate-300 flex items-start gap-3">
           <BookOpen className="w-4 h-4 text-purple-400 flex-shrink-0 mt-0.5" />
           <p className="leading-relaxed">
-            <span className="text-purple-300 font-semibold">【思维链透明度与可解释性说明】</span>: 
-            区别于传统“黑盒”模型，DeepSeek-AuditMind 完整输出了对于记账凭证摘要、发票税率偏差及银行存单真伪的逐步推理证据。评委可随时调阅大模型如何援引《企业会计准则第14号——收入》五步法模型及中国证监会行政处罚先例做出审慎定性。
+            <span className="text-purple-300 font-semibold">【证据链透明度说明】</span>:
+            此处展示的是可复核的审计推理摘要：每一步都对应导入数据、确定性算子或会计准则依据，并明确人工核验边界，不把模型的隐式思考当作未经验证的审计证据。
           </p>
         </div>
       </div>

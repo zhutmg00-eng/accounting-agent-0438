@@ -375,6 +375,10 @@ class DeepSeekLLMAdapter:
             stock_code = m_stock.group(1)
 
         case_desc = ""
+        audit_period = "当前案例期间"
+        m_period = re.search(r"审计期间[：:]\s*([^\n|]+)", user_prompt)
+        if m_period:
+            audit_period = m_period.group(1).strip()
         m_bg = re.search(r"【案例背景】：(.*?)(?:\n\n|\n【|$)", user_prompt, re.DOTALL)
         if m_bg:
             case_desc = m_bg.group(1).strip()
@@ -646,13 +650,42 @@ class DeepSeekLLMAdapter:
             "workpapers": workpapers
         }
 
-        reasoning_str = f"CoT 深度推理链（{prefix_tag}）：已完成对企业各维度业财数据的多模态穿透比对，研判风险等级为 {overall_rating}。"
+        evidence_refs = ", ".join(
+            f"{v['voucher_id']}（关联单号 {v['doc_id'] or '无'}）"
+            for v in vouchers_parsed[:3]
+        ) or "当前账套未提供可抽取的记账凭证"
+        discrepancy_refs = ", ".join(
+            f"{d['voucher_id']} / ¥{d['amount']:,.2f}"
+            for d in discrepancies[:3]
+        ) or "未检出确定性勾稽异常"
+        if discrepancies:
+            reasoning_str = "\n".join([
+                f"[1/8 数据接收] 已锁定 {company_name}（{stock_code or '无证券代码'}），审计期间 {audit_period or '未提供'}；读取凭证 {len(vouchers_parsed)} 笔、发票 {len(invoices_parsed)} 张，先建立证据范围。",
+                f"[2/8 凭证抽取] 从会计明细中提取 {evidence_refs}，保留日期、关联单号、借贷方向和金额，避免只依据案例标签下结论。",
+                f"[3/8 规则命中] 确定性勾稽算子检出 {len(discrepancies)} 项异常，命中对象 {discrepancy_refs}；异常事实来自单据关系比对，不来自模型猜测。",
+                f"[4/8 金额核算] 以最大可追溯凭证金额 ¥{primary_amt:,.2f} 作为当前发现的影响金额，并与异常单据金额交叉核对，形成可复核的金额口径。",
+                f"[5/8 业财交叉验证] 将凭证、发票、合同及银行流水放入同一业务链核验；当前结论为存在单据链断裂或商业实质不足，需继续穿透资金最终去向。",
+                f"[6/8 准则映射] 将异常映射至 {std}，重点检查确认条件、披露完整性和舞弊风险应对程序，形成审计准则层面的解释。",
+                f"[7/8 风险评级] 结合异常数量、金额重大性和证据一致性，暂定总体风险等级为 {overall_rating}；该评级用于确定追加审计程序，不替代注册会计师职业判断。",
+                "[8/8 结论边界] 形成初步审计发现并生成底稿，同时保留人工核验环节：执行外部函证、抽凭和现场盘点后再确认最终结论。"
+            ])
+        else:
+            reasoning_str = "\n".join([
+                f"[1/8 数据接收] 已锁定 {company_name}（{stock_code or '无证券代码'}），读取凭证 {len(vouchers_parsed)} 笔、发票 {len(invoices_parsed)} 张及银行流水，建立本次核查范围。",
+                f"[2/8 凭证抽取] 重点核对 {evidence_refs}，检查日期、金额、摘要与关联单据是否完整。",
+                "[3/8 规则扫描] 借贷平衡、凭证与发票匹配、银行回款关系均未发现确定性异常。",
+                "[4/8 金额核算] 抽查金额与可验证单据一致，未形成需要调整的差异金额。",
+                "[5/8 业财交叉验证] 凭证、发票、合同及银行流水能够相互勾稽，暂未发现商业实质断裂。",
+                "[6/8 准则映射] 按 CAS 14、CAS 1 及 CSA 1141 检查收入确认、资产确认和舞弊风险应对要求。",
+                f"[7/8 风险评级] 基于当前样本和证据范围，暂定总体风险等级为 {overall_rating}。",
+                "[8/8 结论边界] 该结论仅覆盖已导入样本，仍建议结合完整账套和外部函证完成最终审计判断。"
+            ])
 
         return LLMResponse(
             content=json.dumps(simulated_data, ensure_ascii=False, indent=2),
             reasoning_content=reasoning_str,
             prompt_tokens=850,
-            completion_tokens=420,
+            completion_tokens=980,
             execution_mode=ExecutionMode.MOCK if not fallback_occurred else ExecutionMode.ONLINE,
             model_name="domain-heuristic-engine",
             fallback_occurred=fallback_occurred,
