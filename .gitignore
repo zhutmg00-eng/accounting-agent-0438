@@ -27,3 +27,7 @@ output/
 # Custom cases upload directory
 data/cases/custom_cases/*.json
 !data/cases/custom_cases/.gitkeep
+
+# Local collaboration documents
+COLLABORATION_GUIDE.*
+~$*

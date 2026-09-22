@@ -8,7 +8,9 @@ import { CoTConsole } from './components/CoTConsole'
 import { BenchmarkArena } from './components/BenchmarkArena'
 import { WorkpaperTable } from './components/WorkpaperTable'
 import { CustomUploadModal } from './components/CustomUploadModal'
-import { CaseListItem, AnalysisReportResult } from './types'
+import { AgentWorkbench } from './components/AgentWorkbench'
+import { ModelDetectionModal } from './components/ModelDetectionModal'
+import { CaseListItem, AnalysisReportResult, DeepSeekModelsResponse } from './types'
 
 export function App() {
   const [currentTab, setCurrentTab] = useState('cockpit')
@@ -26,9 +28,38 @@ export function App() {
   const [cotStream, setCotStream] = useState('')
 
   const [isUploadOpen, setIsUploadOpen] = useState(false)
+  const [modelInfo, setModelInfo] = useState<DeepSeekModelsResponse | null>(null)
+  const [isModelModalOpen, setIsModelModalOpen] = useState(false)
 
-  // 1. Fetch case list and categories
+  // Fetch model configuration & auto-detection profile
+  const fetchModelInfo = () => {
+    fetch('/api/deepseek/models')
+      .then((r) => r.json())
+      .then((data) => setModelInfo(data))
+      .catch((err) => console.error('Failed to load DeepSeek models info', err))
+  }
+
+  const handleUpdateConfig = async (modelName: string, apiKey?: string, apiBase?: string) => {
+    const resp = await fetch('/api/deepseek/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model_name: modelName,
+        api_key: apiKey,
+        api_base: apiBase
+      })
+    })
+    if (!resp.ok) {
+      const err = await resp.json()
+      throw new Error(err.detail || '更新失败')
+    }
+    fetchModelInfo()
+  }
+
+  // 1. Fetch case list, categories, and model info
   useEffect(() => {
+    fetchModelInfo()
+
     fetch('/api/cases')
       .then((r) => r.json())
       .then((data) => {
@@ -162,6 +193,8 @@ export function App() {
         setExecutionMode={setExecutionMode}
         onOpenUpload={() => setIsUploadOpen(true)}
         totalCases={cases.length}
+        modelInfo={modelInfo}
+        onOpenModelModal={() => setIsModelModalOpen(true)}
       />
 
       {/* Main Layout Body */}
@@ -186,6 +219,15 @@ export function App() {
               onRunAudit={handleRunAudit}
               currentStage={currentStage}
               stageLogs={stageLogs}
+            />
+          )}
+
+          {currentTab === 'agent' && (
+            <AgentWorkbench
+              currentCase={currentCase}
+              executionMode={executionMode}
+              modelInfo={modelInfo}
+              onOpenModelModal={() => setIsModelModalOpen(true)}
             />
           )}
 
@@ -225,6 +267,15 @@ export function App() {
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}
         onCaseImported={handleCaseImported}
+      />
+
+      {/* DeepSeek Model Detection & Diagnosis Modal */}
+      <ModelDetectionModal
+        isOpen={isModelModalOpen}
+        onClose={() => setIsModelModalOpen(false)}
+        modelInfo={modelInfo}
+        onRefreshModels={fetchModelInfo}
+        onUpdateConfig={handleUpdateConfig}
       />
     </div>
   )

@@ -138,3 +138,68 @@ export interface CategorySummary {
   name: string
   count: number
 }
+
+export interface DeepSeekModelProfile {
+  id: string
+  display_name: string
+  series: string
+  description: string
+  has_thinking_mode: boolean
+  supports_tools: boolean
+  context_window: string
+  throughput_tier: string
+  recommended_scenario: string
+  is_latest_2026: boolean
+}
+
+export interface DeepSeekModelsResponse {
+  status: string
+  is_mock: boolean
+  api_base: string
+  detected_model: string
+  active_model: string
+  active_model_profile: DeepSeekModelProfile
+  available_models: string[]
+  models_detail: DeepSeekModelProfile[]
+  latency_ms: number
+  message: string
+  error_detail?: string
+}
+
+export interface AgentToolCall {
+  tool_name: string
+  tool_input: any
+  tool_output: any
+  status: string
+}
+
+export interface AgentMessage {
+  id: string
+  role: 'user' | 'assistant' | 'system'
+  content: string
+  reasoning_content?: string
+  tool_calls?: AgentToolCall[]
+  timestamp: string
+  is_streaming?: boolean
+}
+
+export interface AgentGoalStep {
+  step: number
+  title: string
+  status: string
+  detail: string
+}
+
+export interface AgentGoalResponse {
+  status: string
+  goal: string
+  case_id: string
+  company_name: string
+  steps: AgentGoalStep[]
+  report: AnalysisReportResult
+  tool_outputs: Record<string, any>
+  elapsed_seconds: number
+  execution_mode: string
+  model_name: string
+}
+

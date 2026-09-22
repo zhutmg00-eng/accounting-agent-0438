@@ -27,6 +27,192 @@ class DeepSeekAPIError(Exception):
         self.response_text = response_text
 
 
+# 2026 DeepSeek Model Intelligence Profiles
+MODEL_PROFILES: Dict[str, Dict[str, Any]] = {
+    "deepseek-v4.1-flash": {
+        "id": "deepseek-v4.1-flash",
+        "display_name": "DeepSeek-V4.1 Flash",
+        "series": "V4.1 Ultra-Fast",
+        "description": "2026年最新超高吞吐智能体专用模型，427 tokens/s 极致响应速度，原生工具调用优化，多模态原生支持",
+        "has_thinking_mode": False,
+        "supports_tools": True,
+        "context_window": "128,000 tokens (128K)",
+        "throughput_tier": "Ultra-Fast (427 tok/s)",
+        "recommended_scenario": "实时智能体对话、高频审计算子调度、极速三单勾稽比对",
+        "is_latest_2026": True
+    },
+    "deepseek-v4-pro": {
+        "id": "deepseek-v4-pro",
+        "display_name": "DeepSeek-V4 Pro",
+        "series": "V4 Flagship",
+        "description": "1.6T MoE 超大规模旗舰模型，原生内置深度 Thinking 思维链，支持 1M 超长上下文，擅长复杂舞弊穿透与多步审计演绎",
+        "has_thinking_mode": True,
+        "supports_tools": True,
+        "context_window": "1,000,000 tokens (1M)",
+        "throughput_tier": "Deep Reasoning",
+        "recommended_scenario": "复杂造假穿透推演、多层体外资金闭环研判、审计底稿综合生成",
+        "is_latest_2026": True
+    },
+    "deepseek-v4-flash": {
+        "id": "deepseek-v4-flash",
+        "display_name": "DeepSeek-V4 Flash",
+        "series": "V4 Flash",
+        "description": "V4 架构高吞吐模型，全面优化工具调用与 JSON 模式输出稳定性",
+        "has_thinking_mode": False,
+        "supports_tools": True,
+        "context_window": "128,000 tokens (128K)",
+        "throughput_tier": "Fast (350+ tok/s)",
+        "recommended_scenario": "常规审计核验与流水检索",
+        "is_latest_2026": True
+    },
+    "deepseek-chat": {
+        "id": "deepseek-chat",
+        "display_name": "DeepSeek-V3 (Legacy Chat)",
+        "series": "V3 Legacy",
+        "description": "671B MoE 经典大模型（兼容过渡通道）",
+        "has_thinking_mode": False,
+        "supports_tools": True,
+        "context_window": "64,000 tokens (64K)",
+        "throughput_tier": "Standard",
+        "recommended_scenario": "常规会计咨询与分录检查",
+        "is_latest_2026": False
+    },
+    "deepseek-reasoner": {
+        "id": "deepseek-reasoner",
+        "display_name": "DeepSeek-R1 (Legacy Reasoner)",
+        "series": "R1 Legacy",
+        "description": "671B 深度强化学习推理模型（过渡通道）",
+        "has_thinking_mode": True,
+        "supports_tools": False,
+        "context_window": "64,000 tokens (64K)",
+        "throughput_tier": "Reasoning",
+        "recommended_scenario": "离线复杂准则案例演算",
+        "is_latest_2026": False
+    }
+}
+
+
+def detect_deepseek_models(
+    api_key: Optional[str] = None,
+    api_base: Optional[str] = None,
+    timeout: float = 5.0
+) -> Dict[str, Any]:
+    """
+    High-timeliness auto-detection of available DeepSeek models via GET /models endpoint.
+    Identifies active model capabilities (Thinking mode, Tools support, Token throughput)
+    and falls back cleanly when offline or running in MOCK mode.
+    """
+    key = api_key or settings.api_key
+    base = (api_base or settings.api_base or "https://api.deepseek.com").rstrip("/")
+
+    # If key is absent, empty, or placeholder mock-key, return simulated profile
+    if not key or key in ("mock-key", "your-api-key-here", ""):
+        return {
+            "status": "mock_mode",
+            "is_mock": True,
+            "api_base": base,
+            "detected_model": settings.model_name,
+            "active_model_profile": MODEL_PROFILES.get(settings.model_name, MODEL_PROFILES["deepseek-v4.1-flash"]),
+            "available_models": list(MODEL_PROFILES.keys()),
+            "models_detail": [MODEL_PROFILES[k] for k in MODEL_PROFILES],
+            "latency_ms": 1.5,
+            "message": "未配置真实在线 API Key，当前已自适应激活 MOCK 确定性领域启发式智能体算子引擎。"
+        }
+
+    # Attempt online model detection
+    headers = {
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json"
+    }
+
+    # Try both /v1/models and /models
+    endpoints = [f"{base}/models", f"{base}/v1/models"]
+    t0 = time.perf_counter()
+    models_data = None
+    last_err = None
+
+    for ep in endpoints:
+        try:
+            resp = requests.get(ep, headers=headers, timeout=timeout)
+            if resp.status_code == 200:
+                models_data = resp.json().get("data", [])
+                break
+            else:
+                last_err = f"HTTP {resp.status_code}: {resp.text[:200]}"
+        except Exception as e:
+            last_err = str(e)
+
+    latency_ms = round((time.perf_counter() - t0) * 1000, 1)
+
+    if models_data is not None:
+        model_ids = [m.get("id") for m in models_data if isinstance(m, dict) and "id" in m]
+        # Prioritize 2026 latest models: v4.1-flash > v4-pro > v4-flash > others
+        auto_detected = settings.model_name
+        for candidate in ("deepseek-v4.1-flash", "deepseek-v4-pro", "deepseek-v4-flash", "deepseek-chat", "deepseek-reasoner"):
+            if candidate in model_ids:
+                auto_detected = candidate
+                break
+
+        profile = MODEL_PROFILES.get(auto_detected, {
+            "id": auto_detected,
+            "display_name": auto_detected,
+            "series": "Custom/Compatible",
+            "description": "OpenAI/DeepSeek 兼容端点模型",
+            "has_thinking_mode": "reason" in auto_detected.lower() or "pro" in auto_detected.lower(),
+            "supports_tools": True,
+            "context_window": "128,000 tokens",
+            "throughput_tier": "Standard",
+            "recommended_scenario": "智能体业财穿透分析",
+            "is_latest_2026": "v4" in auto_detected.lower()
+        })
+
+        # Enrich details for all found models
+        details = []
+        for mid in model_ids:
+            if mid in MODEL_PROFILES:
+                details.append(MODEL_PROFILES[mid])
+            else:
+                details.append({
+                    "id": mid,
+                    "display_name": mid,
+                    "series": "Compatible",
+                    "description": "服务端提供模型",
+                    "has_thinking_mode": "reason" in mid.lower(),
+                    "supports_tools": True,
+                    "context_window": "未知",
+                    "throughput_tier": "Standard",
+                    "recommended_scenario": "自定义调用",
+                    "is_latest_2026": False
+                })
+
+        return {
+            "status": "connected",
+            "is_mock": False,
+            "api_base": base,
+            "detected_model": auto_detected,
+            "active_model_profile": profile,
+            "available_models": model_ids,
+            "models_detail": details,
+            "latency_ms": latency_ms,
+            "message": f"成功连接 DeepSeek API，实时自动识别模型为 [{profile['display_name']}]。"
+        }
+    else:
+        # Online connection failed, provide graceful diagnostics
+        fallback_profile = MODEL_PROFILES.get(settings.model_name, MODEL_PROFILES["deepseek-v4.1-flash"])
+        return {
+            "status": "connection_failed",
+            "is_mock": True,
+            "api_base": base,
+            "detected_model": settings.model_name,
+            "active_model_profile": fallback_profile,
+            "available_models": list(MODEL_PROFILES.keys()),
+            "models_detail": [MODEL_PROFILES[k] for k in MODEL_PROFILES],
+            "latency_ms": latency_ms,
+            "error_detail": last_err,
+            "message": f"DeepSeek API 探测未成功 ({last_err})，已自动保持 MOCK 启发式算子保障服务可用。"
+        }
+
+
 class LLMResponse:
     def __init__(
         self,

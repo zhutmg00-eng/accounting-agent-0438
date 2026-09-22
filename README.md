@@ -50,6 +50,9 @@
    - 每项发现明确区分为：**【确定性客观事实】**、**【DeepSeek 大模型准则深度研判】**、**【待注册会计师现场核实程序】**，并在 Excel 与 PDF 中全面呈现。
 6. **Windows 一键双击极速启动 (Issue 6)**：
    - 根目录下提供 `run.bat`，双击即可自检环境并直达浏览器演示大屏。
+7. **原生智能体工作台与 DeepSeek 模型自适应识别 (Issue 9)**：
+   - 告别外部独立 `dsh` 依赖，将原 dsh 期望的**注册会计师智能体对话、算子工具调度（Beneish / 三单核对 / 凭证流水检索）与自主审计目标（`/goal`）**全量原生集成进 Dashboard；
+   - 提供高时效性 **DeepSeek 实时模型探测器**，毫秒级自适应识别 2026 前沿架构（`deepseek-v4.1-flash` 427 tok/s 极致吞吐 与 `deepseek-v4-pro` 1.6T MoE 深度思考链），支持在线连通性测算与动态热切换。
 
 ---
 
@@ -57,9 +60,9 @@
 
 | 竞赛通知硬性要求 | 本项目实现与落地保障 (2026 最新前沿) | 对应模块/文件 |
 | :--- | :--- | :--- |
-| **1. 核心模型**：必须使用至少一个大语言模型（推荐国产模型） | 原生集成 **DeepSeek-V4.1-Flash**（2026年9月最新架构，427 tokens/s 极致吞吐，原生多模态）与 **DeepSeek-V4-Pro**（1.6T MoE 深度逻辑推理链与 CoT 思维链推演，支持 1M 超长上下文与 `reasoning_content`），全面支持 STRICT_ONLINE / ONLINE / MOCK 三档热切换 | `src/core/llm_adapter.py`<br>`src/config.py` |
+| **1. 核心模型**：必须使用至少一个大语言模型（推荐国产模型） | 原生集成 **DeepSeek-V4.1-Flash**（2026年9月最新架构，427 tokens/s 极致吞吐，原生多模态）与 **DeepSeek-V4-Pro**（1.6T MoE 深度逻辑推理链与 CoT 思维链推演，支持 1M 超长上下文与 `reasoning_content`），具备**在线模型自适应探测 (GET /models) 与毫秒级延迟诊断**，全面支持 STRICT_ONLINE / ONLINE / MOCK 三档热切换 | `src/core/llm_adapter.py`<br>`src/config.py`<br>`frontend/src/components/ModelDetectionModal.tsx` |
 | **2. 输出格式**：必须输出结构化结果（表格/PDF） | 自动生成 **Excel 标准审计工作底稿 (.xlsx)**、**PDF 审计穿透分析报告** 与 **JSON 结构化数据集**（包含审定明细行、调整分录与三层证据链） | `src/exporters/` |
-| **3. 演示原型**：现场可实时处理样例数据，具备交互系统 | 提供 **现代金融赛博风全景审计指挥舱 SPA (React 18 + Vite + Tailwind CSS + Framer Motion + ECharts)**，由高性能 FastAPI 统一单端口 (8501) 托管；配套 `run.bat` 一键极速启动，支持现场上传真实 Excel 凭证与 CSV 发票流水 | `frontend/src/`<br>`src/api/server.py`<br>`run.bat` |
+| **3. 演示原型**：现场可实时处理样例数据，具备交互系统 | 提供 **现代金融赛博风全景审计指挥舱 SPA (React 18 + Vite + Tailwind CSS + Framer Motion + ECharts)**，内置 **CPA 智能体交互工作台 (Agent Workbench)** 与 **自主审计目标 (/goal)** 编排；由高性能 FastAPI 统一单端口 (8501) 托管；配套 `run.bat` 一键极速启动，支持现场上传真实 Excel 凭证与 CSV 发票流水 | `frontend/src/`<br>`src/api/server.py`<br>`run.bat` |
 | **4. 专业深度**：围绕注会审计、舞弊穿透场景 | 深度融入《中国注册会计师审计准则第1141号——财务报表审计中与舞弊相关的责任》(CSA 1141)、《企业会计准则》(CAS 14、CAS 1、CAS 36) 及 Beneish M-Score 模型，涵盖康美药业、康得新、瑞幸咖啡等 **28 例真实证监会 (CSRC) 行政处罚决定书真实案例** | `src/plugins/audit_fraud_plugin/`<br>`data/cases/` |
 
 ---

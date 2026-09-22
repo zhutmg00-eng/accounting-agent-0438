@@ -1,5 +1,19 @@
 import React from 'react'
-import { ShieldAlert, Cpu, Database, Award, UploadCloud, Layers, Activity, FileSpreadsheet, Network, Terminal } from 'lucide-react'
+import {
+  ShieldAlert,
+  Cpu,
+  Database,
+  Award,
+  UploadCloud,
+  Layers,
+  Activity,
+  FileSpreadsheet,
+  Network,
+  Terminal,
+  Bot,
+  Sparkles
+} from 'lucide-react'
+import { DeepSeekModelsResponse } from '../types'
 
 interface HeaderProps {
   currentTab: string
@@ -8,6 +22,8 @@ interface HeaderProps {
   setExecutionMode: (mode: string) => void
   onOpenUpload: () => void
   totalCases: number
+  modelInfo?: DeepSeekModelsResponse | null
+  onOpenModelModal?: () => void
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -16,10 +32,13 @@ export const Header: React.FC<HeaderProps> = ({
   executionMode,
   setExecutionMode,
   onOpenUpload,
-  totalCases
+  totalCases,
+  modelInfo,
+  onOpenModelModal
 }) => {
   const tabs = [
     { id: 'cockpit', label: '审计指挥舱', icon: Activity },
+    { id: 'agent', label: '智能体工作台', icon: Bot },
     { id: 'reconcile', label: '三单勾稽穿透', icon: Layers },
     { id: 'topology', label: '资金体外拓扑', icon: Network },
     { id: 'cot', label: '思维链推演台', icon: Terminal },
@@ -84,6 +103,21 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Right Controls: Mode Selector & Upload */}
         <div className="flex items-center gap-3">
+          {/* DeepSeek Model Detection Badge */}
+          <button
+            onClick={onOpenModelModal}
+            title="点击打开 DeepSeek 模型自适应探测与诊断面板"
+            className="flex items-center gap-1.5 bg-slate-900/90 hover:bg-cyan-950/40 px-2.5 py-1.5 rounded-lg border border-cyan-500/30 text-xs text-slate-300 transition-all group cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-12 transition-transform" />
+            <span className="font-mono text-cyan-300 font-medium truncate max-w-[130px]">
+              {modelInfo?.active_model || 'deepseek-v4.1-flash'}
+            </span>
+            <span className="hidden md:inline px-1 py-0.2 text-[9px] font-mono rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+              自适应
+            </span>
+          </button>
+
           {/* Mode Switcher */}
           <div className="flex items-center gap-1.5 bg-slate-900/90 px-3 py-1.5 rounded-lg border border-white/10 text-xs">
             <Cpu className="w-3.5 h-3.5 text-purple-400" />

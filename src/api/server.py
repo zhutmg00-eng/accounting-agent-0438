@@ -23,7 +23,9 @@ from src.core.schemas import (
     FinancialStatementsSummary
 )
 from src.core.harness import AccountingAgentHarness
-from src.core.llm_adapter import DeepSeekLLMAdapter, DeepSeekAPIError
+from src.core.llm_adapter import (
+    DeepSeekLLMAdapter, DeepSeekAPIError, detect_deepseek_models, MODEL_PROFILES
+)
 from src.benchmark.test_cases import (
     get_benchmark_cases, get_all_cases, get_case_categories, get_case_by_id, register_custom_case
 )
@@ -98,6 +100,31 @@ class BeneishCalcRequest(BaseModel):
     cur_cfo: float
 
 
+class ModelDetectRequest(BaseModel):
+    api_key: Optional[str] = None
+    api_base: Optional[str] = None
+
+
+class ModelConfigRequest(BaseModel):
+    model_name: Optional[str] = None
+    api_key: Optional[str] = None
+    api_base: Optional[str] = None
+
+
+class AgentChatRequest(BaseModel):
+    case_id: str
+    messages: List[Dict[str, str]]
+    tools_enabled: bool = True
+    mode: str = "MOCK"
+    temperature: float = 0.3
+
+
+class AgentGoalRequest(BaseModel):
+    case_id: str
+    goal: str = "执行端到端全量舞弊穿透审计与底稿生成"
+    mode: str = "MOCK"
+
+
 @app.get("/api/health")
 def get_health():
     """Health check and harness status."""
@@ -109,6 +136,166 @@ def get_health():
         "cases_count": len(get_benchmark_cases()),
         "categories_count": len(get_case_categories()),
     }
+
+
+@app.get("/api/deepseek/models")
+def get_deepseek_models():
+    """Get active DeepSeek model configuration, auto-detected model profile, and model list."""
+    info = detect_deepseek_models(settings.api_key, settings.api_base)
+    info["active_model"] = settings.model_name
+    info["configured_mode"] = "MOCK" if settings.use_mock_llm else "ONLINE"
+    return info
+
+
+@app.post("/api/deepseek/detect")
+def detect_models_endpoint(req: ModelDetectRequest):
+    """Test API connection, ping /models, and auto-detect models and latency."""
+    return detect_deepseek_models(req.api_key, req.api_base)
+
+
+@app.post("/api/deepseek/config")
+def update_deepseek_config(req: ModelConfigRequest):
+    """Dynamically switch active DeepSeek model or update API credentials."""
+    if req.model_name:
+        settings.model_name = req.model_name
+    if req.api_key:
+        settings.api_key = req.api_key
+        if req.api_key not in ("mock-key", ""):
+            settings.use_mock_llm = False
+    if req.api_base:
+        settings.api_base = req.api_base
+
+    profile = MODEL_PROFILES.get(settings.model_name, {
+        "id": settings.model_name,
+        "display_name": settings.model_name,
+        "series": "Custom",
+        "description": "自定义模型",
+        "has_thinking_mode": "pro" in settings.model_name or "reason" in settings.model_name,
+        "supports_tools": True,
+        "context_window": "128,000 tokens",
+        "throughput_tier": "Standard",
+        "recommended_scenario": "自定义调用",
+        "is_latest_2026": "v4" in settings.model_name
+    })
+
+    return {
+        "status": "success",
+        "active_model": settings.model_name,
+        "active_model_profile": profile,
+        "api_base": settings.api_base,
+        "mode": "MOCK" if settings.use_mock_llm else "ONLINE"
+    }
+
+
+@app.post("/api/agent/chat")
+def agent_chat_endpoint(req: AgentChatRequest):
+    """Interactive multi-turn dialogue with DeepSeek CPA Audit Agent (with domain tools)."""
+    case = get_case_by_id(req.case_id)
+    if not case:
+        raise HTTPException(status_code=404, detail=f"Case '{req.case_id}' not found")
+
+    mode_enum = ExecutionMode.MOCK
+    if req.mode.upper() == "STRICT_ONLINE":
+        mode_enum = ExecutionMode.STRICT_ONLINE
+    elif req.mode.upper() == "ONLINE":
+        mode_enum = ExecutionMode.ONLINE
+
+    llm = DeepSeekLLMAdapter(mode=mode_enum)
+    harness = AccountingAgentHarness(llm_adapter=llm)
+
+    try:
+        reply = harness.run_agent_turn(
+            case=case,
+            messages=req.messages,
+            tools_enabled=req.tools_enabled,
+            temperature=req.temperature
+        )
+        return reply
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/agent/stream")
+async def agent_stream_endpoint(
+    case_id: str = Query(...),
+    message: str = Query(...),
+    mode: str = Query("MOCK"),
+    tools_enabled: bool = Query(True)
+):
+    """Server-Sent Events (SSE) streaming for Agent chat and real-time tool execution."""
+    case = get_case_by_id(case_id)
+    if not case:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found")
+
+    mode_enum = ExecutionMode.MOCK
+    if mode.upper() == "STRICT_ONLINE":
+        mode_enum = ExecutionMode.STRICT_ONLINE
+    elif mode.upper() == "ONLINE":
+        mode_enum = ExecutionMode.ONLINE
+
+    llm = DeepSeekLLMAdapter(mode=mode_enum)
+    harness = AccountingAgentHarness(llm_adapter=llm)
+
+    async def event_generator():
+        yield f"data: {json.dumps({'type': 'agent_status', 'status': 'analyzing', 'detail': f'正在调阅企业【{case.company_name}】账套并研判审计意图...'}, ensure_ascii=False)}\n\n"
+        await asyncio.sleep(0.2)
+
+        try:
+            reply = await run_in_threadpool(
+                harness.run_agent_turn,
+                case,
+                [{"role": "user", "content": message}],
+                tools_enabled
+            )
+        except Exception as exc:
+            yield f"data: {json.dumps({'type': 'error', 'detail': str(exc)}, ensure_ascii=False)}\n\n"
+            yield "data: [DONE]\n\n"
+            return
+
+        # Emit tool call events
+        for tc in reply.get("tool_calls", []):
+            yield f"data: {json.dumps({'type': 'tool_call', 'tool': tc}, ensure_ascii=False)}\n\n"
+            await asyncio.sleep(0.1)
+
+        # Emit CoT thinking if available
+        if reply.get("reasoning_content"):
+            yield f"data: {json.dumps({'type': 'cot_stream', 'content': reply['reasoning_content']}, ensure_ascii=False)}\n\n"
+
+        # Stream assistant response content in chunks
+        content = reply.get("content", "")
+        chunk_size = 40
+        for i in range(0, len(content), chunk_size):
+            chunk = content[i:i+chunk_size]
+            yield f"data: {json.dumps({'type': 'content_chunk', 'chunk': chunk}, ensure_ascii=False)}\n\n"
+            await asyncio.sleep(0.03)
+
+        yield f"data: {json.dumps({'type': 'agent_reply', 'reply': reply}, ensure_ascii=False)}\n\n"
+        yield "data: [DONE]\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+
+@app.post("/api/agent/goal")
+def agent_goal_endpoint(req: AgentGoalRequest):
+    """Execute autonomous multi-step audit goal (/goal) natively on the selected case."""
+    case = get_case_by_id(req.case_id)
+    if not case:
+        raise HTTPException(status_code=404, detail=f"Case '{req.case_id}' not found")
+
+    mode_enum = ExecutionMode.MOCK
+    if req.mode.upper() == "STRICT_ONLINE":
+        mode_enum = ExecutionMode.STRICT_ONLINE
+    elif req.mode.upper() == "ONLINE":
+        mode_enum = ExecutionMode.ONLINE
+
+    llm = DeepSeekLLMAdapter(mode=mode_enum)
+    harness = AccountingAgentHarness(llm_adapter=llm)
+
+    try:
+        res = harness.run_autonomous_audit_goal(case=case, goal_instruction=req.goal)
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/api/categories")

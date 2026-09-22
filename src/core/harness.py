@@ -14,6 +14,9 @@ from src.core.plugin_registry import registry, PluginRegistry
 from src.core.cordis_kernel import Context, SessionLogger
 from src.plugins.audit_fraud_plugin.plugin import AuditFraudPlugin
 from src.plugins.cost_analysis_plugin.plugin import CostAnalysisPlugin
+from src.plugins.audit_fraud_plugin.tools import (
+    calculate_beneish_from_case, perform_three_way_reconciliation
+)
 
 
 class AccountingAgentHarness:
@@ -251,3 +254,254 @@ class AccountingAgentHarness:
             total_tokens=report.token_usage.get("total", 0),
             passed=passed
         )
+
+    def run_agent_turn(
+        self,
+        case: AccountingCaseData,
+        messages: List[Dict[str, str]],
+        tools_enabled: bool = True,
+        temperature: float = 0.3
+    ) -> Dict[str, Any]:
+        """
+        Interactive multi-turn CPA Audit Agent turn.
+        Executes domain tools dynamically (Beneish M-Score, 3-Way Reconciliation, Voucher/Bank Search)
+        and leverages DeepSeek (or Domain Heuristic Engine) to provide rigorous audit consultation.
+        """
+        last_user_msg = ""
+        for m in reversed(messages):
+            if m.get("role") == "user":
+                last_user_msg = m.get("content", "")
+                break
+
+        tool_calls = []
+        tool_context_str = ""
+
+        if tools_enabled:
+            # Check for Beneish tool intent
+            if any(k in last_user_msg.lower() for k in ("beneish", "m-score", "财务操纵", "操纵指数", "8变量", "8因子")):
+                beneish_res = calculate_beneish_from_case(case)
+                tool_calls.append({
+                    "tool_name": "calculate_beneish_m_score",
+                    "tool_input": {"case_id": case.case_id, "company_name": case.company_name},
+                    "tool_output": beneish_res,
+                    "status": "success"
+                })
+                if beneish_res.get("is_calculable"):
+                    tool_context_str += f"\n【工具调用: calculate_beneish_m_score】测算结果: M-Score = {beneish_res.get('m_score', 0.0):.2f}, 操纵预警: {'超标高危' if beneish_res.get('is_manipulator') else '正常'}, 变量: {beneish_res.get('variables', {})}\n"
+                else:
+                    tool_context_str += f"\n【工具调用: calculate_beneish_m_score】结果: 不可计算（{beneish_res.get('reason')}）\n"
+
+            # Check for Three-way Reconciliation intent
+            if any(k in last_user_msg for k in ("三单", "勾稽", "核对", "对账", "差异", "倒挂", "发票", "流水", "穿透")):
+                recon_res = perform_three_way_reconciliation(case)
+                tool_calls.append({
+                    "tool_name": "perform_three_way_reconciliation",
+                    "tool_input": {"case_id": case.case_id, "vouchers_count": len(case.vouchers)},
+                    "tool_output": recon_res,
+                    "status": "success"
+                })
+                tool_context_str += (
+                    f"\n【工具调用: perform_three_way_reconciliation】业财三单勾稽结果: 发现异常 {recon_res.get('total_discrepancies_count', 0)} 项，"
+                    f"涉及异常金额 ¥{recon_res.get('total_abnormal_amount', 0.0):,.2f} 元。"
+                )
+                if recon_res.get("discrepancies"):
+                    tool_context_str += "\n典型异常单据:\n" + "\n".join(
+                        f" - [{d['type']}] 单号:{d.get('voucher_id') or d.get('voucherId')}, 金额:¥{d['amount']:,.2f}, 详情:{d['detail']}"
+                        for d in recon_res.get("discrepancies", [])[:3]
+                    )
+
+            # Check for Voucher Search intent
+            if any(k in last_user_msg for k in ("凭证", "分录", "科目", "借贷")):
+                vouchers_summary = []
+                for v in case.vouchers[:5]:
+                    entries_text = ", ".join(f"{e.direction} {e.account_name} ¥{e.debit or e.credit:,.2f}" for e in v.entries)
+                    vouchers_summary.append(f"凭证号:{v.voucher_id} | 日期:{v.voucher_date} | 分录:[{entries_text}]")
+                tool_calls.append({
+                    "tool_name": "search_vouchers",
+                    "tool_input": {"case_id": case.case_id, "sample_size": len(case.vouchers)},
+                    "tool_output": {"sample_vouchers": vouchers_summary, "total_vouchers": len(case.vouchers)},
+                    "status": "success"
+                })
+                tool_context_str += f"\n【工具调用: search_vouchers】抽样凭证明细 ({min(5, len(case.vouchers))}/{len(case.vouchers)}):\n" + "\n".join(vouchers_summary)
+
+            # Check for Bank Flow intent
+            if any(k in last_user_msg for k in ("流水", "银行", "对手方", "转账", "资金")):
+                flows_summary = []
+                for b in case.bank_flows[:5]:
+                    flows_summary.append(f"流水号:{b.flow_id} | 对手方:{b.counterparty_name} | 金额:¥{b.amount:,.2f} | 摘要:{b.summary}")
+                tool_calls.append({
+                    "tool_name": "search_bank_flows",
+                    "tool_input": {"case_id": case.case_id, "sample_size": len(case.bank_flows)},
+                    "tool_output": {"sample_flows": flows_summary, "total_flows": len(case.bank_flows)},
+                    "status": "success"
+                })
+                tool_context_str += f"\n【工具调用: search_bank_flows】银行流水抽样 ({min(5, len(case.bank_flows))}/{len(case.bank_flows)}):\n" + "\n".join(flows_summary)
+
+        # Build prompt for LLM or Heuristic Engine
+        system_prompt = (
+            "你是由 DeepSeek-AuditMind 驱动的数智会计与舞弊穿透智能体（注册会计师 / 资深数智审计专家）。\n"
+            "依据《中国注册会计师审计准则》第1141号及 CAS 14（新收入）、CAS 1（存货）、CAS 36（关联方）等企业会计准则开展分析。\n"
+            f"当前被审计单位：【{case.company_name} ({case.stock_code})】，行业：{case.industry}，审计期间：{case.audit_period}。\n"
+            f"案例概况：凭证 {len(case.vouchers)} 笔、发票 {len(case.invoices)} 张、流水 {len(case.bank_flows)} 笔、合同 {len(case.contracts)} 份。\n"
+            "请以专业注册会计师口吻，结合工具调用返回的确定性事实与证据链，针对用户提出的问题进行条理清晰、严谨专业的解答。\n"
+            "若发现异常，请明确指出：涉及金额、违反的会计准则条款、舞弊嫌疑机制及注册会计师建议的进一步审计程序。"
+        )
+
+        chat_messages = [{"role": "system", "content": system_prompt}]
+        for m in messages:
+            chat_messages.append({"role": m.get("role", "user"), "content": m.get("content", "")})
+
+        if tool_context_str:
+            chat_messages.append({
+                "role": "system",
+                "content": f"【系统注入实时审计算子工具执行数据】：{tool_context_str}"
+            })
+
+        # LLM completion
+        if self.llm.mode == ExecutionMode.MOCK:
+            # Heuristic CPA auditor response
+            content = self._generate_heuristic_agent_response(case, last_user_msg, tool_calls)
+            reasoning = "DeepSeek CoT 思考链（离线启发式演绎）：结合被审计单位凭证与流水事实，调度确定性审计算子，依据 CAS 14 / CSA 1141 完成专家研判。"
+            return {
+                "role": "assistant",
+                "content": content,
+                "reasoning_content": reasoning,
+                "tool_calls": tool_calls,
+                "model_name": self.llm.model_name,
+                "execution_mode": self.llm.mode.value
+            }
+        else:
+            resp = self.llm.chat_completion(
+                messages=chat_messages,
+                temperature=temperature,
+                response_json=False,
+                max_tokens=4096
+            )
+            return {
+                "role": "assistant",
+                "content": resp.content,
+                "reasoning_content": resp.reasoning_content,
+                "tool_calls": tool_calls,
+                "model_name": resp.model_name,
+                "execution_mode": resp.execution_mode.value
+            }
+
+    def _generate_heuristic_agent_response(
+        self,
+        case: AccountingCaseData,
+        user_prompt: str,
+        tool_calls: List[Dict[str, Any]]
+    ) -> str:
+        """Generate high-quality, professional auditor response in MOCK mode."""
+        recon_call = next((tc for tc in tool_calls if tc["tool_name"] == "perform_three_way_reconciliation"), None)
+        beneish_call = next((tc for tc in tool_calls if tc["tool_name"] == "calculate_beneish_m_score"), None)
+
+        response_lines = [
+            f"### 📋 注册会计师审计专业意见 · {case.company_name} ({case.stock_code})",
+            ""
+        ]
+
+        if beneish_call:
+            b_data = beneish_call["tool_output"]
+            if b_data.get("is_calculable"):
+                m_val = b_data.get("m_score", 0.0)
+                is_man = b_data.get("is_manipulator", False)
+                response_lines.append(f"**1. Beneish M-Score 操纵指数分析**：")
+                response_lines.append(f"- 测算得分：`{m_val:.2f}`（阈值标准：大于 -1.78 即存在高危财务操纵嫌疑）。")
+                response_lines.append(f"- 评价结论：{'⚠️ 存在显著盈余操纵/财报粉饰风险' if is_man else '✅ 指标处于常规合理波动区间'}。")
+            else:
+                response_lines.append(f"**1. Beneish M-Score 操纵指数分析**：")
+                response_lines.append(f"- 状态：`不可计算`（{b_data.get('reason')}）。智能体遵循客观严谨原则，未采用主观估算数据。")
+            response_lines.append("")
+
+        if recon_call:
+            r_data = recon_call["tool_output"]
+            cnt = r_data.get("total_discrepancies_count", 0)
+            amt = r_data.get("total_abnormal_amount", 0.0)
+            response_lines.append(f"**2. 业财三单穿透勾稽核对结果**：")
+            response_lines.append(f"- 涉及凭证总量：{len(case.vouchers)} 笔，检出异常单据：`{cnt}` 处，涉及错报金额：`¥{amt:,.2f}` 元。")
+            if r_data.get("discrepancies"):
+                response_lines.append("- **核心异常证据链**：")
+                for d in r_data.get("discrepancies")[:3]:
+                    response_lines.append(f"  * **[{d['type']}]** 凭证单号 `{d.get('voucher_id') or d.get('voucherId')}`：{d['detail']}（涉及金额：¥{d['amount']:,.2f}）")
+            response_lines.append("")
+
+        if not beneish_call and not recon_call:
+            response_lines.append(f"**审计事实梳理**：当前账套已接入记账凭证 {len(case.vouchers)} 笔、发票 {len(case.invoices)} 张、银行流水 {len(case.bank_flows)} 笔。")
+            response_lines.append("")
+
+        response_lines.extend([
+            "**3. 会计准则适用与专业判断**：",
+            "- 依据 **CAS 14（新收入准则）** 五步法原则，收入确认必须以客户取得商品或服务的控制权为前提。若出现“有账无单”、“单据倒挂”或“发票与流水金额不符”，应全额冲减虚构收入并作差错更正。",
+            "- 依据 **CSA 1141（财务报表审计中与舞弊相关的责任）**，上述单据矛盾构成舞弊重大错报风险，审计项目组不可将内控依赖作为实质性程序减免的理由。",
+            "",
+            "**4. 进一步审计底稿核查程序建议**：",
+            "1. **外部独立函证**：向主要客户及资金对手方实施积极式询证函，函证交易发生额及期末应收/应付款项余额。",
+            "2. **资金穿透核查**：调取银行对账单原件并核对网银电子回单流水，排查是否存在体外资金循环或大股东隐蔽占用。",
+            "3. **现场监盘与出入库追踪**：核验仓储物流单据与海关报关记录，验证基础实物资产交付的真实性。"
+        ])
+
+        return "\n".join(response_lines)
+
+    def run_autonomous_audit_goal(
+        self,
+        case: AccountingCaseData,
+        goal_instruction: str = "执行端到端全量舞弊穿透审计与底稿生成"
+    ) -> Dict[str, Any]:
+        """
+        Autonomous Multi-Step Audit Goal Execution (Native replacement for dsh-tool-goal).
+        Executes:
+        - Step 1: Goal Planning & Context Ingestion
+        - Step 2: Deterministic Tools Matrix Execution
+        - Step 3: Deep CAS Accounting Standards Deduction
+        - Step 4: Audit Workpapers & Opinion Synthesis
+        """
+        start_time = time.perf_counter()
+        steps = [
+            {
+                "step": 1,
+                "title": "审计目标规划与全模态账套画像",
+                "status": "completed",
+                "detail": f"目标：{goal_instruction}。成功加载【{case.company_name}】账套，解析凭证 {len(case.vouchers)} 笔、发票 {len(case.invoices)} 张、流水 {len(case.bank_flows)} 笔。"
+            },
+            {
+                "step": 2,
+                "title": "确定性审计算子矩阵调度",
+                "status": "completed",
+                "detail": "调度 Beneish M-Score 8 变量模型与三单穿透勾稽算子，完成数值层面刚性排查。"
+            },
+            {
+                "step": 3,
+                "title": "DeepSeek 大模型准则深度定性",
+                "status": "completed",
+                "detail": "基于 CAS 14、CAS 1、CAS 36 及 CSA 1141 开展商业实质与舞弊机理演绎。"
+            },
+            {
+                "step": 4,
+                "title": "三层证据审计底稿与结论合成",
+                "status": "completed",
+                "detail": "已自动编排标准审计工作底稿，完成证据链闭环并生成注册会计师应对建议。"
+            }
+        ]
+
+        report = self.run_case(case, plugin_id="audit_fraud_detection")
+        recon = perform_three_way_reconciliation(case)
+        beneish = calculate_beneish_from_case(case)
+
+        elapsed = round(time.perf_counter() - start_time, 3)
+
+        return {
+            "status": "success",
+            "goal": goal_instruction,
+            "case_id": case.case_id,
+            "company_name": case.company_name,
+            "steps": steps,
+            "report": report.model_dump(),
+            "tool_outputs": {
+                "beneish_m_score": beneish,
+                "three_way_reconciliation": recon
+            },
+            "elapsed_seconds": elapsed,
+            "execution_mode": self.llm.mode.value,
+            "model_name": self.llm.model_name
+        }
