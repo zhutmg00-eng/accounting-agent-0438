@@ -203,3 +203,29 @@ export interface AgentGoalResponse {
   model_name: string
 }
 
+export interface CompliancePillar {
+  pillar: string
+  summary: string
+  details: string[]
+}
+
+export interface ComplianceManifest {
+  title: string
+  version: string
+  governance_pillars: CompliancePillar[]
+  compliance_standards: string[]
+}
+
+export interface CpaApprovalReceipt {
+  receipt_id: string
+  case_id: string
+  auditor_name: string
+  cert_no: string
+  audit_firm: string
+  opinion_type: string
+  sign_timestamp: string
+  verification_hash: string
+  ethical_declaration: string
+  status: string
+}
+

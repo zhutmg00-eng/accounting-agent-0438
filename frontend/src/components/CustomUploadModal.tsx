@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { X, UploadCloud, FileSpreadsheet, Receipt, Landmark, CheckCircle2, AlertCircle } from 'lucide-react'
+import { X, UploadCloud, FileSpreadsheet, Receipt, Landmark, CheckCircle2, AlertCircle, Download } from 'lucide-react'
 
 interface CustomUploadModalProps {
   isOpen: boolean
@@ -22,6 +22,10 @@ export const CustomUploadModal: React.FC<CustomUploadModalProps> = ({
 
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
+
+  const handleDownloadTemplate = (type: 'vouchers' | 'invoices' | 'bank_flows') => {
+    window.open(`/api/templates/download/${type}`, '_blank')
+  }
 
   if (!isOpen) return null
 
@@ -116,11 +120,21 @@ export const CustomUploadModal: React.FC<CustomUploadModalProps> = ({
           {/* 3 File Inputs */}
           <div className="space-y-3 pt-2">
             {/* Vouchers File */}
-            <div className="p-3.5 rounded-xl bg-slate-900/60 border border-white/10 flex items-center justify-between">
+            <div className="p-3.5 rounded-xl bg-slate-900/60 border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <FileSpreadsheet className="w-5 h-5 text-cyan-400" />
+                <FileSpreadsheet className="w-5 h-5 text-cyan-400 flex-shrink-0" />
                 <div>
-                  <div className="text-xs font-bold text-white">1. 企业记账凭证表 (Excel: .xlsx)</div>
+                  <div className="text-xs font-bold text-white flex items-center gap-2">
+                    <span>1. 企业记账凭证表 (Excel: .xlsx)</span>
+                    <button
+                      type="button"
+                      onClick={() => handleDownloadTemplate('vouchers')}
+                      className="text-[10px] text-cyan-400 hover:text-cyan-300 underline font-normal flex items-center gap-0.5 cursor-pointer"
+                    >
+                      <Download className="w-2.5 h-2.5" />
+                      下载标准模板
+                    </button>
+                  </div>
                   <div className="text-[11px] text-slate-400">必填列: 凭证号、记账日期、科目编码、科目名称、借方金额、贷方金额</div>
                 </div>
               </div>
@@ -133,11 +147,21 @@ export const CustomUploadModal: React.FC<CustomUploadModalProps> = ({
             </div>
 
             {/* Invoices File */}
-            <div className="p-3.5 rounded-xl bg-slate-900/60 border border-white/10 flex items-center justify-between">
+            <div className="p-3.5 rounded-xl bg-slate-900/60 border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <Receipt className="w-5 h-5 text-purple-400" />
+                <Receipt className="w-5 h-5 text-purple-400 flex-shrink-0" />
                 <div>
-                  <div className="text-xs font-bold text-white">2. 增值税发票清单 (CSV: .csv)</div>
+                  <div className="text-xs font-bold text-white flex items-center gap-2">
+                    <span>2. 增值税发票清单 (CSV: .csv)</span>
+                    <button
+                      type="button"
+                      onClick={() => handleDownloadTemplate('invoices')}
+                      className="text-[10px] text-purple-400 hover:text-purple-300 underline font-normal flex items-center gap-0.5 cursor-pointer"
+                    >
+                      <Download className="w-2.5 h-2.5" />
+                      下载标准模板
+                    </button>
+                  </div>
                   <div className="text-[11px] text-slate-400">必填列: 发票号码、开票日期、购买方名称、销售方名称、价税合计</div>
                 </div>
               </div>
@@ -150,11 +174,21 @@ export const CustomUploadModal: React.FC<CustomUploadModalProps> = ({
             </div>
 
             {/* Bank Flows File */}
-            <div className="p-3.5 rounded-xl bg-slate-900/60 border border-white/10 flex items-center justify-between">
+            <div className="p-3.5 rounded-xl bg-slate-900/60 border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <Landmark className="w-5 h-5 text-blue-400" />
+                <Landmark className="w-5 h-5 text-blue-400 flex-shrink-0" />
                 <div>
-                  <div className="text-xs font-bold text-white">3. 银行对账单明细 (CSV: .csv)</div>
+                  <div className="text-xs font-bold text-white flex items-center gap-2">
+                    <span>3. 银行对账单明细 (CSV: .csv)</span>
+                    <button
+                      type="button"
+                      onClick={() => handleDownloadTemplate('bank_flows')}
+                      className="text-[10px] text-blue-400 hover:text-blue-300 underline font-normal flex items-center gap-0.5 cursor-pointer"
+                    >
+                      <Download className="w-2.5 h-2.5" />
+                      下载标准模板
+                    </button>
+                  </div>
                   <div className="text-[11px] text-slate-400">必填列: 交易流水号、交易时间、对手方户名、交易金额、附言</div>
                 </div>
               </div>

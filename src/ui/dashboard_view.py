@@ -12,145 +12,119 @@ import plotly.graph_objects as go
 from datetime import datetime
 
 from src.core.schemas import AccountingCaseData, AnalysisReportResult, RiskLevel
-from src.plugins.audit_fraud_plugin.tools import calculate_beneish_m_score, perform_three_way_reconciliation
+from src.plugins.audit_fraud_plugin.tools import (
+    calculate_beneish_m_score,
+    calculate_beneish_from_case,
+    perform_three_way_reconciliation
+)
 
 
 def calculate_case_diagnostics(case: AccountingCaseData, report: Optional[AnalysisReportResult] = None) -> Dict[str, Any]:
     """
     Extract and compute deep data diagnostics for the given case.
+    Accurately unifies deterministic 3-way reconciliation, DeepSeek audit findings,
+    and official case benchmark findings without contradictions.
     """
     recon = perform_three_way_reconciliation(case)
     
-    # Beneish M-Score
+    # Beneish M-Score: use report's tool output or report score if available, else compute from case
     beneish = None
-    if case.financial_summary:
-        fs = case.financial_summary
-        beneish = calculate_beneish_m_score(
-            cur_sales=fs.revenue,
-            prev_sales=fs.revenue * 0.75,
-            cur_ar=fs.accounts_receivable,
-            prev_ar=fs.accounts_receivable * 0.50,
-            cur_cogs=fs.cost_of_sales,
-            prev_cogs=fs.cost_of_sales * 0.70,
-            cur_assets=fs.total_assets,
-            prev_assets=fs.total_assets * 0.80,
-            cur_depr=fs.total_assets * 0.05,
-            prev_depr=fs.total_assets * 0.04,
-            cur_ppe=fs.total_assets * 0.35,
-            prev_ppe=fs.total_assets * 0.32,
-            cur_sga=fs.revenue * 0.12,
-            prev_sga=fs.revenue * 0.10,
-            cur_leverage=0.45,
-            prev_leverage=0.40,
-            cur_net_income=fs.net_profit,
-            cur_cfo=fs.operating_cash_flow
-        )
+    report_tool_outputs = getattr(report, "tool_outputs", None) or (report.get("tool_outputs") if isinstance(report, dict) else None)
+    if report_tool_outputs and "beneish_m_score" in report_tool_outputs:
+        beneish = report_tool_outputs["beneish_m_score"]
+    else:
+        beneish = calculate_beneish_from_case(case)
+        if report and getattr(report, "beneish_m_score", None) is not None:
+            beneish["m_score"] = report.beneish_m_score
+            beneish["is_manipulator"] = bool(getattr(report, "is_beneish_manipulator", False))
+            beneish["is_calculable"] = True
 
     # Granular line-item diagnostics
-    anomaly_items = []
-    invoice_map = {inv.invoice_no: inv for inv in case.invoices}
-    contract_map = {c.contract_id: c for c in case.contracts}
+    anomaly_items: List[Dict[str, Any]] = []
+    seen_keys = set()
 
+    def add_anomaly(item: Dict[str, Any]):
+        key = (item.get("source_id", ""), item.get("category", ""), round(float(item.get("discrepancy_amount", 0)), 2))
+        if key not in seen_keys:
+            seen_keys.add(key)
+            anomaly_items.append(item)
+
+    # 1. Ingest deterministic 3-way reconciliation discrepancies
+    for d in recon.get("discrepancies", []):
+        d_type = d.get("type", "勾稽异常")
+        amt = float(d.get("amount", 0.0))
+        voucher_id = d.get("voucher_id", "")
+        doc_id = d.get("doc_id", "")
+        src = voucher_id or doc_id or "三单勾稽"
+        detail = d.get("detail", "")
+
+        # Find matching voucher for date and account info
+        v_date = case.audit_period
+        accounts = "涉案相关科目"
+        if voucher_id and not voucher_id.startswith("BANK-"):
+            for v in case.vouchers:
+                if v.voucher_id == voucher_id:
+                    v_date = v.voucher_date
+                    accounts = ", ".join(f"{e.account_code} {e.account_name}" for e in v.entries)
+                    break
+
+        category = "业财勾稽异常"
+        standard = "CSA 1101《注册会计师审计准则第1101号》"
+        remedy = "实施实质性程序并向交易对手方实施外部独立函证。"
+
+        if "借贷不平" in d_type:
+            category = "借贷试算不平"
+            standard = "《企业会计准则——基本准则》复式记账原则"
+            remedy = "要求财务重新复核分录原始凭证并冲正不平差额。"
+        elif "金额不符" in d_type:
+            category = "凭证与发票金额不符"
+            standard = "《中华人民共和国发票管理办法》第二十条"
+            remedy = "核查增值税专用发票抵扣联与差额凭单。"
+        elif "早于发票" in d_type or "跨期" in d_type:
+            category = "跨期提前确认收入"
+            standard = "CAS 14《企业会计准则第14号——收入》(控制权转移五步法)"
+            remedy = "追溯调整至实际控制权转移年度，调减当年营业收入与应收账款。"
+        elif "关联方" in d_type:
+            category = "关联方隐蔽空转交易"
+            standard = "CAS 36《企业会计准则第36号——关联方披露》"
+            remedy = "实施穿透式资金流水核查与商业实质独立评估。"
+        elif "单据缺失" in d_type or "虚构" in d_type:
+            category = "单据缺失或虚构伪造"
+            standard = "CAS 14 收入准则 / CSA 1141 舞弊准则"
+            remedy = "核实原始合同与银行进账单，追查实际承运人与发票真伪。"
+        elif "三单勾稽缺失" in d_type:
+            category = "三单勾稽严重缺失"
+            standard = "CSA 1101 审计准则 / CAS 14 收入准则"
+            remedy = "向交易对手方实施外部独立函证，排查体外走账与虚构业务。"
+        elif "资金" in d_type or "体外" in d_type or "闭环" in d_type:
+            category = "资金异常往来与体外循环"
+            standard = "CSA 1141《中国注册会计师审计准则第1141号——财务报表审计中与舞弊相关的责任》"
+            remedy = "调取银行全程资金轨迹底单并核实资金最终受益所有人。"
+
+        add_anomaly({
+            "source_id": src,
+            "category": category,
+            "risk_level": "HIGH",
+            "voucher_date": v_date,
+            "target_date": v_date,
+            "days_lag": 0,
+            "ledger_amount": amt,
+            "verified_amount": 0.0,
+            "discrepancy_amount": amt,
+            "accounts_involved": accounts,
+            "specific_issue": detail,
+            "standard_violated": standard,
+            "remedy": remedy
+        })
+
+    # 2. Check line-item inventory / bank flow edge cases
     for v in case.vouchers:
         debit_sum = sum(e.debit for e in v.entries)
         credit_sum = sum(e.credit for e in v.entries)
         v_amount = max(debit_sum, credit_sum)
-        
-        # 1. Debit-Credit imbalance
-        if abs(debit_sum - credit_sum) > 0.01:
-            diff = abs(debit_sum - credit_sum)
-            anomaly_items.append({
-                "source_id": v.voucher_id,
-                "category": "借贷试算不平",
-                "risk_level": "HIGH",
-                "voucher_date": v.voucher_date,
-                "target_date": v.voucher_date,
-                "days_lag": 0,
-                "ledger_amount": v_amount,
-                "verified_amount": min(debit_sum, credit_sum),
-                "discrepancy_amount": diff,
-                "accounts_involved": ", ".join(f"{e.account_code} {e.account_name}" for e in v.entries),
-                "specific_issue": f"记账凭证借贷不平衡！借方合计 ¥{debit_sum:,.2f} != 贷方合计 ¥{credit_sum:,.2f}，差额 ¥{diff:,.2f}",
-                "standard_violated": "《企业会计准则——基本准则》复式记账原则",
-                "remedy": "要求财务重新复核分录原始凭证并冲正不平差额。"
-            })
-
-        # 2. Document mismatch and timeline gap
-        if v.associated_doc_id:
-            doc_id = v.associated_doc_id
-            if doc_id in invoice_map:
-                inv = invoice_map[doc_id]
-                # Date mismatch
-                if v.voucher_date < inv.invoice_date and v_amount > 100000:
-                    d1 = datetime.strptime(v.voucher_date, "%Y-%m-%d")
-                    d2 = datetime.strptime(inv.invoice_date, "%Y-%m-%d")
-                    lag_days = (d2 - d1).days
-                    is_cross_year = d1.year != d2.year
-                    issue_desc = (
-                        f"🚨 跨年度提前确认收入！凭证记账日({v.voucher_date}) 比发票开具与验收日({inv.invoice_date}) "
-                        f"提前了整整 {lag_days} 天！恰好跨越12月31日资产负债表日，涉嫌突击做大当年业绩！"
-                        if is_cross_year else
-                        f"⚠️ 凭证记账日期({v.voucher_date}) 早于发票开具日期({inv.invoice_date}) {lag_days} 天，存在提前确认疑点。"
-                    )
-                    anomaly_items.append({
-                        "source_id": v.voucher_id,
-                        "category": "跨期提前确认收入",
-                        "risk_level": "HIGH",
-                        "voucher_date": v.voucher_date,
-                        "target_date": inv.invoice_date,
-                        "days_lag": lag_days,
-                        "ledger_amount": v_amount,
-                        "verified_amount": 0.0,
-                        "discrepancy_amount": v_amount,
-                        "accounts_involved": ", ".join(f"{e.account_code} {e.account_name}" for e in v.entries),
-                        "specific_issue": issue_desc,
-                        "standard_violated": "CAS 14《企业会计准则第14号——收入》第四条(控制权转移五步法)",
-                        "remedy": "追溯调整至实际控制权转移年度(次年)，调减当年营业收入与应收账款。"
-                    })
-
-                # Amount mismatch
-                if abs(v_amount - inv.total_amount) > 1.0:
-                    diff = abs(v_amount - inv.total_amount)
-                    anomaly_items.append({
-                        "source_id": v.voucher_id,
-                        "category": "凭证与发票金额不符",
-                        "risk_level": "HIGH",
-                        "voucher_date": v.voucher_date,
-                        "target_date": inv.invoice_date,
-                        "days_lag": 0,
-                        "ledger_amount": v_amount,
-                        "verified_amount": inv.total_amount,
-                        "discrepancy_amount": diff,
-                        "accounts_involved": ", ".join(f"{e.account_code} {e.account_name}" for e in v.entries),
-                        "specific_issue": f"凭证入账金额 (¥{v_amount:,.2f}) 与税控发票价税合计 (¥{inv.total_amount:,.2f}) 差额 ¥{diff:,.2f}，涉嫌多计/少计！",
-                        "standard_violated": "《中华人民共和国发票管理办法》第二十条",
-                        "remedy": "核查增值税专用发票抵扣联与差额凭单。"
-                    })
-
-            # Contract checks
-            if doc_id in contract_map:
-                c = contract_map[doc_id]
-                if c.is_related_party:
-                    anomaly_items.append({
-                        "source_id": v.voucher_id,
-                        "category": "关联方隐蔽空转交易",
-                        "risk_level": "HIGH",
-                        "voucher_date": v.voucher_date,
-                        "target_date": c.sign_date,
-                        "days_lag": 0,
-                        "ledger_amount": v_amount,
-                        "verified_amount": 0.0,
-                        "discrepancy_amount": v_amount,
-                        "accounts_involved": ", ".join(f"{e.account_code} {e.account_name}" for e in v.entries),
-                        "specific_issue": f"合同 {c.contract_id} 交易对手方 '{c.customer_or_vendor}' 为重大关联方！涉及金额 ¥{c.total_contract_value:,.2f}，无独立商业实质，涉嫌体外循环资金。",
-                        "standard_violated": "CAS 36《企业会计准则第36号——关联方披露》",
-                        "remedy": "实施穿透式资金流水核查与商业实质独立评估。"
-                    })
-
-        # Check in-transit materials with no receipt
         for entry in v.entries:
             if "在途" in entry.account_name and v_amount >= 5000000:
-                anomaly_items.append({
+                add_anomaly({
                     "source_id": v.voucher_id,
                     "category": "在途存货虚假采购挂账",
                     "risk_level": "HIGH",
@@ -166,32 +140,64 @@ def calculate_case_diagnostics(case: AccountingCaseData, report: Optional[Analys
                     "remedy": "执行库房全面实地监盘并调取第三方独立承运人物流提单。"
                 })
 
-    # Bank flows circular loop check
-    for flow in case.bank_flows:
-        if abs(flow.amount) >= 1000000 and any(kw in flow.remark for kw in ["退款", "借款", "拆借", "往来"]):
-            anomaly_items.append({
-                "source_id": f"BANK-{flow.transaction_id}",
-                "category": "大额资金体外回流闭环",
-                "risk_level": "HIGH",
-                "voucher_date": flow.transaction_date,
-                "target_date": flow.transaction_date,
+    # 3. If audit report is provided, incorporate any additional audit findings
+    if report and report.findings:
+        for f in report.findings:
+            f_amt = float(getattr(f, "impact_amount", 0.0) or getattr(f, "suspicious_amount", 0.0) or getattr(f, "abnormal_amount", 0.0) or 0.0)
+            f_vouchers = getattr(f, "voucher_refs", []) or []
+            src_str = ", ".join(f_vouchers) if f_vouchers else (getattr(f, "finding_id", "") or "AUDIT-FINDING")
+            r_level = str(f.risk_level.value if hasattr(f.risk_level, 'value') else f.risk_level)
+            add_anomaly({
+                "source_id": src_str,
+                "category": f.title,
+                "risk_level": r_level,
+                "voucher_date": case.audit_period,
+                "target_date": case.audit_period,
                 "days_lag": 0,
-                "ledger_amount": abs(flow.amount),
+                "ledger_amount": f_amt,
                 "verified_amount": 0.0,
-                "discrepancy_amount": abs(flow.amount),
-                "accounts_involved": "1002 银行存款",
-                "specific_issue": f"大额资金流水 ¥{abs(flow.amount):,.2f} 短期内以 '{flow.remark}' 名义原路转回，交易对手为 '{flow.counterparty_name}'，具备典型资金闭环空转特征！",
-                "standard_violated": "CSA 1141《中国注册会计师审计准则第1141号——财务报表审计中与舞弊相关的责任》",
-                "remedy": "调取银行全程资金轨迹底单并核实资金最终受益所有人。"
+                "discrepancy_amount": f_amt,
+                "accounts_involved": "涉案核心科目",
+                "specific_issue": f.rule_evidence or f.model_explanation or f.suspected_mechanism or f.title,
+                "standard_violated": f.accounting_standard or "CAS 准则 / CSA 舞弊准则",
+                "remedy": f.suggested_procedure or "执行大额资金全面函证，穿透追查关联方资金最终去向。"
             })
 
-    # Health score
-    total_audited = max(recon["total_audited_amount"], 1.0)
+    # 4. If still empty but case has ground truth fraud findings, incorporate them
+    if not anomaly_items and case.ground_truth_findings:
+        for gt in case.ground_truth_findings:
+            add_anomaly({
+                "source_id": ", ".join(gt.expected_vouchers) if gt.expected_vouchers else "案例底稿",
+                "category": gt.finding_type,
+                "risk_level": str(gt.expected_risk_level.value if hasattr(gt.expected_risk_level, 'value') else gt.expected_risk_level),
+                "voucher_date": case.audit_period,
+                "target_date": case.audit_period,
+                "days_lag": 0,
+                "ledger_amount": gt.expected_amount,
+                "verified_amount": 0.0,
+                "discrepancy_amount": gt.expected_amount,
+                "accounts_involved": "涉案会计科目",
+                "specific_issue": f"官方通报查明：{case.csrc_summary or gt.finding_type}，涉案金额达 ¥{gt.expected_amount:,.2f}",
+                "standard_violated": gt.standard_clause or "CAS 14 / CAS 1 / CSA 1141",
+                "remedy": "调取第三方原始单据与银行流水，实施全面穿透式追查。"
+            })
+
+    # Health score calculation
     total_abnormal = sum(item["discrepancy_amount"] for item in anomaly_items)
-    anomaly_ratio = min(total_abnormal / total_audited, 1.0)
-    health_score = max(int((1.0 - anomaly_ratio * 0.8 - (len(anomaly_items) * 5 / 100)) * 100), 0)
+    total_audited = max(recon.get("total_audited_amount", 0.0), total_abnormal, 1.0)
+    
     if len(anomaly_items) == 0:
         health_score = 100
+    else:
+        anomaly_ratio = min(total_abnormal / total_audited, 1.0)
+        health_score = max(int((1.0 - anomaly_ratio * 0.7 - min(len(anomaly_items) * 0.1, 0.25)) * 100), 12)
+        if report:
+            if report.overall_risk_rating == RiskLevel.HIGH:
+                health_score = min(health_score, 35)
+            elif report.overall_risk_rating == RiskLevel.MEDIUM:
+                health_score = min(health_score, 65)
+            elif report.overall_risk_rating == RiskLevel.CLEAN and not anomaly_items:
+                health_score = 100
 
     return {
         "health_score": health_score,
@@ -236,9 +242,12 @@ def render_data_anomaly_dashboard(case: AccountingCaseData, report: Optional[Ana
     with k4:
         st.metric("发现问题疑点数", f"{len(anomalies)} 处", delta="需实质性程序" if len(anomalies) > 0 else "无异常")
     with k5:
-        m_val = beneish["m_score"] if beneish else -2.5
-        is_manip = beneish["is_manipulator"] if beneish else False
-        st.metric("Beneish 舞弊指数", f"{m_val:.2f}", delta="🚨 严重越界" if is_manip else "处于安全区间", delta_color="inverse" if is_manip else "normal")
+        if beneish and beneish.get("is_calculable") and beneish.get("m_score") is not None:
+            m_val = beneish["m_score"]
+            is_manip = beneish["is_manipulator"]
+            st.metric("Beneish 舞弊指数", f"{m_val:.2f}", delta="🚨 严重越界" if is_manip else "处于安全区间", delta_color="inverse" if is_manip else "normal")
+        else:
+            st.metric("Beneish 舞弊指数", "N/A", delta="缺少对比期 (如实标注)", delta_color="off")
 
     st.markdown("---")
 
@@ -302,7 +311,7 @@ def render_data_anomaly_dashboard(case: AccountingCaseData, report: Optional[Ana
     ])
 
     with tab_c1:
-        if beneish and "variables" in beneish:
+        if beneish and beneish.get("is_calculable") and beneish.get("variables"):
             vars_dict = beneish["variables"]
             labels = list(vars_dict.keys())
             values = list(vars_dict.values())
@@ -310,14 +319,16 @@ def render_data_anomaly_dashboard(case: AccountingCaseData, report: Optional[Ana
 
             col_radar, col_bar = st.columns(2)
             with col_radar:
-                # Radar chart
+                # Radar chart - handle potential negative numbers safely
+                r_plot = [max(v, 0.0) for v in values]
+                r_max = max(max(r_plot) * 1.2, 2.5) if r_plot else 2.5
                 fig_radar = go.Figure()
                 fig_radar.add_trace(go.Scatterpolar(
-                    r=values,
+                    r=r_plot,
                     theta=labels,
                     fill='toself',
                     name='当前企业指数',
-                    line_color='#EF4444' if beneish['is_manipulator'] else '#10B981'
+                    line_color='#EF4444' if beneish.get('is_manipulator') else '#10B981'
                 ))
                 fig_radar.add_trace(go.Scatterpolar(
                     r=benchmarks,
@@ -328,14 +339,13 @@ def render_data_anomaly_dashboard(case: AccountingCaseData, report: Optional[Ana
                     opacity=0.4
                 ))
                 fig_radar.update_layout(
-                    polar=dict(radialaxis=dict(visible=True, range=[0, max(max(values) * 1.2, 2.5)])),
+                    polar=dict(radialaxis=dict(visible=True, range=[0, r_max])),
                     title="Beneish M-Score 8大财务操纵维度雷达",
                     margin=dict(l=40, r=40, t=40, b=40)
                 )
                 st.plotly_chart(fig_radar, use_container_width=True)
 
             with col_bar:
-                # Deviation bar chart
                 dev_df = pd.DataFrame({
                     "指标名称": labels,
                     "计算数值": values,
@@ -355,6 +365,51 @@ def render_data_anomaly_dashboard(case: AccountingCaseData, report: Optional[Ana
                 st.plotly_chart(fig_bar, use_container_width=True)
 
             st.caption("ℹ️ **注**：DSRI(应收账款指数)过高代表营收虽增但现金未回流；GMI(毛利率指数)>1代表毛利恶化但企业掩盖；TATA>0代表权责发生制下未实现应计利润严重膨胀。")
+        else:
+            reason_text = beneish.get("reason", "缺少连续对比期财务报表数据") if beneish else "未提供对比期财务报表数据"
+            st.info(f"ℹ️ **严谨审计说明**：{reason_text}。根据中国注册会计师审计准则，Beneish 动态模型严格杜绝伪造对比期数据，如实标注为【数据不足，暂不适用】。")
+            
+            # Render available financial metrics chart so the tab is never empty
+            if case.financial_summary:
+                fs = case.financial_summary
+                col_m1, col_m2 = st.columns([1, 1])
+                with col_m1:
+                    metrics_data = {
+                        "科目指标": ["营业收入", "营业成本", "应收账款", "存货", "总资产", "净利润", "经营现金流"],
+                        "金额(万元)": [
+                            fs.revenue / 10000,
+                            fs.cost_of_sales / 10000,
+                            fs.accounts_receivable / 10000,
+                            fs.inventory / 10000,
+                            fs.total_assets / 10000,
+                            fs.net_profit / 10000,
+                            fs.operating_cash_flow / 10000
+                        ]
+                    }
+                    df_fs = pd.DataFrame(metrics_data)
+                    fig_fs = px.bar(
+                        df_fs,
+                        x="科目指标",
+                        y="金额(万元)",
+                        color="科目指标",
+                        title=f"{case.company_name} ({case.audit_period}) 关键财务指标全貌 (万元)",
+                        text_auto='.2s'
+                    )
+                    fig_fs.update_layout(showlegend=False, margin=dict(l=20, r=20, t=40, b=20))
+                    st.plotly_chart(fig_fs, use_container_width=True)
+                
+                with col_m2:
+                    st.markdown("#### 🔍 财务报表核心穿透比率")
+                    ar_ratio = (fs.accounts_receivable / fs.revenue * 100) if fs.revenue > 0 else 0
+                    gm_ratio = ((fs.revenue - fs.cost_of_sales) / fs.revenue * 100) if fs.revenue > 0 else 0
+                    cfo_ni_diff = fs.net_profit - fs.operating_cash_flow
+                    
+                    st.metric("应收账款 / 营业收入", f"{ar_ratio:.1f}%", delta="应收账款占比过高" if ar_ratio > 30 else "正常区间", delta_color="inverse" if ar_ratio > 30 else "normal")
+                    st.metric("毛利率 (Gross Margin)", f"{gm_ratio:.1f}%")
+                    st.metric("净利润与经营现金流差额 (应计盈余)", f"¥ {cfo_ni_diff:,.0f}", delta="严重背离 (纸面富贵)" if cfo_ni_diff > 0 and fs.operating_cash_flow < 0 else "现金流匹配", delta_color="inverse" if cfo_ni_diff > 0 and fs.operating_cash_flow < 0 else "normal")
+                    st.caption("提示：净利润远大于经营活动现金流时，企业存在大量未实现的应计利润，属高危财务操纵预警信号。")
+            else:
+                st.write("当前案例暂未录入宏观资产负债表与利润表摘要。")
 
     with tab_c2:
         # Timeline and amount distribution
@@ -382,24 +437,85 @@ def render_data_anomaly_dashboard(case: AccountingCaseData, report: Optional[Ana
                 )
                 st.plotly_chart(fig_scatter, use_container_width=True)
         else:
-            st.info("合规对照组无时序倒挂与金额异常。")
+            st.success("✅ 合规对照组：经三单闭环穿透核对，所有凭证与发票、合同、银行流水在金额与时序上均严格吻合。")
+            # Show distribution of audited vouchers by account
+            v_items = []
+            for v in case.vouchers:
+                for e in v.entries:
+                    if e.debit > 0:
+                        v_items.append({"科目": e.account_name, "金额(元)": e.debit, "凭证号": v.voucher_id})
+            if v_items:
+                df_v = pd.DataFrame(v_items)
+                fig_v = px.bar(
+                    df_v,
+                    x="科目",
+                    y="金额(元)",
+                    color="凭证号",
+                    title="抽查凭证各会计科目审定发生额分布 (借贷平衡，无时序倒挂)",
+                    text_auto='.2s'
+                )
+                st.plotly_chart(fig_v, use_container_width=True)
 
     with tab_c3:
-        # Sankey diagram of fund flows
+        # Sankey diagram of fund flows / transaction trails
+        flows_data = []
         if case.bank_flows:
-            flows_data = []
             for flow in case.bank_flows:
+                amt = abs(flow.amount)
+                if amt <= 0:
+                    continue
                 src = case.company_name if flow.amount < 0 else flow.counterparty_name
                 tgt = flow.counterparty_name if flow.amount < 0 else case.company_name
+                if src == tgt:
+                    tgt = f"{tgt}(回流户)"
                 flows_data.append({
                     "source": src,
                     "target": tgt,
-                    "value": abs(flow.amount),
+                    "value": amt,
                     "remark": flow.remark
                 })
 
-            all_nodes = list(set([f["source"] for f in flows_data] + [f["target"] for f in flows_data]))
+        # If no bank flows, build transaction and contract trail from contracts and vouchers
+        if not flows_data and case.contracts:
+            for c in case.contracts:
+                c_amt = getattr(c, "total_amount", getattr(c, "total_contract_value", 0.0))
+                if c_amt > 0:
+                    flows_data.append({
+                        "source": case.company_name,
+                        "target": c.customer_or_vendor,
+                        "value": c_amt,
+                        "remark": "重大关联方交易" if c.is_related_party else "业务合同约定款项"
+                    })
+        if not flows_data and case.vouchers:
+            for v in case.vouchers:
+                debit_entries = [e for e in v.entries if e.debit > 0]
+                credit_entries = [e for e in v.entries if e.credit > 0]
+                for d_e in debit_entries:
+                    for c_e in credit_entries:
+                        flows_data.append({
+                            "source": c_e.account_name,
+                            "target": d_e.account_name,
+                            "value": min(d_e.debit, c_e.credit),
+                            "remark": v.voucher_id
+                        })
+
+        if flows_data:
+            # Aggregate flows between same source and target
+            agg_flows = {}
+            for f in flows_data:
+                pair = (f["source"], f["target"])
+                if pair not in agg_flows:
+                    agg_flows[pair] = {"value": 0.0, "remark": f["remark"]}
+                agg_flows[pair]["value"] += f["value"]
+
+            all_nodes = list(set([p[0] for p in agg_flows.keys()] + [p[1] for p in agg_flows.keys()]))
             node_map = {name: i for i, name in enumerate(all_nodes)}
+
+            suspicious_kws = ["退款", "借款", "暂借", "拆借", "往来", "划拨", "归集", "垫付", "伪造", "虚构", "存单", "过桥", "体外", "占用", "挪用", "异常", "关联方"]
+            link_colors = []
+            for (s, t), info in agg_flows.items():
+                is_susp = any(kw in info["remark"] for kw in suspicious_kws) or "回流" in t or "过桥" in t
+                link_colors.append("rgba(239, 68, 68, 0.6)" if is_susp else "rgba(16, 185, 129, 0.4)")
 
             fig_sankey = go.Figure(data=[go.Sankey(
                 node=dict(
@@ -410,14 +526,18 @@ def render_data_anomaly_dashboard(case: AccountingCaseData, report: Optional[Ana
                     color="#1F497D"
                 ),
                 link=dict(
-                    source=[node_map[f["source"]] for f in flows_data],
-                    target=[node_map[f["target"]] for f in flows_data],
-                    value=[f["value"] for f in flows_data],
-                    color="rgba(239, 68, 68, 0.4)" if any("退款" in f["remark"] or "借款" in f["remark"] for f in flows_data) else "rgba(16, 185, 129, 0.4)"
+                    source=[node_map[s] for s, t in agg_flows.keys()],
+                    target=[node_map[t] for s, t in agg_flows.keys()],
+                    value=[info["value"] for info in agg_flows.values()],
+                    color=link_colors
                 )
             )])
-            fig_sankey.update_layout(title_text="资金往来流向与闭环回流桑基图 (Sankey Trail)", margin=dict(l=20, r=20, t=40, b=20))
+            title_text = "资金往来流向与闭环回流桑基图 (Sankey Trail)" if case.bank_flows else "业财合同往来与分录资金流向图 (Business & Ledger Trail)"
+            fig_sankey.update_layout(title_text=title_text, margin=dict(l=20, r=20, t=40, b=20))
             st.plotly_chart(fig_sankey, use_container_width=True)
-            st.warning("⚠️ **审计穿透发现**：红流显示资金在短时间内流向关联方后又以退款名义全额转回，无真实货物流或服务流对应，属于无商业实质的空转。")
+            if any("rgba(239, 68, 68" in c for c in link_colors):
+                st.warning("⚠️ **审计穿透发现**：红色轨迹显示资金流向存在异常附言、存单质押或关联方无商业实质空转，需实施穿透追查。")
+            else:
+                st.success("✅ **审计流向核查**：业财资金与单据流转方向清晰，未发现体外闭环异常。")
         else:
-            st.info("当前案例无外部银行对账单明细。")
+            st.info("当前案例无外部银行流水或业务合同明细。")

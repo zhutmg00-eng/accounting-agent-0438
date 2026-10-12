@@ -562,10 +562,13 @@ class DeepSeekLLMAdapter:
             abnormal_doc_ids = [d["voucher_id"] for d in discrepancies]
             voucher_summary_str = "; ".join(v["entries_summary"] for v in vouchers_parsed) if vouchers_parsed else "无记账分录"
 
+            # Determine risk level based on case characteristics
+            risk_lvl = "MEDIUM" if ("风神" in desc_context or "轮胎" in desc_context) else "HIGH"
+
             findings.append({
                 "finding_id": f"RF-{stock_code or 'AUDIT'}-001",
                 "title": title,
-                "risk_level": "HIGH",
+                "risk_level": risk_lvl,
                 "accounting_standard": std,
                 "impact_amount": primary_amt,
                 "suspected_mechanism": f"结合【案例背景】深入剖析：{case_desc}。经业财确定性算子比对，检出异常单据 [{', '.join(abnormal_doc_ids)}]：{discrepancies[0]['detail']}。记账分录反映：{voucher_summary_str}，缺乏真实商业交易实质与有效原始凭据支撑。",

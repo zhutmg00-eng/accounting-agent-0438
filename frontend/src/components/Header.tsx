@@ -24,6 +24,7 @@ interface HeaderProps {
   totalCases: number
   modelInfo?: DeepSeekModelsResponse | null
   onOpenModelModal?: () => void
+  onOpenComplianceModal?: () => void
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -34,7 +35,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenUpload,
   totalCases,
   modelInfo,
-  onOpenModelModal
+  onOpenModelModal,
+  onOpenComplianceModal
 }) => {
   const tabs = [
     { id: 'cockpit', label: '审计指挥舱', icon: Activity },
@@ -47,37 +49,33 @@ export const Header: React.FC<HeaderProps> = ({
   ]
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#080C14]/85 border-b border-white/10 px-6 py-3 transition-all">
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#090D16]/90 border-b border-slate-800 px-6 py-2.5 transition-all">
       <div className="max-w-[1720px] mx-auto flex items-center justify-between gap-4">
         {/* Brand & Competition Info */}
-        <div className="flex items-center gap-4">
-          <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 via-blue-600/30 to-purple-600/20 border border-cyan-500/40 shadow-lg shadow-cyan-500/20">
-            <ShieldAlert className="w-6 h-6 text-cyan-400 animate-pulse" />
-            <span className="absolute -top-1 -right-1 flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
-            </span>
+        <div className="flex items-center gap-3.5">
+          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600/10 border border-blue-500/30 text-blue-400">
+            <ShieldAlert className="w-5 h-5" />
           </div>
 
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-cyan-300 bg-clip-text text-transparent font-mono">
+              <h1 className="text-base font-bold tracking-tight text-white font-mono">
                 DeepSeek-AuditMind
               </h1>
-              <span className="px-2 py-0.5 text-[11px] font-semibold tracking-wider rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 font-mono">
-                v2.0 PRO
+              <span className="px-1.5 py-0.2 text-[10px] font-semibold tracking-wider rounded bg-blue-500/10 text-blue-300 border border-blue-500/30 font-mono">
+                PRO 2.0
               </span>
             </div>
-            <p className="text-xs text-slate-400 flex items-center gap-2">
-              <span>2026年北京市大学生数智会计创新应用竞赛参赛作品</span>
-              <span className="text-slate-600">|</span>
-              <span className="text-emerald-400/90 font-mono">Cordis 微内核驱动</span>
+            <p className="text-[11px] text-slate-400 flex items-center gap-2">
+              <span>数智会计创新应用竞赛决赛作品</span>
+              <span className="text-slate-600">·</span>
+              <span className="text-slate-300 font-mono">矛与盾团队</span>
             </p>
           </div>
         </div>
 
         {/* Center Tabs Navigation */}
-        <nav className="flex items-center gap-1 bg-slate-900/80 p-1.5 rounded-xl border border-white/10 shadow-inner">
+        <nav className="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800">
           {tabs.map((tab) => {
             const Icon = tab.icon
             const isActive = currentTab === tab.id
@@ -85,17 +83,14 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 key={tab.id}
                 onClick={() => setCurrentTab(tab.id)}
-                className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   isActive
-                    ? 'text-cyan-300 bg-gradient-to-r from-cyan-500/20 to-blue-600/20 border border-cyan-500/40 shadow-md shadow-cyan-500/10'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                    ? 'text-white bg-slate-800 border border-slate-700 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-cyan-400' : 'text-slate-400'}`} />
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-400' : 'text-slate-500'}`} />
                 <span>{tab.label}</span>
-                {isActive && (
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-[2px] bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full" />
-                )}
               </button>
             )
           })}
@@ -106,27 +101,36 @@ export const Header: React.FC<HeaderProps> = ({
           {/* DeepSeek Model Detection Badge */}
           <button
             onClick={onOpenModelModal}
-            title="点击打开 DeepSeek 模型自适应探测与诊断面板"
-            className="flex items-center gap-1.5 bg-slate-900/90 hover:bg-cyan-950/40 px-2.5 py-1.5 rounded-lg border border-cyan-500/30 text-xs text-slate-300 transition-all group cursor-pointer"
+            className="flex items-center gap-1.5 bg-slate-800/80 hover:bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-700 text-xs text-slate-300 transition-colors cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-12 transition-transform" />
-            <span className="font-mono text-cyan-300 font-medium truncate max-w-[130px]">
+            <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+            <span className="font-mono text-slate-200 font-medium truncate max-w-[130px]">
               {modelInfo?.active_model || 'deepseek-v4.1-flash'}
             </span>
-            <span className="hidden md:inline px-1 py-0.2 text-[9px] font-mono rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+            <span className="hidden md:inline px-1 py-0.2 text-[9px] font-mono rounded bg-slate-900 text-slate-400 border border-slate-700">
               自适应
             </span>
           </button>
 
+          {/* Ethics & Compliance Button */}
+          <button
+            onClick={onOpenComplianceModal}
+            title="点击查看数智会计伦理、合规与数据安全白皮书"
+            className="flex items-center gap-1.5 bg-slate-800/80 hover:bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-700 text-xs text-slate-300 transition-colors cursor-pointer"
+          >
+            <ShieldAlert className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="font-medium">伦理合规</span>
+          </button>
+
           {/* Mode Switcher */}
-          <div className="flex items-center gap-1.5 bg-slate-900/90 px-3 py-1.5 rounded-lg border border-white/10 text-xs">
+          <div className="flex items-center gap-1.5 bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-700 text-xs">
             <Cpu className="w-3.5 h-3.5 text-purple-400" />
             <span className="text-slate-400">运行模式:</span>
             <select
               value={executionMode}
               onChange={(e) => setExecutionMode(e.target.value)}
               aria-label="选择运行模式"
-              className="bg-transparent text-cyan-300 font-mono font-medium focus:outline-none cursor-pointer"
+              className="bg-transparent text-slate-200 font-mono font-medium focus:outline-none cursor-pointer text-xs"
             >
               <option value="MOCK" className="bg-slate-900 text-slate-200">
                 MOCK (离线确定性引擎)
@@ -143,14 +147,14 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Upload Button */}
           <button
             onClick={onOpenUpload}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-lg shadow-cyan-500/20 transition-all active:scale-95 border border-cyan-400/30"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-blue-600 hover:bg-blue-500 text-white transition-colors border border-blue-500 shadow-sm"
           >
             <UploadCloud className="w-4 h-4" />
             <span>导入账套</span>
           </button>
 
           {/* Database Counter Badge */}
-          <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
+          <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/60 text-slate-300 text-xs font-mono">
             <Database className="w-3.5 h-3.5" />
             <span>全量真实案例: {totalCases} 例</span>
           </div>

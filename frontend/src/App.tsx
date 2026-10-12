@@ -10,10 +10,18 @@ import { WorkpaperTable } from './components/WorkpaperTable'
 import { CustomUploadModal } from './components/CustomUploadModal'
 import { AgentWorkbench } from './components/AgentWorkbench'
 import { ModelDetectionModal } from './components/ModelDetectionModal'
+import { ComplianceModal } from './components/ComplianceModal'
 import { CaseListItem, AnalysisReportResult, DeepSeekModelsResponse } from './types'
 
 export function App() {
-  const [currentTab, setCurrentTab] = useState('cockpit')
+  const getInitialTab = () => {
+    if (typeof window !== 'undefined') {
+      const p = new URLSearchParams(window.location.search).get('tab')
+      if (p) return p
+    }
+    return 'cockpit'
+  }
+  const [currentTab, setCurrentTab] = useState(getInitialTab)
   const [executionMode, setExecutionMode] = useState('MOCK')
   const [cases, setCases] = useState<CaseListItem[]>([])
   const [categories, setCategories] = useState<{ name: string; count: number }[]>([])
@@ -31,6 +39,16 @@ export function App() {
   const [modelInfo, setModelInfo] = useState<DeepSeekModelsResponse | null>(null)
   const [isModelModalOpen, setIsModelModalOpen] = useState(false)
 
+  const [isComplianceOpen, setIsComplianceOpen] = useState(false)
+
+  const refreshCurrentCase = () => {
+    if (selectedCaseId) {
+      fetch(`/api/cases/${selectedCaseId}`)
+        .then((r) => r.json())
+        .then((data) => setCurrentCase(data))
+        .catch((err) => console.error('Failed to reload sanitized case', err))
+    }
+  }
   // Fetch model configuration & auto-detection profile
   const fetchModelInfo = () => {
     fetch('/api/deepseek/models')
@@ -82,10 +100,29 @@ export function App() {
       .then((r) => r.json())
       .then((data) => {
         setCurrentCase(data)
-        setReport(null)
-        setCotStream('')
-        setCurrentStage(1)
-        setStageLogs([])
+        const autoRun = new URLSearchParams(window.location.search).get('autorun') === '1'
+        if (autoRun) {
+          fetch('/api/audit/run', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              case_id: selectedCaseId,
+              plugin_id: 'audit_fraud_detection',
+              mode: executionMode
+            })
+          })
+            .then((r) => r.json())
+            .then((repData) => {
+              setReport(repData)
+              setCurrentStage(5)
+            })
+            .catch((e) => console.error('Auto audit failed', e))
+        } else {
+          setReport(null)
+          setCotStream('')
+          setCurrentStage(1)
+          setStageLogs([])
+        }
       })
       .catch((err) => console.error('Failed to load case detail', err))
   }, [selectedCaseId])
@@ -195,6 +232,7 @@ export function App() {
         totalCases={cases.length}
         modelInfo={modelInfo}
         onOpenModelModal={() => setIsModelModalOpen(true)}
+        onOpenComplianceModal={() => setIsComplianceOpen(true)}
       />
 
       {/* Main Layout Body */}
@@ -210,7 +248,7 @@ export function App() {
         />
 
         {/* Center Workspace Content Area */}
-        <main className="flex-1 flex flex-col overflow-hidden bg-slate-950/40">
+        <main className="flex-1 min-w-0 w-full flex flex-col overflow-hidden bg-slate-950/40">
           {currentTab === 'cockpit' && (
             <AuditCockpit
               currentCase={currentCase}
@@ -219,6 +257,7 @@ export function App() {
               onRunAudit={handleRunAudit}
               currentStage={currentStage}
               stageLogs={stageLogs}
+              onSelectCase={setSelectedCaseId}
             />
           )}
 
@@ -234,7 +273,7 @@ export function App() {
           {currentTab === 'reconcile' && (
             <ReconciliationVisualizer
               currentCase={currentCase}
-              reconData={report?.tool_outputs?.three_way_reconciliation || null}
+              reconData={report?.tool_outputs?.three_way_reconciliation || currentCase?.reconciliation || null}
             />
           )}
 
@@ -257,7 +296,12 @@ export function App() {
           )}
 
           {currentTab === 'workpapers' && (
-            <WorkpaperTable report={report} currentCase={currentCase} />
+            <WorkpaperTable
+              report={report}
+              currentCase={currentCase}
+              onRunAudit={handleRunAudit}
+              isRunning={isRunning}
+            />
           )}
         </main>
       </div>
@@ -276,6 +320,14 @@ export function App() {
         modelInfo={modelInfo}
         onRefreshModels={fetchModelInfo}
         onUpdateConfig={handleUpdateConfig}
+      />
+
+      {/* Ethics & Compliance Whitepaper Modal */}
+      <ComplianceModal
+        isOpen={isComplianceOpen}
+        onClose={() => setIsComplianceOpen(false)}
+        currentCaseId={selectedCaseId}
+        onCaseSanitized={refreshCurrentCase}
       />
     </div>
   )

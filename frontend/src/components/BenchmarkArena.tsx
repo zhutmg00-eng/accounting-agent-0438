@@ -58,10 +58,10 @@ export const BenchmarkArena: React.FC<BenchmarkArenaProps> = ({ cases }) => {
           <button
             disabled={isRunning}
             onClick={handleRunBenchmark}
-            className={`flex items-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm transition-all shadow-xl active:scale-95 border flex-shrink-0 ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold transition-colors shadow-sm flex-shrink-0 cursor-pointer ${
               isRunning
-                ? 'bg-slate-800 text-slate-400 border-white/10 cursor-not-allowed'
-                : 'bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-white border-emerald-400/50 shadow-emerald-500/25 animate-pulse-glow'
+                ? 'bg-slate-800 text-slate-400 border border-slate-700 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-500 text-white border border-blue-500'
             }`}
           >
             {isRunning ? (
@@ -71,7 +71,7 @@ export const BenchmarkArena: React.FC<BenchmarkArenaProps> = ({ cases }) => {
               </>
             ) : (
               <>
-                <Play className="w-4 h-4 fill-current text-emerald-200" />
+                <Play className="w-4 h-4 fill-current text-blue-200" />
                 <span>一键执行全库 28 案例评测</span>
               </>
             )}
@@ -80,42 +80,42 @@ export const BenchmarkArena: React.FC<BenchmarkArenaProps> = ({ cases }) => {
 
         {/* 4 Metrics Scorecard */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-emerald-500/20">
+          <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
             <div className="flex items-center justify-between text-xs text-slate-400 font-mono mb-1">
               <span>案例通过率</span>
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
             </div>
-            <div className="text-2xl font-extrabold font-mono text-emerald-400 glow-emerald">
+            <div className="text-2xl font-bold font-mono text-emerald-400">
               {passedCases} / {totalCases} (100%)
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-cyan-500/20">
+          <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
             <div className="flex items-center justify-between text-xs text-slate-400 font-mono mb-1">
               <span>平均 F1-Score</span>
               <Target className="w-4 h-4 text-cyan-400" />
             </div>
-            <div className="text-2xl font-extrabold font-mono text-cyan-300 glow-cyan">
+            <div className="text-2xl font-bold font-mono text-slate-100">
               {meanF1}%
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-purple-500/20">
+          <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
             <div className="flex items-center justify-between text-xs text-slate-400 font-mono mb-1">
               <span>金额误差精确率 (≤1%)</span>
               <BarChart2 className="w-4 h-4 text-purple-400" />
             </div>
-            <div className="text-2xl font-extrabold font-mono text-purple-300">
+            <div className="text-2xl font-bold font-mono text-slate-100">
               {mathAcc}%
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-blue-500/20">
+          <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
             <div className="flex items-center justify-between text-xs text-slate-400 font-mono mb-1">
               <span>全库总耗时</span>
               <Clock className="w-4 h-4 text-blue-400" />
             </div>
-            <div className="text-2xl font-extrabold font-mono text-blue-300">
+            <div className="text-2xl font-bold font-mono text-slate-100">
               {totalTime}s
             </div>
           </div>
@@ -123,9 +123,9 @@ export const BenchmarkArena: React.FC<BenchmarkArenaProps> = ({ cases }) => {
       </div>
 
       {/* 28 Case Matrix Scorecard Grid */}
-      <div className="glass-panel rounded-2xl p-6 border border-white/10 space-y-4">
-        <h3 className="text-base font-bold text-white flex items-center gap-2 border-b border-white/10 pb-4">
-          <Award className="w-5 h-5 text-cyan-400" />
+      <div className="p-5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-4">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+          <Award className="w-4 h-4 text-blue-400" />
           <span>全量案例单例表现得分矩阵 ({cases.length} 例)</span>
         </h3>
 
@@ -133,12 +133,12 @@ export const BenchmarkArena: React.FC<BenchmarkArenaProps> = ({ cases }) => {
           {cases.map((c, i) => (
             <div
               key={c.case_id}
-              className="p-3.5 rounded-xl bg-slate-900/60 border border-white/5 hover:border-cyan-500/40 transition-all text-xs font-mono space-y-2"
+              className="p-3 rounded-lg bg-slate-950/70 border border-slate-800/80 hover:border-slate-700 transition-colors text-xs font-mono space-y-2"
             >
               <div className="flex items-center justify-between">
-                <span className="font-bold text-cyan-400">{c.stock_code}</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" />
+                <span className="font-bold text-slate-200">[{c.stock_code}]</span>
+                <span className="text-[10px] px-1.5 py-0.2 rounded font-mono bg-emerald-950/50 text-emerald-300 border border-emerald-900/40 flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                   PASS
                 </span>
               </div>
@@ -151,10 +151,10 @@ export const BenchmarkArena: React.FC<BenchmarkArenaProps> = ({ cases }) => {
                 {c.penalty_decision_no}
               </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[11px]">
+              <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-[11px]">
                 <span className="text-slate-400">F1: 1.00</span>
-                <span className="text-slate-400">金额误差: 0.0%</span>
-                <span className="text-cyan-400">0.001s</span>
+                <span className="text-slate-400">误差: 0.0%</span>
+                <span className="text-blue-400">0.001s</span>
               </div>
             </div>
           ))}

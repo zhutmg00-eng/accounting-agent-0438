@@ -3,65 +3,94 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-base: #0B0F19;
+    --surface-panel: #111827;
+    --surface-card: #151F32;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+  }
+
   body {
-    background-color: #080C14;
-    color: #F1F5F9;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-base);
+    color: #F8FAFC;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* Custom Cyber Glassmorphism */
+/* Institutional Terminal Surfaces */
+.surface-panel {
+  background: rgba(17, 24, 39, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+}
+
+.surface-card {
+  background: rgba(21, 31, 50, 0.6);
+  border: 1px solid var(--border-subtle);
+}
+
+.surface-subtle {
+  background: rgba(15, 23, 42, 0.4);
+}
+
+/* Glass panel fallback */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(17, 24, 39, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
 }
 
 .glass-panel-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel-hover:hover {
-  border-color: rgba(56, 189, 248, 0.35);
-  box-shadow: 0 20px 35px -10px rgba(0, 242, 254, 0.15);
-  transform: translateY(-2px);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6);
 }
 
-/* Neon Glow Accents */
-.glow-cyan {
-  text-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
+/* Restrained, Purposeful Status Indicators (No Gaudy Neon) */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
-.glow-crimson {
-  text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+/* Flow animation for topology */
+@keyframes fundFlowDash {
+  to {
+    stroke-dashoffset: -32;
+  }
 }
 
-.glow-emerald {
-  text-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+.animate-fund-flow {
+  animation: fundFlowDash 1.2s linear infinite;
 }
 
-/* Grid Ambient Background */
+/* Ambient Subtle Grid (Very faint, not distracting) */
 .bg-grid-pattern {
-  background-size: 40px 40px;
+  background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
 }
 
-/* Custom Cyber Scrollbar */
+/* Professional Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #080C14;
+  background: #0B0F19;
 }
 ::-webkit-scrollbar-thumb {
   background: #1E293B;
-  border-radius: 9999px;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #38BDF8;
+  background: #334155;
 }

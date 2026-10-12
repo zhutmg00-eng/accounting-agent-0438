@@ -41,6 +41,10 @@ from src.data_loader.file_importer import (
 )
 from src.config import settings
 from src.benchmark.test_cases import _load_custom_cases_from_disk
+from src.core.compliance import (
+    DataSanitizer, CpaApprovalRequest, CpaApprovalReceipt,
+    generate_cpa_signoff, get_ethics_and_compliance_manifest
+)
 
 _load_custom_cases_from_disk(settings.data_dir)
 
@@ -67,6 +71,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def add_no_cache_headers_for_spa(request, call_next):
+    response = await call_next(request)
+    # Ensure browsers never serve stale HTML for the SPA root
+    if request.url.path in ("/", "/index.html"):
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+    return response
 
 # Global harness instance
 _HARNESS = AccountingAgentHarness()
@@ -344,7 +358,9 @@ def get_case_detail(case_id: str):
     case = get_case_by_id(case_id)
     if not case:
         raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found")
-    return case.model_dump()
+    data = case.model_dump()
+    data["reconciliation"] = perform_three_way_reconciliation(case)
+    return data
 
 
 @app.post("/api/audit/run")
@@ -587,6 +603,35 @@ async def upload_files(
     }
 
 
+@app.get("/api/templates/download/{template_type}")
+def download_template_endpoint(template_type: str):
+    """Download standard Excel / CSV templates for offline preparation."""
+    templates_dir = Path("data/templates")
+    if template_type == "vouchers":
+        file_path = templates_dir / "企业记账凭证模板.xlsx"
+        media_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        filename = "企业记账凭证模板.xlsx"
+    elif template_type == "invoices":
+        file_path = templates_dir / "增值税发票清单模板.csv"
+        media_type = "text/csv; charset=utf-8"
+        filename = "增值税发票清单模板.csv"
+    elif template_type == "bank_flows":
+        file_path = templates_dir / "银行对账单明细模板.csv"
+        media_type = "text/csv; charset=utf-8"
+        filename = "银行对账单明细模板.csv"
+    else:
+        raise HTTPException(status_code=400, detail=f"未知模板类型: {template_type}")
+
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="模板文件不存在")
+
+    return FileResponse(
+        str(file_path),
+        filename=filename,
+        media_type=media_type
+    )
+
+
 @app.post("/api/export/excel")
 def export_excel_endpoint(report_data: Dict[str, Any] = Body(...)):
     """Export workpaper to Excel and return file download."""
@@ -630,6 +675,54 @@ def export_json_endpoint(report_data: Dict[str, Any] = Body(...)):
         filename=out_path.name,
         media_type="application/json"
     )
+
+# -------------------------------------------------------------
+# Ethics, Compliance & Data Privacy Endpoints (1/6 Scoring Pillar)
+# -------------------------------------------------------------
+
+@app.get("/api/compliance/manifest")
+def get_compliance_manifest_endpoint():
+    """Return full ethics, legal compliance, and data privacy governance whitepaper."""
+    return get_ethics_and_compliance_manifest()
+
+
+@app.post("/api/compliance/cpa-approval", response_model=CpaApprovalReceipt)
+def cpa_approval_endpoint(req: CpaApprovalRequest):
+    """CPA Lead Auditor digital sign-off and ethical verification endpoint."""
+    return generate_cpa_signoff(req)
+
+
+@app.post("/api/compliance/sanitize-case/{case_id}")
+def sanitize_case_endpoint(case_id: str):
+    """Sanitize bank accounts, counterparty names, and sensitive IDs for a case."""
+    case = get_case_by_id(case_id)
+    if not case:
+        raise HTTPException(status_code=404, detail=f"案例 {case_id} 未找到")
+    sanitized = DataSanitizer.sanitize_case_data(case)
+    register_custom_case(sanitized)
+    return {
+        "status": "success",
+        "case_id": case_id,
+        "sanitized": True,
+        "message": "已成功对该案例应用数据安全脱敏防护",
+        "data": sanitized.model_dump()
+    }
+
+
+@app.get("/api/system/health")
+def system_health_endpoint():
+    """System readiness & health diagnosis for competition live demonstration."""
+    all_cases = get_all_cases()
+    dist_exists = (BASE_DIR / "frontend" / "dist").exists()
+    return {
+        "status": "ready",
+        "timestamp": time.time(),
+        "loaded_cases_count": len(all_cases),
+        "frontend_production_built": dist_exists,
+        "compliance_engine": "active",
+        "default_execution_mode": "MOCK (Deterministic Demo Safeguard)",
+        "recommended_live_flow": "1. 载入真实案例 -> 2. 算子/思维链研判 -> 3. 拓扑与三单下钻 -> 4. CPA签章 -> 5. 导出底稿"
+    }
 
 
 # Mount static frontend production build if available

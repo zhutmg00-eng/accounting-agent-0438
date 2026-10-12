@@ -28,6 +28,20 @@ output/
 data/cases/custom_cases/*.json
 !data/cases/custom_cases/.gitkeep
 
-# Local collaboration documents
+# Local collaboration and defense privacy documents
 COLLABORATION_GUIDE.*
 ~$*
+*答辩*
+*承诺书*
+*方案书*
+defense/
+presentation/
+*.pptx
+preview-v*
+fill_commitment.py
+commitment_doc_inspection.txt
+docx_template_extracted.txt
+convert_to_pdf.py
+build_competition_docx.py
+generate_diagrams.py
+

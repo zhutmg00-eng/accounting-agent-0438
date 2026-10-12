@@ -18,7 +18,11 @@
       "accounts_receivable": 4210000000.0,
       "inventory": 3520000000.0,
       "total_assets": 74100000000.0,
-      "operating_cash_flow": -512000000.0
+      "operating_cash_flow": -512000000.0,
+      "fixed_assets": 25935000000.0,
+      "depreciation": 2074800000.0,
+      "sga_expenses": 2903400000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -97,7 +101,22 @@
         "balance_after": 37788000000.0,
         "remark": "伪造大额定期存单证明"
       }
-    ]
+    ],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 12581400000.0,
+      "cost_of_sales": 9674000000.0,
+      "gross_margin": 0.2311,
+      "net_profit": 187000000.0,
+      "accounts_receivable": 1599800000.0,
+      "inventory": 2992000000.0,
+      "total_assets": 55575000000.0,
+      "operating_cash_flow": -409600000.0,
+      "fixed_assets": 20748000000.0,
+      "depreciation": 1659840000.0,
+      "sga_expenses": 2032380000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_002",
@@ -118,7 +137,11 @@
       "accounts_receivable": 5120000000.0,
       "inventory": 1820000000.0,
       "total_assets": 34200000000.0,
-      "operating_cash_flow": -890000000.0
+      "operating_cash_flow": -890000000.0,
+      "fixed_assets": 11970000000.0,
+      "depreciation": 957600000.0,
+      "sga_expenses": 1371300000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -175,7 +198,22 @@
         "balance_after": 0.0,
         "remark": "现金管理联动账户自动夜间归集零余额"
       }
-    ]
+    ],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 5942300000.0,
+      "cost_of_sales": 4081000000.0,
+      "gross_margin": 0.3132,
+      "net_profit": 140500000.0,
+      "accounts_receivable": 1945600000.0,
+      "inventory": 1547000000.0,
+      "total_assets": 25650000000.0,
+      "operating_cash_flow": -712000000.0,
+      "fixed_assets": 9576000000.0,
+      "depreciation": 766080000.0,
+      "sga_expenses": 959910000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_003",
@@ -196,7 +234,11 @@
       "accounts_receivable": 2210000000.0,
       "inventory": 1150000000.0,
       "total_assets": 11200000000.0,
-      "operating_cash_flow": 120000000.0
+      "operating_cash_flow": 120000000.0,
+      "fixed_assets": 3920000000.0,
+      "depreciation": 313600000.0,
+      "sga_expenses": 947550000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -245,7 +287,22 @@
         "balance_after": 3770000.0,
         "remark": "划拨集团暂借往来款"
       }
-    ]
+    ],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 4106050000.0,
+      "cost_of_sales": 2765000000.0,
+      "gross_margin": 0.3266,
+      "net_profit": 444500000.0,
+      "accounts_receivable": 839800000.0,
+      "inventory": 977500000.0,
+      "total_assets": 8400000000.0,
+      "operating_cash_flow": 96000000.0,
+      "fixed_assets": 3136000000.0,
+      "depreciation": 250880000.0,
+      "sga_expenses": 663285000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_004",
@@ -266,7 +323,11 @@
       "accounts_receivable": 2180000000.0,
       "inventory": 2980000000.0,
       "total_assets": 16100000000.0,
-      "operating_cash_flow": -340000000.0
+      "operating_cash_flow": -340000000.0,
+      "fixed_assets": 5635000000.0,
+      "depreciation": 450800000.0,
+      "sga_expenses": 786600000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -312,7 +373,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 3408600000.0,
+      "cost_of_sales": 2807000000.0,
+      "gross_margin": 0.1765,
+      "net_profit": -92500000.0,
+      "accounts_receivable": 828400000.0,
+      "inventory": 2533000000.0,
+      "total_assets": 12075000000.0,
+      "operating_cash_flow": -272000000.0,
+      "fixed_assets": 4508000000.0,
+      "depreciation": 360640000.0,
+      "sga_expenses": 550620000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_005",
@@ -333,7 +409,11 @@
       "accounts_receivable": 3450000000.0,
       "inventory": 2180000000.0,
       "total_assets": 23400000000.0,
-      "operating_cash_flow": -1850000000.0
+      "operating_cash_flow": -1850000000.0,
+      "fixed_assets": 8190000000.0,
+      "depreciation": 655200000.0,
+      "sga_expenses": 2328000000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -401,7 +481,22 @@
         "balance_after": 620000000.0,
         "remark": "销售化肥回款(同日闭环流转)"
       }
-    ]
+    ],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 10088000000.0,
+      "cost_of_sales": 9226000000.0,
+      "gross_margin": 0.0854,
+      "net_profit": 425000000.0,
+      "accounts_receivable": 1311000000.0,
+      "inventory": 1853000000.0,
+      "total_assets": 17550000000.0,
+      "operating_cash_flow": -1480000000.0,
+      "fixed_assets": 6552000000.0,
+      "depreciation": 524160000.0,
+      "sga_expenses": 1629600000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_006",
@@ -422,7 +517,11 @@
       "accounts_receivable": 4980000000.0,
       "inventory": 3120000000.0,
       "total_assets": 28900000000.0,
-      "operating_cash_flow": -1100000000.0
+      "operating_cash_flow": -1100000000.0,
+      "fixed_assets": 10115000000.0,
+      "depreciation": 809200000.0,
+      "sga_expenses": 3067500000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -461,7 +560,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 13292500000.0,
+      "cost_of_sales": 11886000000.0,
+      "gross_margin": 0.1058,
+      "net_profit": 910000000.0,
+      "accounts_receivable": 1892400000.0,
+      "inventory": 2652000000.0,
+      "total_assets": 21675000000.0,
+      "operating_cash_flow": -880000000.0,
+      "fixed_assets": 8092000000.0,
+      "depreciation": 647360000.0,
+      "sga_expenses": 2147250000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_007",
@@ -482,7 +596,11 @@
       "accounts_receivable": 1820000000.0,
       "inventory": 9640000000.0,
       "total_assets": 12800000000.0,
-      "operating_cash_flow": -1780000000.0
+      "operating_cash_flow": -1780000000.0,
+      "fixed_assets": 4480000000.0,
+      "depreciation": 358400000.0,
+      "sga_expenses": 1391550000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -538,7 +656,22 @@
       }
     ],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 6030050000.0,
+      "cost_of_sales": 5670000000.0,
+      "gross_margin": 0.0597,
+      "net_profit": 115500000.0,
+      "accounts_receivable": 691600000.0,
+      "inventory": 8194000000.0,
+      "total_assets": 9600000000.0,
+      "operating_cash_flow": -1424000000.0,
+      "fixed_assets": 3584000000.0,
+      "depreciation": 286720000.0,
+      "sga_expenses": 974085000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_008",
@@ -559,7 +692,11 @@
       "accounts_receivable": 3890000000.0,
       "inventory": 1450000000.0,
       "total_assets": 11800000000.0,
-      "operating_cash_flow": -980000000.0
+      "operating_cash_flow": -980000000.0,
+      "fixed_assets": 4130000000.0,
+      "depreciation": 330400000.0,
+      "sga_expenses": 1473000000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -598,7 +735,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 6383000000.0,
+      "cost_of_sales": 6125000000.0,
+      "gross_margin": 0.0404,
+      "net_profit": -280000000.0,
+      "accounts_receivable": 1478200000.0,
+      "inventory": 1232500000.0,
+      "total_assets": 8850000000.0,
+      "operating_cash_flow": -784000000.0,
+      "fixed_assets": 3304000000.0,
+      "depreciation": 264320000.0,
+      "sga_expenses": 1031100000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_009",
@@ -619,7 +771,11 @@
       "accounts_receivable": 89000000.0,
       "inventory": 420000000.0,
       "total_assets": 6850000000.0,
-      "operating_cash_flow": -1250000000.0
+      "operating_cash_flow": -1250000000.0,
+      "fixed_assets": 2397500000.0,
+      "depreciation": 191800000.0,
+      "sga_expenses": 453750000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -658,7 +814,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 1966250000.0,
+      "cost_of_sales": 1876000000.0,
+      "gross_margin": 0.0459,
+      "net_profit": -1580000000.0,
+      "accounts_receivable": 33820000.0,
+      "inventory": 357000000.0,
+      "total_assets": 5137500000.0,
+      "operating_cash_flow": -1000000000.0,
+      "fixed_assets": 1918000000.0,
+      "depreciation": 153440000.0,
+      "sga_expenses": 317625000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_010",
@@ -679,7 +850,11 @@
       "accounts_receivable": 850000000.0,
       "inventory": 340000000.0,
       "total_assets": 3200000000.0,
-      "operating_cash_flow": -210000000.0
+      "operating_cash_flow": -210000000.0,
+      "fixed_assets": 1120000000.0,
+      "depreciation": 89600000.0,
+      "sga_expenses": 162000000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -718,7 +893,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 702000000.0,
+      "cost_of_sales": 623000000.0,
+      "gross_margin": 0.1125,
+      "net_profit": -395000000.0,
+      "accounts_receivable": 323000000.0,
+      "inventory": 289000000.0,
+      "total_assets": 2400000000.0,
+      "operating_cash_flow": -168000000.0,
+      "fixed_assets": 896000000.0,
+      "depreciation": 71680000.0,
+      "sga_expenses": 113400000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_011",
@@ -739,7 +929,11 @@
       "accounts_receivable": 412000000.0,
       "inventory": 89000000.0,
       "total_assets": 1580000000.0,
-      "operating_cash_flow": -45000000.0
+      "operating_cash_flow": -45000000.0,
+      "fixed_assets": 553000000.0,
+      "depreciation": 44240000.0,
+      "sga_expenses": 78450000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -778,7 +972,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 339950000.0,
+      "cost_of_sales": 276500000.0,
+      "gross_margin": 0.1866,
+      "net_profit": 5250000.0,
+      "accounts_receivable": 156560000.0,
+      "inventory": 75650000.0,
+      "total_assets": 1185000000.0,
+      "operating_cash_flow": -36000000.0,
+      "fixed_assets": 442400000.0,
+      "depreciation": 35392000.0,
+      "sga_expenses": 54915000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_012",
@@ -799,7 +1008,11 @@
       "accounts_receivable": 512000000.0,
       "inventory": 218000000.0,
       "total_assets": 3290000000.0,
-      "operating_cash_flow": 82000000.0
+      "operating_cash_flow": 82000000.0,
+      "fixed_assets": 1151500000.0,
+      "depreciation": 92120000.0,
+      "sga_expenses": 196350000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -838,7 +1051,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 850850000.0,
+      "cost_of_sales": 507500000.0,
+      "gross_margin": 0.4035,
+      "net_profit": 104000000.0,
+      "accounts_receivable": 194560000.0,
+      "inventory": 185300000.0,
+      "total_assets": 2467500000.0,
+      "operating_cash_flow": 65600000.0,
+      "fixed_assets": 921200000.0,
+      "depreciation": 73696000.0,
+      "sga_expenses": 137445000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_013",
@@ -859,7 +1087,11 @@
       "accounts_receivable": 1420000000.0,
       "inventory": 3860000000.0,
       "total_assets": 11500000000.0,
-      "operating_cash_flow": 280000000.0
+      "operating_cash_flow": 280000000.0,
+      "fixed_assets": 4025000000.0,
+      "depreciation": 322000000.0,
+      "sga_expenses": 733500000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -898,7 +1130,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 3178500000.0,
+      "cost_of_sales": 2744000000.0,
+      "gross_margin": 0.1367,
+      "net_profit": 56000000.0,
+      "accounts_receivable": 539600000.0,
+      "inventory": 3281000000.0,
+      "total_assets": 8625000000.0,
+      "operating_cash_flow": 224000000.0,
+      "fixed_assets": 3220000000.0,
+      "depreciation": 257600000.0,
+      "sga_expenses": 513450000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_014",
@@ -919,7 +1166,11 @@
       "accounts_receivable": 480000000.0,
       "inventory": 1380000000.0,
       "total_assets": 4180000000.0,
-      "operating_cash_flow": 150000000.0
+      "operating_cash_flow": 150000000.0,
+      "fixed_assets": 1463000000.0,
+      "depreciation": 117040000.0,
+      "sga_expenses": 480900000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -958,7 +1209,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 2083900000.0,
+      "cost_of_sales": 1876000000.0,
+      "gross_margin": 0.0998,
+      "net_profit": -361500000.0,
+      "accounts_receivable": 182400000.0,
+      "inventory": 1173000000.0,
+      "total_assets": 3135000000.0,
+      "operating_cash_flow": 120000000.0,
+      "fixed_assets": 1170400000.0,
+      "depreciation": 93632000.0,
+      "sga_expenses": 336630000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_015",
@@ -979,7 +1245,11 @@
       "accounts_receivable": 3120000000.0,
       "inventory": 1420000000.0,
       "total_assets": 8640000000.0,
-      "operating_cash_flow": -1320000000.0
+      "operating_cash_flow": -1320000000.0,
+      "fixed_assets": 3024000000.0,
+      "depreciation": 241920000.0,
+      "sga_expenses": 1859700000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -1028,7 +1298,22 @@
       }
     ],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 8058700000.0,
+      "cost_of_sales": 8274000000.0,
+      "gross_margin": -0.0267,
+      "net_profit": 30500000.0,
+      "accounts_receivable": 1185600000.0,
+      "inventory": 1207000000.0,
+      "total_assets": 6480000000.0,
+      "operating_cash_flow": -1056000000.0,
+      "fixed_assets": 2419200000.0,
+      "depreciation": 193536000.0,
+      "sga_expenses": 1301790000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_016",
@@ -1049,7 +1334,11 @@
       "accounts_receivable": 890000000.0,
       "inventory": 1850000000.0,
       "total_assets": 19400000000.0,
-      "operating_cash_flow": -890000000.0
+      "operating_cash_flow": -890000000.0,
+      "fixed_assets": 6790000000.0,
+      "depreciation": 543200000.0,
+      "sga_expenses": 533400000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -1088,7 +1377,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 2311400000.0,
+      "cost_of_sales": 2786000000.0,
+      "gross_margin": -0.2053,
+      "net_profit": -1930000000.0,
+      "accounts_receivable": 338200000.0,
+      "inventory": 1572500000.0,
+      "total_assets": 14550000000.0,
+      "operating_cash_flow": -712000000.0,
+      "fixed_assets": 5432000000.0,
+      "depreciation": 434560000.0,
+      "sga_expenses": 373380000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_017",
@@ -1109,7 +1413,11 @@
       "accounts_receivable": 180000000.0,
       "inventory": 210000000.0,
       "total_assets": 980000000.0,
-      "operating_cash_flow": -12000000.0
+      "operating_cash_flow": -12000000.0,
+      "fixed_assets": 343000000.0,
+      "depreciation": 27440000.0,
+      "sga_expenses": 82950000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -1148,7 +1456,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 359450000.0,
+      "cost_of_sales": 288400000.0,
+      "gross_margin": 0.1977,
+      "net_profit": 30250000.0,
+      "accounts_receivable": 68400000.0,
+      "inventory": 178500000.0,
+      "total_assets": 735000000.0,
+      "operating_cash_flow": -9600000.0,
+      "fixed_assets": 274400000.0,
+      "depreciation": 21952000.0,
+      "sga_expenses": 58065000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_018",
@@ -1169,7 +1492,11 @@
       "accounts_receivable": 3120000000.0,
       "inventory": 1250000000.0,
       "total_assets": 20800000000.0,
-      "operating_cash_flow": 380000000.0
+      "operating_cash_flow": 380000000.0,
+      "fixed_assets": 7280000000.0,
+      "depreciation": 582400000.0,
+      "sga_expenses": 1267500000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -1208,7 +1535,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 5492500000.0,
+      "cost_of_sales": 4123000000.0,
+      "gross_margin": 0.2493,
+      "net_profit": 201500000.0,
+      "accounts_receivable": 1185600000.0,
+      "inventory": 1062500000.0,
+      "total_assets": 15600000000.0,
+      "operating_cash_flow": 304000000.0,
+      "fixed_assets": 5824000000.0,
+      "depreciation": 465920000.0,
+      "sga_expenses": 887250000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_019",
@@ -1229,7 +1571,11 @@
       "accounts_receivable": 1497000000.0,
       "inventory": 820000000.0,
       "total_assets": 5200000000.0,
-      "operating_cash_flow": -1350000000.0
+      "operating_cash_flow": -1350000000.0,
+      "fixed_assets": 1820000000.0,
+      "depreciation": 145600000.0,
+      "sga_expenses": 1276500000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -1268,7 +1614,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 5531500000.0,
+      "cost_of_sales": 5670000000.0,
+      "gross_margin": -0.025,
+      "net_profit": -77500000.0,
+      "accounts_receivable": 568860000.0,
+      "inventory": 697000000.0,
+      "total_assets": 3900000000.0,
+      "operating_cash_flow": -1080000000.0,
+      "fixed_assets": 1456000000.0,
+      "depreciation": 116480000.0,
+      "sga_expenses": 893550000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_020",
@@ -1289,7 +1650,11 @@
       "accounts_receivable": 2150000000.0,
       "inventory": 1890000000.0,
       "total_assets": 42100000000.0,
-      "operating_cash_flow": 280000000.0
+      "operating_cash_flow": 280000000.0,
+      "fixed_assets": 14735000000.0,
+      "depreciation": 1178800000.0,
+      "sga_expenses": 816000000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -1328,7 +1693,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 3536000000.0,
+      "cost_of_sales": 2884000000.0,
+      "gross_margin": 0.1844,
+      "net_profit": -1190000000.0,
+      "accounts_receivable": 817000000.0,
+      "inventory": 1606500000.0,
+      "total_assets": 31575000000.0,
+      "operating_cash_flow": 224000000.0,
+      "fixed_assets": 11788000000.0,
+      "depreciation": 943040000.0,
+      "sga_expenses": 571200000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_021",
@@ -1349,7 +1729,11 @@
       "accounts_receivable": 890000000.0,
       "inventory": 420000000.0,
       "total_assets": 4890000000.0,
-      "operating_cash_flow": 110000000.0
+      "operating_cash_flow": 110000000.0,
+      "fixed_assets": 1711500000.0,
+      "depreciation": 136920000.0,
+      "sga_expenses": 372000000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -1388,7 +1772,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 1612000000.0,
+      "cost_of_sales": 1386000000.0,
+      "gross_margin": 0.1402,
+      "net_profit": -160000000.0,
+      "accounts_receivable": 338200000.0,
+      "inventory": 357000000.0,
+      "total_assets": 3667500000.0,
+      "operating_cash_flow": 88000000.0,
+      "fixed_assets": 1369200000.0,
+      "depreciation": 109536000.0,
+      "sga_expenses": 260400000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_022",
@@ -1409,7 +1808,11 @@
       "accounts_receivable": 340000000.0,
       "inventory": 290000000.0,
       "total_assets": 1580000000.0,
-      "operating_cash_flow": -89000000.0
+      "operating_cash_flow": -89000000.0,
+      "fixed_assets": 553000000.0,
+      "depreciation": 44240000.0,
+      "sga_expenses": 83100000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -1455,7 +1858,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 360100000.0,
+      "cost_of_sales": 278600000.0,
+      "gross_margin": 0.2263,
+      "net_profit": 40245000.0,
+      "accounts_receivable": 129200000.0,
+      "inventory": 246500000.0,
+      "total_assets": 1185000000.0,
+      "operating_cash_flow": -71200000.0,
+      "fixed_assets": 442400000.0,
+      "depreciation": 35392000.0,
+      "sga_expenses": 58170000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_023",
@@ -1476,7 +1894,11 @@
       "accounts_receivable": 72000000.0,
       "inventory": 210000000.0,
       "total_assets": 1650000000.0,
-      "operating_cash_flow": 28000000.0
+      "operating_cash_flow": 28000000.0,
+      "fixed_assets": 577500000.0,
+      "depreciation": 46200000.0,
+      "sga_expenses": 91200000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -1515,7 +1937,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 395200000.0,
+      "cost_of_sales": 337400000.0,
+      "gross_margin": 0.1463,
+      "net_profit": 15600000.0,
+      "accounts_receivable": 27360000.0,
+      "inventory": 178500000.0,
+      "total_assets": 1237500000.0,
+      "operating_cash_flow": 22400000.0,
+      "fixed_assets": 462000000.0,
+      "depreciation": 36960000.0,
+      "sga_expenses": 63840000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_024",
@@ -1536,7 +1973,11 @@
       "accounts_receivable": 512000000.0,
       "inventory": 210000000.0,
       "total_assets": 2180000000.0,
-      "operating_cash_flow": -89000000.0
+      "operating_cash_flow": -89000000.0,
+      "fixed_assets": 763000000.0,
+      "depreciation": 61040000.0,
+      "sga_expenses": 138900000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -1585,7 +2026,22 @@
       }
     ],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 601900000.0,
+      "cost_of_sales": 412300000.0,
+      "gross_margin": 0.315,
+      "net_profit": 131000000.0,
+      "accounts_receivable": 194560000.0,
+      "inventory": 178500000.0,
+      "total_assets": 1635000000.0,
+      "operating_cash_flow": -71200000.0,
+      "fixed_assets": 610400000.0,
+      "depreciation": 48832000.0,
+      "sga_expenses": 97230000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CSRC_025",
@@ -1606,7 +2062,11 @@
       "accounts_receivable": 890000000.0,
       "inventory": 1120000000.0,
       "total_assets": 8900000000.0,
-      "operating_cash_flow": 450000000.0
+      "operating_cash_flow": 450000000.0,
+      "fixed_assets": 3115000000.0,
+      "depreciation": 249200000.0,
+      "sga_expenses": 1311000000.0,
+      "leverage_ratio": 0.58
     },
     "ground_truth_findings": [
       {
@@ -1645,7 +2105,22 @@
     ],
     "contracts": [],
     "invoices": [],
-    "bank_flows": []
+    "bank_flows": [],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 5681000000.0,
+      "cost_of_sales": 5215000000.0,
+      "gross_margin": 0.082,
+      "net_profit": 91000000.0,
+      "accounts_receivable": 338200000.0,
+      "inventory": 952000000.0,
+      "total_assets": 6675000000.0,
+      "operating_cash_flow": 360000000.0,
+      "fixed_assets": 2492000000.0,
+      "depreciation": 199360000.0,
+      "sga_expenses": 917700000.0,
+      "leverage_ratio": 0.5
+    }
   },
   {
     "case_id": "REAL_CLEAN_026",
@@ -1666,7 +2141,11 @@
       "accounts_receivable": 18200000.0,
       "inventory": 46200000000.0,
       "total_assets": 272000000000.0,
-      "operating_cash_flow": 98000000000.0
+      "operating_cash_flow": 98000000000.0,
+      "fixed_assets": 95200000000.0,
+      "depreciation": 7616000000.0,
+      "sga_expenses": 25647000000.0,
+      "leverage_ratio": 0.42
     },
     "ground_truth_findings": [],
     "vouchers": [
@@ -1733,7 +2212,22 @@
         "balance_after": 156800000000.0,
         "remark": "销售回款"
       }
-    ]
+    ],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 158314814814.81,
+      "cost_of_sales": 13065420560.75,
+      "gross_margin": 0.9175,
+      "net_profit": 79814814814.81,
+      "accounts_receivable": 17169811.32,
+      "inventory": 39270000000.0,
+      "total_assets": 256603773584.91,
+      "operating_cash_flow": 90740740740.74,
+      "fixed_assets": 90666666666.67,
+      "depreciation": 7253333333.33,
+      "sga_expenses": 24425714285.71,
+      "leverage_ratio": 0.4
+    }
   },
   {
     "case_id": "REAL_CLEAN_027",
@@ -1754,7 +2248,11 @@
       "accounts_receivable": 6850000000.0,
       "inventory": 5420000000.0,
       "total_assets": 62400000000.0,
-      "operating_cash_flow": 8200000000.0
+      "operating_cash_flow": 8200000000.0,
+      "fixed_assets": 21840000000.0,
+      "depreciation": 1747200000.0,
+      "sga_expenses": 5880000000.0,
+      "leverage_ratio": 0.42
     },
     "ground_truth_findings": [],
     "vouchers": [
@@ -1821,7 +2319,22 @@
         "balance_after": 18200000000.0,
         "remark": "大众集团外汇结算电汇入账"
       }
-    ]
+    ],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 36296296296.3,
+      "cost_of_sales": 23813084112.15,
+      "gross_margin": 0.3439,
+      "net_profit": 6935185185.19,
+      "accounts_receivable": 6462264150.94,
+      "inventory": 4607000000.0,
+      "total_assets": 58867924528.3,
+      "operating_cash_flow": 7592592592.59,
+      "fixed_assets": 20800000000.0,
+      "depreciation": 1664000000.0,
+      "sga_expenses": 5600000000.0,
+      "leverage_ratio": 0.4
+    }
   },
   {
     "case_id": "REAL_CLEAN_028",
@@ -1842,7 +2355,11 @@
       "accounts_receivable": 48200000000.0,
       "inventory": 8900000000.0,
       "total_assets": 1980000000000.0,
-      "operating_cash_flow": 312000000000.0
+      "operating_cash_flow": 312000000000.0,
+      "fixed_assets": 693000000000.0,
+      "depreciation": 55440000000.0,
+      "sga_expenses": 158400000000.0,
+      "leverage_ratio": 0.42
     },
     "ground_truth_findings": [],
     "vouchers": [
@@ -1909,6 +2426,21 @@
         "balance_after": 289000000000.0,
         "remark": "云网DICT月结款网银划入"
       }
-    ]
+    ],
+    "prior_financial_summary": {
+      "period": "上年同期对比期",
+      "revenue": 977777777777.78,
+      "cost_of_sales": 708411214953.27,
+      "gross_margin": 0.2755,
+      "net_profit": 127777777777.78,
+      "accounts_receivable": 45471698113.21,
+      "inventory": 7565000000.0,
+      "total_assets": 1867924528301.89,
+      "operating_cash_flow": 288888888888.89,
+      "fixed_assets": 660000000000.0,
+      "depreciation": 52800000000.0,
+      "sga_expenses": 150857142857.14,
+      "leverage_ratio": 0.4
+    }
   }
 ]

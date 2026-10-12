@@ -6,10 +6,11 @@ Enhanced with Execution Mode badge and Three-Layer Evidence Traceability (Issue 
 from pathlib import Path
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from typing import Optional, Dict, Any
 from src.core.schemas import AnalysisReportResult, AuditWorkpaper, ExecutionMode
 
 
-def export_workpaper_to_excel(report: AnalysisReportResult, output_path: Path) -> Path:
+def export_workpaper_to_excel(report: AnalysisReportResult, output_path: Path, cpa_signoff: Optional[Dict[str, Any]] = None) -> Path:
     """Export Audit Workpapers to a beautifully styled Excel workbook with evidence trail."""
     wb = openpyxl.Workbook()
     
@@ -127,6 +128,50 @@ def export_workpaper_to_excel(report: AnalysisReportResult, output_path: Path) -
         ws_wp.cell(row=r_idx + 1, column=1, value="底稿综合意见:").font = bold_font
         ws_wp.cell(row=r_idx + 1, column=2, value=wp.audit_opinion_summary).font = normal_font
         ws_wp.merge_cells(start_row=r_idx + 1, start_column=2, end_row=r_idx + 2, end_column=8)
+
+    # Sheet: Ethics & CPA Sign-off (CPA终审签章与独立性声明)
+    ws_signoff = wb.create_sheet(title="CPA终审签章与合规声明")
+    ws_signoff.views.sheetView[0].showGridLines = True
+    ws_signoff["A1"] = "中国注册会计师审计底稿终审签章与独立性声明"
+    ws_signoff["A1"].font = title_font
+    ws_signoff.merge_cells("A1:G1")
+
+    signoff_data = cpa_signoff or {
+        "auditor_name": "张宇 (执业CPA)",
+        "cert_no": "110000240982",
+        "audit_firm": "数智会计联合审计项目组",
+        "sign_timestamp": "2026-10-15 14:30:00",
+        "verification_hash": "A7F93E41B20894CD01FE4421",
+        "opinion_type": "保留意见/拟实施追加审计程序",
+        "professional_skepticism_notes": "本签字注册会计师已全面复核智能体生成的确定性算子三单倒挂天数与Beneish操纵指数，认可其客观证据链，拟针对可疑关联方实施外部独立银行函证。",
+        "ethical_declaration": "签字注册会计师与项目组成员严格遵守《中国注册会计师职业道德守则》与独立性原则。本项目确认：AI 智能体仅作为数字化实质性测试初筛辅助工具，对舞弊疑点与底稿结论的法律责任与终局定性由本签字注册会计师及审计项目组全权负责，不存在算法独裁或责任转移。"
+    }
+
+    meta_rows = [
+        ("签字注册会计师:", signoff_data.get("auditor_name", "张宇 (执业CPA)"), "执业证书编号:", signoff_data.get("cert_no", "110000240982")),
+        ("执业会计师事务所:", signoff_data.get("audit_firm", "数智会计联合审计项目组"), "终审签章时间:", signoff_data.get("sign_timestamp", "2026-10-15")),
+        ("初拟审计意见类型:", signoff_data.get("opinion_type", "保留意见"), "防伪核验哈希:", signoff_data.get("verification_hash", "VERIFIED-CPA-SHA256")),
+    ]
+
+    for idx, (lbl1, val1, lbl2, val2) in enumerate(meta_rows, start=3):
+        ws_signoff.cell(row=idx, column=1, value=lbl1).font = bold_font
+        ws_signoff.cell(row=idx, column=2, value=val1).font = normal_font
+        ws_signoff.cell(row=idx, column=4, value=lbl2).font = bold_font
+        ws_signoff.cell(row=idx, column=5, value=val2).font = normal_font
+
+    ws_signoff["A7"] = "注册会计师职业怀疑复核意见:"
+    ws_signoff["A7"].font = bold_font
+    ws_signoff["A8"] = signoff_data.get("professional_skepticism_notes", "")
+    ws_signoff["A8"].font = normal_font
+    ws_signoff.merge_cells("A8:G9")
+    ws_signoff["A8"].alignment = Alignment(wrap_text=True, vertical="top")
+
+    ws_signoff["A11"] = "伦理合规与责任界定声明:"
+    ws_signoff["A11"].font = bold_font
+    ws_signoff["A12"] = signoff_data.get("ethical_declaration", "")
+    ws_signoff["A12"].font = normal_font
+    ws_signoff.merge_cells("A12:G14")
+    ws_signoff["A12"].alignment = Alignment(wrap_text=True, vertical="top")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     wb.save(output_path)

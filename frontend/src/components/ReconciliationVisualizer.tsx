@@ -43,11 +43,17 @@ export const ReconciliationVisualizer: React.FC<ReconciliationVisualizerProps> =
             <div className="text-right">
               <span className="text-[11px] text-slate-400 block font-mono">勾稽核对状态</span>
               <span className={`text-sm font-bold font-mono px-3 py-1 rounded-md inline-block mt-0.5 ${
-                reconData?.reconciliation_clean
+                !reconData
+                  ? 'bg-slate-800 text-slate-400 border border-white/10'
+                  : reconData.reconciliation_clean
                   ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
                   : 'bg-rose-500/20 text-rose-300 border border-rose-500/30 glow-crimson'
               }`}>
-                {reconData?.reconciliation_clean ? '三单勾稽一致 (CLEAN)' : `检出 ${reconData?.total_discrepancies_count || 0} 处重大勾稽断裂`}
+                {!reconData
+                  ? '待核验'
+                  : reconData.reconciliation_clean
+                  ? '三单勾稽一致 (CLEAN)'
+                  : `检出 ${reconData.total_discrepancies_count || 0} 处重大勾稽断裂`}
               </span>
             </div>
           </div>

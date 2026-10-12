@@ -1,19 +1,81 @@
 import React, { useState } from 'react'
-import { FileSpreadsheet, FileText, Download, CheckCircle2, AlertCircle, Share2, Layers } from 'lucide-react'
-import { AnalysisReportResult, WorkpaperData } from '../types'
+import { FileSpreadsheet, FileText, Download, CheckCircle2, AlertCircle, Share2, Layers, Play, RotateCw, UserCheck, ShieldCheck, Stamp } from 'lucide-react'
+import { AnalysisReportResult, WorkpaperData, CpaApprovalReceipt } from '../types'
 
 interface WorkpaperTableProps {
   report: AnalysisReportResult | null
   currentCase: any
+  onRunAudit?: () => void
+  isRunning?: boolean
 }
 
-export const WorkpaperTable: React.FC<WorkpaperTableProps> = ({ report, currentCase }) => {
+export const WorkpaperTable: React.FC<WorkpaperTableProps> = ({ report, currentCase, onRunAudit, isRunning }) => {
   const [downloading, setDownloading] = useState<string | null>(null)
 
+  const [cpaReceipt, setCpaReceipt] = useState<CpaApprovalReceipt | null>(null)
+  const [signing, setSigning] = useState(false)
+  const [auditorName, setAuditorName] = useState('张宇 (执业CPA)')
+  const [certNo, setCertNo] = useState('110000240982')
+  const [opinionType, setOpinionType] = useState('保留意见/拟追加外部银行函证')
+
+  const handleSignOff = async () => {
+    if (!report) return
+    setSigning(true)
+    try {
+      const resp = await fetch('/api/compliance/cpa-approval', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          case_id: report.case_id,
+          auditor_name: auditorName,
+          cert_no: certNo,
+          opinion_type: opinionType,
+          audit_firm: '数智会计联合审计项目组',
+          professional_skepticism_notes: '已秉持职业怀疑态度，全面复核确定性算子三单倒挂天数与Beneish操纵指数，认可智能体证据链，拟针对可疑关联方实施外部独立银行函证。',
+          compliance_confirmed: true
+        })
+      })
+      if (resp.ok) {
+        const receipt = await resp.json()
+        setCpaReceipt(receipt)
+      }
+    } catch (e) {
+      console.error('Sign-off failed', e)
+    } finally {
+      setSigning(false)
+    }
+  }
   if (!report || !report.workpapers || report.workpapers.length === 0) {
     return (
-      <div className="flex-1 overflow-y-auto p-6 flex items-center justify-center text-slate-500 text-xs">
-        暂无审计底稿数据。请先在指挥舱完成该案例的智能穿透研判。
+      <div className="flex-1 overflow-y-auto p-12 flex flex-col items-center justify-center text-center space-y-4">
+        <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center shadow-lg shadow-cyan-500/10">
+          <FileSpreadsheet className="w-8 h-8 text-cyan-400" />
+        </div>
+        <div className="space-y-1.5 max-w-md">
+          <h3 className="text-base font-bold text-white">暂未生成受审企业审计工作底稿</h3>
+          <p className="text-xs text-slate-400">
+            底稿需要结合业财三单比对、Beneish 8 因子刚性测算以及大模型准则定性自动合成。当前选定案例【{currentCase?.company_name || '未选定'}】尚未执行穿透研判。
+          </p>
+        </div>
+        {onRunAudit && (
+          <button
+            onClick={onRunAudit}
+            disabled={isRunning}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-lg shadow-cyan-500/25 active:scale-95 transition-all cursor-pointer"
+          >
+            {isRunning ? (
+              <>
+                <RotateCw className="w-4 h-4 animate-spin" />
+                <span>正在生成审计工作底稿...</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-4 h-4 fill-current" />
+                <span>立即对当前案例一键生成底稿</span>
+              </>
+            )}
+          </button>
+        )}
       </div>
     )
   }
@@ -154,6 +216,100 @@ export const WorkpaperTable: React.FC<WorkpaperTableProps> = ({ report, currentC
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* CPA Lead Auditor Sign-off & Ethics Declaration Card */}
+      <div className="glass-panel rounded-2xl p-6 border border-emerald-500/20 bg-gradient-to-br from-slate-950/80 via-slate-900/90 to-emerald-950/20 space-y-4">
+        <div className="flex items-center justify-between border-b border-emerald-500/20 pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+              <UserCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                注册会计师终审签章与责任伦理机制 (CPA Sign-off & Ethics)
+                <span className="px-2 py-0.5 text-[10px] rounded bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30">
+                  防算法独裁 · CPA终局负责
+                </span>
+              </h4>
+              <p className="text-xs text-slate-400">
+                遵循《中国注册会计师职业道德守则》：AI 辅助初筛，终审结论由执业注会独立复核并签名确认
+              </p>
+            </div>
+          </div>
+          {cpaReceipt ? (
+            <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-mono font-bold">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <span>已完成数字签章生效</span>
+            </div>
+          ) : (
+            <button
+              onClick={handleSignOff}
+              disabled={signing}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-950/50 transition-all cursor-pointer disabled:opacity-50"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>{signing ? '签名存证中...' : '执业注会终审签章'}</span>
+            </button>
+          )}
+        </div>
+
+        {cpaReceipt ? (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 rounded-xl bg-slate-950/60 border border-emerald-500/30 font-mono text-xs">
+            <div>
+              <span className="text-slate-500 block">签字注册会计师</span>
+              <span className="text-emerald-300 font-bold">{cpaReceipt.auditor_name}</span>
+            </div>
+            <div>
+              <span className="text-slate-500 block">执业证书编号</span>
+              <span className="text-slate-300">{cpaReceipt.cert_no}</span>
+            </div>
+            <div>
+              <span className="text-slate-500 block">终审防伪哈希</span>
+              <span className="text-cyan-400 font-mono truncate block" title={cpaReceipt.verification_hash}>
+                {cpaReceipt.verification_hash}
+              </span>
+            </div>
+            <div>
+              <span className="text-slate-500 block">签章时间</span>
+              <span className="text-slate-300">{cpaReceipt.sign_timestamp}</span>
+            </div>
+            <div className="col-span-1 md:col-span-4 mt-2 pt-2 border-t border-white/5 text-[11px] text-slate-400">
+              <span className="text-emerald-400 font-semibold">【伦理承诺】: </span>
+              {cpaReceipt.ethical_declaration}
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div>
+              <label className="text-slate-400 text-[11px] block mb-1">签字注册会计师</label>
+              <input
+                type="text"
+                value={auditorName}
+                onChange={(e) => setAuditorName(e.target.value)}
+                className="w-full bg-slate-900 border border-white/10 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+            <div>
+              <label className="text-slate-400 text-[11px] block mb-1">CPA执业证书编号</label>
+              <input
+                type="text"
+                value={certNo}
+                onChange={(e) => setCertNo(e.target.value)}
+                className="w-full bg-slate-900 border border-white/10 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+            <div>
+              <label className="text-slate-400 text-[11px] block mb-1">初拟审计意见类型</label>
+              <input
+                type="text"
+                value={opinionType}
+                onChange={(e) => setOpinionType(e.target.value)}
+                className="w-full bg-slate-900 border border-white/10 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
