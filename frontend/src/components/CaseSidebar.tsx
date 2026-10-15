@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
-import { Search, Filter, AlertCircle, CheckCircle2, ChevronRight, Building2, Tag } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 import { CaseListItem } from '../types'
+import { Chip, cn, EmptyState } from '../ui/primitives'
+import { Reveal } from '../ui/motion'
 
 interface CaseSidebarProps {
   cases: CaseListItem[]
@@ -9,15 +11,27 @@ interface CaseSidebarProps {
   categories: { name: string; count: number }[]
   selectedCategory: string | null
   onSelectCategory: (cat: string | null) => void
+  /** Present when the sidebar is rendered as a drawer below the lg breakpoint. */
+  onClose?: () => void
+  className?: string
 }
 
+/**
+ * The case library.
+ *
+ * The rows carry the facts an auditor picks a case by - stock code, name, the
+ * penalty decision it comes from, and how much evidence is attached - so the
+ * list can be scanned without opening anything.
+ */
 export const CaseSidebar: React.FC<CaseSidebarProps> = ({
   cases,
   selectedCaseId,
   onSelectCase,
   categories,
   selectedCategory,
-  onSelectCategory
+  onSelectCategory,
+  onClose,
+  className
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -33,137 +47,169 @@ export const CaseSidebar: React.FC<CaseSidebarProps> = ({
     return matchesCat && matchesQuery
   })
 
+  const filters: { key: string | null; label: string; count: number }[] = [
+    { key: null, label: '全部', count: cases.length },
+    ...categories.map((cat) => ({ key: cat.name, label: cat.name, count: cat.count }))
+  ]
+
   return (
-    <aside className="w-84 xl:w-96 flex-shrink-0 flex flex-col h-[calc(100vh-57px)] border-r border-slate-800 bg-[#0B0F19] overflow-hidden">
-      {/* Top Search & Filter Area */}
-      <div className="p-3.5 border-b border-slate-800 space-y-2.5 bg-slate-900/60">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input
-            type="text"
-            placeholder="搜索公司、股票代码、处罚文号..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 font-mono transition-colors"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 text-xs"
-            >
-              ×
-            </button>
-          )}
+    <aside
+      aria-label="案例库"
+      className={cn(
+        'flex h-full w-[320px] shrink-0 flex-col bg-field-sunken xl:w-[360px] max-lg:h-auto max-lg:max-h-[40svh] max-lg:w-full max-lg:overflow-y-auto',
+        className
+      )}
+    >
+      <div className="shrink-0 space-y-3 px-4 pb-4 pt-4">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-small font-semibold text-fg">案例库</h2>
+          <div className="flex items-center gap-2">
+            <span className="text-label text-fg-muted tabular-nums">
+              {filteredCases.length} / {cases.length}
+            </span>
+            {onClose ? (
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="关闭案例库"
+                className="press flex h-8 w-8 items-center justify-center text-fg-muted hover:bg-field-raised hover:text-fg lg:hidden"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            ) : null}
+          </div>
         </div>
 
-        {/* Category Pills (Horizontal scrolling or wrapped) */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-[11px] text-slate-400">
-            <span className="flex items-center gap-1 font-medium">
-              <Filter className="w-3 h-3 text-slate-400" />
-              <span>案例库分类 ({categories.length + 1})</span>
-            </span>
-            <span className="font-mono text-slate-400">{filteredCases.length} 案例</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 scrollbar-none no-scrollbar text-[11px]">
+        <div className="relative">
+          <Search
+            aria-hidden
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-faint"
+          />
+          <input
+            type="text"
+            name="case-search"
+            placeholder="搜索公司、代码或处罚文号…"
+            aria-label="搜索案例"
+            autoComplete="off"
+            spellCheck={false}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="h-10 w-full bg-field-raised pl-9 pr-9 text-small text-fg outline-none placeholder:text-fg-faint focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-seal"
+          />
+          {searchQuery ? (
             <button
-              onClick={() => onSelectCategory(null)}
-              className={`flex-shrink-0 px-2 py-1 rounded text-xs transition-colors font-medium ${
-                selectedCategory === null
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/60'
-              }`}
+              type="button"
+              onClick={() => setSearchQuery('')}
+              aria-label="清空搜索"
+              className="press absolute right-1 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center text-fg-muted hover:text-fg"
             >
-              全部 ({cases.length})
+              <X className="h-4 w-4" />
             </button>
-            {categories.map((cat) => (
+          ) : null}
+        </div>
+
+        {/* Full category names, no truncation - the strip scrolls instead. */}
+        <div className="scroll-x -mx-4 flex gap-1.5 px-4 pb-1">
+          {filters.map((f) => {
+            const isActive = selectedCategory === f.key
+            return (
               <button
-                key={cat.name}
-                onClick={() => onSelectCategory(cat.name === selectedCategory ? null : cat.name)}
-                className={`flex-shrink-0 px-2 py-1 rounded text-xs transition-colors font-medium flex items-center gap-1 ${
-                  selectedCategory === cat.name
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/60'
-                }`}
+                key={f.key ?? '__all__'}
+                type="button"
+                onClick={() => onSelectCategory(isActive && f.key !== null ? null : f.key)}
+                className={cn(
+                  'press flex shrink-0 items-center gap-1.5 whitespace-nowrap px-2.5 py-1.5 text-label',
+                  isActive
+                    ? 'bg-seal font-semibold text-paper'
+                    : 'bg-field-raised text-fg-muted hover:bg-field-raised2 hover:text-fg'
+                )}
               >
-                <span>{cat.name.length > 6 ? cat.name.slice(0, 6) + '...' : cat.name}</span>
-                <span className="opacity-70 font-mono">({cat.count})</span>
+                {f.label}
+                <span className={cn('tabular-nums', isActive ? 'text-paper/70' : 'text-fg-faint')}>
+                  {f.count}
+                </span>
               </button>
-            ))}
-          </div>
+            )
+          })}
         </div>
       </div>
 
-      {/* Case List View */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-2.5">
-        {filteredCases.map((c) => {
-          const isSelected = c.case_id === selectedCaseId
-          return (
-            <div
-              key={c.case_id}
-              onClick={() => onSelectCase(c.case_id)}
-              className={`p-3 rounded-lg cursor-pointer transition-colors border relative ${
-                isSelected
-                  ? 'bg-slate-800/90 border-blue-500 text-white shadow-xs'
-                  : 'bg-slate-900/40 hover:bg-slate-850 border-slate-800/80 hover:border-slate-700'
-              }`}
-            >
-              {/* Active Indicator Line */}
-              {isSelected && (
-                <span className="absolute left-0 top-2 bottom-2 w-1 bg-blue-500 rounded-r" />
-              )}
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {filteredCases.length === 0 ? (
+          <EmptyState
+            title="没有符合条件的案例"
+            body="试着换一个关键词，或者点上面的「全部」回到完整案例库。"
+            action={
+              selectedCategory !== null || searchQuery ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery('')
+                    onSelectCategory(null)
+                  }}
+                  className="press bg-field-raised px-3 py-2 text-label font-medium text-fg hover:bg-field-raised2"
+                >
+                  重置筛选
+                </button>
+              ) : undefined
+            }
+          />
+        ) : (
+          <ul className="pb-4">
+            {filteredCases.map((c, i) => {
+              const isSelected = c.case_id === selectedCaseId
+              return (
+                <li key={c.case_id}>
+                  <Reveal index={Math.min(i, 10)} step={35}>
+                    <button
+                      type="button"
+                      onClick={() => onSelectCase(c.case_id)}
+                      aria-current={isSelected ? 'true' : undefined}
+                      className={cn(
+                        'row-hover block w-full px-4 py-3 text-left',
+                        isSelected ? 'bg-field-raised' : 'hover:bg-field-raised/60'
+                      )}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex min-w-0 items-baseline gap-2">
+                          <span
+                            className={cn(
+                              'shrink-0 text-label tabular-nums',
+                              isSelected ? 'text-seal-soft' : 'text-fg-faint'
+                            )}
+                          >
+                            {c.stock_code}
+                          </span>
+                          <span className="truncate text-small font-medium text-fg" title={c.company_name}>
+                            {c.company_name}
+                          </span>
+                        </div>
+                        <Chip
+                          tone={c.is_clean ? 'clear' : 'critical'}
+                          className="shrink-0"
+                        >
+                          {c.is_clean ? '合规' : '舞弊'}
+                        </Chip>
+                      </div>
 
-              {/* Header: Company Name & Stock Code */}
-              <div className="flex items-start justify-between gap-2 pl-1.5">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[11px] font-mono font-bold text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">
-                      {c.stock_code}
-                    </span>
-                    <h3 className="text-xs font-semibold text-slate-100 truncate group-hover:text-blue-300 transition-colors">
-                      {c.company_name}
-                    </h3>
-                  </div>
-                  <p className="text-[11px] text-slate-400 mt-1 truncate font-mono">
-                    {c.penalty_decision_no}
-                  </p>
-                </div>
+                      <p className="mt-1 truncate text-label text-fg-muted" title={c.penalty_decision_no}>
+                        {c.penalty_decision_no}
+                      </p>
 
-                {/* Status Badge */}
-                {c.is_clean ? (
-                  <span className="flex-shrink-0 flex items-center gap-1 text-[10px] font-medium text-emerald-400 bg-emerald-950/40 border border-emerald-900/50 px-2 py-0.5 rounded">
-                    <CheckCircle2 className="w-3 h-3" />
-                    合规
-                  </span>
-                ) : (
-                  <span className="flex-shrink-0 flex items-center gap-1 text-[10px] font-medium text-rose-400 bg-rose-950/40 border border-rose-900/50 px-2 py-0.5 rounded">
-                    <AlertCircle className="w-3 h-3" />
-                    舞弊
-                  </span>
-                )}
-              </div>
-
-              {/* Category and Metrics tags */}
-              <div className="flex items-center justify-between text-[10px] text-slate-400 mt-2.5 pt-2 border-t border-white/5 pl-1.5 font-mono">
-                <span className="text-slate-400 bg-slate-950 px-1.5 py-0.5 rounded flex items-center gap-1 border border-slate-800">
-                  <Tag className="w-2.5 h-2.5 text-slate-500" />
-                  {c.case_category}
-                </span>
-
-                <div className="flex items-center gap-2 text-slate-400">
-                  <span>凭证 {c.voucher_count}</span>
-                  <span>流水 {c.bank_flow_count}</span>
-                </div>
-              </div>
-            </div>
-          )
-        })}
-
-        {filteredCases.length === 0 && (
-          <div className="text-center py-12 text-slate-500 text-xs">
-            未检索到匹配的案例，请尝试重置筛选或更改关键词。
-          </div>
+                      <div className="mt-2 flex items-center justify-between gap-3 text-label text-fg-faint">
+                        <span className="truncate" title={c.case_category}>
+                          {c.case_category}
+                        </span>
+                        <span className="shrink-0 tabular-nums">
+                          凭证 {c.voucher_count} · 流水 {c.bank_flow_count}
+                        </span>
+                      </div>
+                    </button>
+                  </Reveal>
+                </li>
+              )
+            })}
+          </ul>
         )}
       </div>
     </aside>

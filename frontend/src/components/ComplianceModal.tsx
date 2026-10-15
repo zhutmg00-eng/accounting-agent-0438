@@ -1,17 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import {
-  ShieldCheck,
-  Lock,
-  UserCheck,
-  Scale,
-  FileText,
-  CheckCircle2,
-  AlertCircle,
-  X,
-  Sparkles,
-  ExternalLink
-} from 'lucide-react'
-import { ComplianceManifest } from '../types'
+import React, { useEffect, useRef, useState } from 'react'
+import { X } from 'lucide-react'
+import { Btn, Chip, StatusMark, cn } from '../ui/primitives'
+import { useFocusTrap } from '../lib/useFocusTrap'
+import { ComplianceManifest, CpaApprovalReceipt } from '../types'
 
 interface ComplianceModalProps {
   isOpen: boolean
@@ -20,6 +11,39 @@ interface ComplianceModalProps {
   onCaseSanitized?: () => void
 }
 
+/**
+ * The same sign-off the workpaper sheet performs, repeated for one case: same
+ * signer, same certificate number, same declared basis, so the modal and the
+ * workpaper sheet quote one CPA rather than two.
+ */
+const SIGNER = {
+  auditor_name: '张宇 (执业CPA)',
+  cert_no: '110000240982',
+  audit_firm: '数智会计联合审计项目组',
+  opinion_type: '保留意见/拟追加外部银行函证',
+  professional_skepticism_notes:
+    '已秉持职业怀疑态度，全面复核确定性算子三单倒挂天数与Beneish操纵指数，认可智能体证据链，拟针对可疑关联方实施外部独立银行函证。',
+  compliance_confirmed: true
+}
+
+interface Notice {
+  text: string
+  bad: boolean
+}
+
+const Field: React.FC<{ label: string; value: React.ReactNode }> = ({ label, value }) => (
+  <div className="min-w-0">
+    <div className="text-label text-fg-muted">{label}</div>
+    <div className="mt-1 text-body text-fg">{value}</div>
+  </div>
+)
+
+/**
+ * The whitepaper overlay. A real overlay, so it carries `shadow-overlay` and a
+ * flat scrim - nothing else: the panel is square, the room stays dark, and the
+ * surface that holds ink is the paper band of legal bases. The one accent is
+ * the sign-off that turns the paper into a case record.
+ */
 export const ComplianceModal: React.FC<ComplianceModalProps> = ({
   isOpen,
   onClose,
@@ -28,185 +52,283 @@ export const ComplianceModal: React.FC<ComplianceModalProps> = ({
 }) => {
   const [manifest, setManifest] = useState<ComplianceManifest | null>(null)
   const [loading, setLoading] = useState(false)
+  const [receipt, setReceipt] = useState<CpaApprovalReceipt | null>(null)
+  const [signing, setSigning] = useState(false)
+  const [signNotice, setSignNotice] = useState<Notice | null>(null)
   const [sanitizing, setSanitizing] = useState(false)
-  const [sanitizeMsg, setSanitizeMsg] = useState<string | null>(null)
+  const [sanitizeNotice, setSanitizeNotice] = useState<Notice | null>(null)
 
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  // A receipt names exactly one case; switching case retires the old one.
   useEffect(() => {
-    if (isOpen) {
-      fetchManifest()
-    }
-  }, [isOpen])
+    setReceipt(null)
+    setSignNotice(null)
+  }, [currentCaseId])
 
   const fetchManifest = async () => {
     setLoading(true)
     try {
-      const res = await fetch('/api/compliance/manifest')
-      if (res.ok) {
-        const data = await res.json()
-        setManifest(data)
+      const resp = await fetch('/api/compliance/manifest')
+      if (resp.ok) {
+        setManifest(await resp.json())
       }
-    } catch (e) {
-      console.error('Failed to fetch compliance manifest', e)
+    } catch (error) {
+      console.error('Failed to load compliance manifest', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleSignOff = async () => {
+    if (!currentCaseId) return
+    setSigning(true)
+    setSignNotice(null)
+    try {
+      const resp = await fetch('/api/compliance/cpa-approval', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ case_id: currentCaseId, ...SIGNER })
+      })
+      if (!resp.ok) {
+        setSignNotice({ text: `签章服务返回 ${resp.status}，本案例回执未签发。`, bad: true })
+        return
+      }
+      setReceipt(await resp.json())
+    } catch (error) {
+      console.error('CPA sign-off failed', error)
+      setSignNotice({ text: '签章服务未响应，本案例回执未签发。', bad: true })
+    } finally {
+      setSigning(false)
     }
   }
 
   const handleSanitizeCase = async () => {
     if (!currentCaseId) return
     setSanitizing(true)
-    setSanitizeMsg(null)
+    setSanitizeNotice(null)
     try {
-      const res = await fetch(`/api/compliance/sanitize-case/${currentCaseId}`, {
-        method: 'POST'
+      const resp = await fetch(`/api/compliance/sanitize-case/${currentCaseId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
       })
-      if (res.ok) {
-        const data = await res.json()
-        setSanitizeMsg(data.message || '已成功启用隐私脱敏防护！')
-        if (onCaseSanitized) {
-          onCaseSanitized()
-        }
+      if (resp.ok) {
+        const data = await resp.json()
+        setSanitizeNotice({ text: data.message || '脱敏完成：账号、对手与流水已掩码。', bad: false })
+        onCaseSanitized?.()
       } else {
-        setSanitizeMsg('脱敏处理失败，请稍后重试。')
+        setSanitizeNotice({ text: `脱敏请求被拒绝（${resp.status}）。`, bad: true })
       }
-    } catch (e) {
-      setSanitizeMsg('网络异常，脱敏请求未送达。')
+    } catch (error) {
+      console.error('Sanitize request failed', error)
+      setSanitizeNotice({ text: '脱敏请求未送达，网络异常。', bad: true })
     } finally {
       setSanitizing(false)
     }
   }
 
+  useEffect(() => {
+    if (isOpen) fetchManifest()
+  }, [isOpen])
+
+  // Real overlay, real focus handling: focus moves into the panel on open, Tab
+  // cycles inside it, Escape closes, and focus returns to the trigger on close.
+  useFocusTrap(isOpen, onClose, { dialogRef: panelRef, panelRef })
+
   if (!isOpen) return null
 
+  const footerStatus = receipt
+    ? `回执 ${receipt.receipt_id} · 签署于 ${receipt.sign_timestamp}`
+    : currentCaseId
+      ? `待签收 · 签字人 ${SIGNER.auditor_name} · 执业证书 ${SIGNER.cert_no}`
+      : '未选定案卷，回执按案卷逐份签发'
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-4xl max-h-[90vh] bg-slate-900 border border-emerald-500/30 rounded-2xl shadow-2xl flex flex-col overflow-hidden text-slate-100 font-sans">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-emerald-500/20 bg-slate-950/80">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-white tracking-wide">
-                  数智会计伦理、合规与数据安全白皮书
-                </h2>
-                <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  六大评审核心维度
-                </span>
-              </div>
-              <p className="text-xs text-slate-400">
-                对齐《数据安全法》《个人信息保护法》与中注协职业道德守则
-              </p>
-            </div>
+    <div
+      className="fixed inset-0 z-modal flex items-start justify-center bg-black/70 p-3 sm:items-center sm:p-6"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
+    >
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="compliance-modal-title"
+        tabIndex={-1}
+        className="flex max-h-[88svh] w-full max-w-5xl flex-col overflow-hidden overscroll-contain bg-field-raised shadow-overlay"
+      >
+        <header className="flex items-start justify-between gap-6 bg-field-raised2 px-6 py-5">
+          <h2 id="compliance-modal-title" className="text-title font-semibold text-fg">
+            {manifest ? manifest.title : '数智会计伦理、合规与数据安全白皮书'}
+          </h2>
+          <div className="flex shrink-0 items-center gap-3">
+            {manifest ? (
+              <span className="hidden text-small text-fg-muted lg:inline">版本 {manifest.version}</span>
+            ) : null}
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="关闭面板"
+              className="press -mt-1 -mr-1 p-2 text-fg-muted hover:bg-field-raised3 hover:text-fg"
+            >
+              <X className="h-5 w-5" />
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+        </header>
 
-        {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          {/* Quick Action: Sanitize Current Case */}
-          {currentCaseId && (
-            <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/30 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Lock className="w-5 h-5 text-emerald-400" />
-                <div>
-                  <div className="text-sm font-semibold text-emerald-300">
-                    当前案例数据脱敏盾 (Privacy Guard)
-                  </div>
-                  <div className="text-xs text-slate-400">
-                    一键对当前案例凭证账号、交易对手及流水实施掩码脱敏（首4尾4）
-                  </div>
-                </div>
-              </div>
-              <button
-                onClick={handleSanitizeCase}
-                disabled={sanitizing}
-                className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md shadow-emerald-900/40 transition-all flex items-center gap-1.5 disabled:opacity-50"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                {sanitizing ? '脱敏中...' : '一键应用脱敏防护'}
-              </button>
-            </div>
-          )}
-
-          {sanitizeMsg && (
-            <div className="p-3 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-              <span>{sanitizeMsg}</span>
-            </div>
-          )}
-
-          {/* Pillars */}
-          {manifest?.governance_pillars.map((p, idx) => {
-            const icons = [UserCheck, Lock, Scale]
-            const Icon = icons[idx % icons.length]
-            return (
-              <div
-                key={idx}
-                className="p-5 rounded-xl bg-slate-950/50 border border-white/5 hover:border-emerald-500/20 transition-all"
-              >
-                <div className="flex items-center gap-2.5 mb-2">
-                  <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <h3 className="text-sm font-bold text-slate-100">
-                    {p.pillar}
-                  </h3>
-                </div>
-                <p className="text-xs text-emerald-400/90 font-medium mb-3">
-                  {p.summary}
-                </p>
-                <ul className="space-y-2">
-                  {p.details.map((d, dIdx) => (
-                    <li
-                      key={dIdx}
-                      className="text-xs text-slate-300 flex items-start gap-2 leading-relaxed"
-                    >
-                      <span className="text-emerald-500 mt-0.5">•</span>
-                      <span>{d}</span>
+        <div className="flex-1 overflow-y-auto overscroll-contain">
+          {loading && !manifest ? (
+            <p role="status" aria-live="polite" className="max-w-[70ch] px-6 py-8 text-body text-fg-muted">
+              正在读取白皮书内容…
+            </p>
+          ) : (
+            <>
+              <section className="px-6 pt-6 pb-8">
+                <h3 className="text-body font-semibold text-fg">治理支柱</h3>
+                <ul className="mt-5 space-y-10">
+                  {manifest?.governance_pillars.map((pillar, index) => (
+                    <li key={index} className="max-w-[70ch]">
+                      <h4 className="text-title font-semibold text-fg">{pillar.pillar}</h4>
+                      <p className="mt-2 text-body text-fg">{pillar.summary}</p>
+                      <ul className="mt-3 space-y-2.5">
+                        {pillar.details.map((detail, detailIndex) => (
+                          <li key={detailIndex} className="flex gap-3">
+                            <span aria-hidden className="mt-[9px] h-1.5 w-1.5 shrink-0 bg-fg-faint" />
+                            <span className="text-body text-fg">{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </li>
                   ))}
                 </ul>
-              </div>
-            )
-          })}
+              </section>
 
-          {/* Standards Footer */}
-          <div className="p-4 rounded-xl bg-slate-950/70 border border-white/5">
-            <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-emerald-400" />
-              法律法规与准则合规依据
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {manifest?.compliance_standards.map((s, sIdx) => (
-                <span
-                  key={sIdx}
-                  className="px-2.5 py-1 text-[11px] rounded-md bg-white/5 text-slate-300 border border-white/10"
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-          </div>
+              <section className="bg-paper text-ink">
+                <div className="flex flex-wrap items-baseline justify-between gap-4 px-6 pt-6">
+                  <h3 className="text-body font-semibold text-ink">合规依据与执业准则</h3>
+                  <span className="text-small text-ink-muted tabular-nums">
+                    {manifest ? `${manifest.compliance_standards.length} 项` : ''}
+                  </span>
+                </div>
+                <ol className="mt-4 pb-6">
+                  {manifest?.compliance_standards.map((standard, index) => (
+                    <li
+                      key={index}
+                      className={cn('flex gap-4 px-6 py-4', index % 2 === 1 && 'bg-paper-deep')}
+                    >
+                      <span className="w-5 shrink-0 text-small text-ink-muted tabular-nums">
+                        {index + 1}
+                      </span>
+                      <span className="text-body text-ink">{standard}</span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+
+              <section className="bg-field-raised2 px-6 py-6">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <h3 className="text-body font-semibold text-fg">CPA 电子签收回执</h3>
+                  {receipt ? (
+                    <Chip filled tone={receipt.status === 'APPROVED_BY_CPA' ? 'clear' : 'medium'}>
+                      {receipt.status}
+                    </Chip>
+                  ) : (
+                    <Chip>尚未签发</Chip>
+                  )}
+                </div>
+
+                {receipt ? (
+                  <>
+                    <div className="mt-5 max-w-[70ch]">
+                      <div className="text-small text-fg-muted">签字注册会计师</div>
+                      <div className="mt-1 text-title font-semibold text-fg">{receipt.auditor_name}</div>
+                      <div className="mt-1 text-small text-fg-muted">
+                        执业证书编号 {receipt.cert_no} · {receipt.audit_firm}
+                      </div>
+                    </div>
+
+                    <div className="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+                      <Field label="回执编号" value={receipt.receipt_id} />
+                      <Field label="案卷编号" value={receipt.case_id} />
+                      <Field label="签署时间" value={receipt.sign_timestamp} />
+                      <Field label="审计意见类型" value={receipt.opinion_type} />
+                    </div>
+
+                    <div className="mt-5 bg-field-sunken px-5 py-4">
+                      <div className="text-label text-fg-muted">验证摘要 · SHA-256 前 24 位</div>
+                      <code className="mt-2 block break-all font-mono text-body text-fg">
+                        {receipt.verification_hash}
+                      </code>
+                      <p className="mt-2 text-body text-fg">
+                        回执编号由该摘要前 8 位与签发日期派生，可在签章服务中复核。
+                      </p>
+                    </div>
+
+                    <div className="mt-5 max-w-[70ch]">
+                      <div className="text-label text-fg-muted">职业道德与独立性声明</div>
+                      <p className="mt-2 text-body text-fg">{receipt.ethical_declaration}</p>
+                    </div>
+                  </>
+                ) : (
+                  <div className="mt-4 max-w-[70ch]">
+                    <p className="text-body text-fg">
+                      本案例尚未签发 CPA 电子签收回执。签署后由合规签章服务按案卷标识生成验证摘要，摘要一经签发即固定。
+                    </p>
+                    <div aria-live="polite">
+                      {signNotice ? (
+                        <p className="mt-3 flex items-center gap-2.5 text-body text-fg">
+                          <StatusMark tone={signNotice.bad ? 'high' : 'clear'} />
+                          {signNotice.text}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                )}
+              </section>
+
+              {currentCaseId ? (
+                <section className="bg-field-sunken px-6 py-5">
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="max-w-[70ch]">
+                      <h3 className="text-body font-semibold text-fg">本案数据脱敏</h3>
+                      <p className="mt-1 text-body text-fg">
+                        对案卷 {currentCaseId} 的凭证账号、交易对手与流水按首 4 位、尾 4 位掩码脱敏。
+                      </p>
+                    </div>
+                    <Btn variant="quiet" disabled={sanitizing} onClick={handleSanitizeCase}>
+                      {sanitizing ? '脱敏处理中…' : '一键应用脱敏防护'}
+                    </Btn>
+                  </div>
+                  <div aria-live="polite">
+                    {sanitizeNotice ? (
+                      <p className="mt-3 flex items-center gap-2.5 text-body text-fg">
+                        <StatusMark tone={sanitizeNotice.bad ? 'high' : 'clear'} />
+                        {sanitizeNotice.text}
+                      </p>
+                    ) : null}
+                  </div>
+                </section>
+              ) : null}
+            </>
+          )}
         </div>
 
-        {/* Footer */}
-        <div className="px-6 py-3 border-t border-white/10 bg-slate-950/90 flex justify-between items-center text-xs text-slate-400">
-          <span>AI 辅助初筛 · 注册会计师终局法定负责制</span>
-          <button
-            onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
-          >
-            关闭面板
-          </button>
-        </div>
+        <footer className="flex flex-wrap items-center justify-between gap-4 bg-field-raised2 px-6 py-4">
+          <p className="flex items-center gap-2.5 text-body text-fg">
+            <StatusMark tone={receipt ? 'clear' : 'neutral'} />
+            {footerStatus}
+          </p>
+          {receipt || !currentCaseId ? (
+            <Btn variant="quiet" onClick={onClose}>
+              关闭白皮书
+            </Btn>
+          ) : (
+            <Btn variant="primary" disabled={signing} onClick={handleSignOff}>
+              {signing ? '签发处理中…' : '确认伦理声明并签署回执'}
+            </Btn>
+          )}
+        </footer>
       </div>
     </div>
   )

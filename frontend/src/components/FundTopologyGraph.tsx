@@ -1,18 +1,41 @@
 import React, { useState } from 'react'
 import {
-  Network,
-  AlertCircle,
-  ShieldCheck,
-  Activity,
-  Layers,
-  ArrowRight,
-  Sparkles,
   Building2,
+  Users,
   Landmark,
-  Share2,
+  FileText,
   RefreshCw,
-  Info
+  Info,
+  ShieldCheck,
+  Sparkles
 } from 'lucide-react'
+import {
+  Chip,
+  DataTable,
+  Panel,
+  Status,
+  Surface,
+  Td,
+  TdNum,
+  Th,
+  Verdict,
+  cn
+} from '../ui/primitives'
+import { Reveal, useAnimatedNumber } from '../ui/motion'
+
+/* ===========================================================================
+   Beat 2 · 穿透 — 资金体外拓扑.
+
+   The screen tells one story: how money leaves the listed company and runs a
+   loop outside it. The graph is the lit evidence; everything drawn on it is a
+   quiet greyscale step except the paths judged to be out-of-book, which carry
+   the risk hue and are therefore the only thing that stands out.
+
+   Presentation layer only: node coordinates, curve control points, link
+   topology, labels and amounts are unchanged from the audited figure. The one
+   move kept here is `animate-fund-flow`, because the dash encodes the
+   DIRECTION of money movement, which is information and not decoration.
+   =========================================================================== */
 
 interface FundTopologyGraphProps {
   currentCase: any
@@ -25,8 +48,7 @@ interface NodeData {
   role: string
   x: number
   y: number
-  color: string
-  glowColor: string
+  stroke: string
   icon: string
   amount?: string
   warning?: string
@@ -43,7 +65,28 @@ interface LinkData {
   cy: number
   label: string
   amount?: string
-  color: string
+  stroke: string
+}
+
+/* ---------------------------------------------------------------------------
+   Canvas palette. The field is the room; the graph is the thing lit inside it.
+   Quiet paths are the greyscale step, out-of-book paths carry risk-critical.
+   --------------------------------------------------------------------------- */
+const STROKE_QUIET = 'var(--fg-faint)'
+const STROKE_STRONG = 'var(--fg-muted)'
+const STROKE_CRITICAL = 'var(--risk-critical)'
+const STROKE_CLEAR = 'var(--risk-clear)'
+
+const CANVAS_BG = 'var(--field-sunken)'
+const CANVAS_LABEL_BG = 'var(--field-raised-2)'
+const NODE_BODY_BG = 'var(--field-raised)'
+
+const NODE_ICONS: Record<string, React.ElementType> = {
+  company: Building2,
+  bank: Landmark,
+  pool: Users,
+  channel: FileText,
+  recycle: RefreshCw
 }
 
 export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCase }) => {
@@ -75,7 +118,12 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
   const node2Name = bankCounterparty === node1Name ? `${bankCounterparty}(专户池)` : bankCounterparty
   const node3Name = contractCounterparty === node1Name || contractCounterparty === node2Name ? `${contractCounterparty}(结算通道)` : contractCounterparty
 
-  // Dynamic Nodes
+  /* The only figure this screen counts up to: the money judged to sit outside
+     the books. The graph itself shows the un-animated amount per node. */
+  const animatedFraudAmt = useAnimatedNumber(rawFraudAmt > 0 ? rawFraudAmt / 100000000 : 0)
+  const verdictFigure = rawFraudAmt > 0 ? `¥${animatedFraudAmt.toFixed(1)}亿` : fraudAmount
+
+  // Dynamic Nodes — same ids, same coordinates, same copy.
   const nodes: NodeData[] = isClean
     ? [
         {
@@ -85,9 +133,8 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           role: '实体生产经营与财务归集中心',
           x: 480,
           y: 90,
-          color: '#00F2FE',
-          glowColor: 'rgba(0, 242, 254, 0.5)',
-          icon: '🏢'
+          stroke: STROKE_STRONG,
+          icon: 'company'
         },
         {
           id: 'node-clean-2',
@@ -96,9 +143,8 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           role: '终端销售与真实商业现金流输入',
           x: 770,
           y: 250,
-          color: '#10B981',
-          glowColor: 'rgba(16, 185, 129, 0.5)',
-          icon: '🤝'
+          stroke: STROKE_QUIET,
+          icon: 'channel'
         },
         {
           id: 'node-clean-3',
@@ -107,9 +153,8 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           role: '原辅材料采购与增值税真实抵扣',
           x: 480,
           y: 400,
-          color: '#38BDF8',
-          glowColor: 'rgba(56, 189, 248, 0.5)',
-          icon: '📦'
+          stroke: STROKE_QUIET,
+          icon: 'channel'
         },
         {
           id: 'node-clean-4',
@@ -118,9 +163,8 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           role: '受央行与商业银行系统实时监管',
           x: 190,
           y: 250,
-          color: '#A855F7',
-          glowColor: 'rgba(168, 85, 247, 0.5)',
-          icon: '🏦'
+          stroke: STROKE_QUIET,
+          icon: 'bank'
         }
       ]
     : [
@@ -131,9 +175,8 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           role: '发端实体 / 资金划出与虚构资产方',
           x: 480,
           y: 75,
-          color: '#00F2FE',
-          glowColor: 'rgba(0, 242, 254, 0.6)',
-          icon: '🏢',
+          stroke: STROKE_CRITICAL,
+          icon: 'company',
           amount: fraudAmount,
           warning: '账面存巨额货币资金，实则已遭体外抽逃划转'
         },
@@ -144,9 +187,8 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           role: '虚假银行凭证开具与资金中转',
           x: 790,
           y: 190,
-          color: '#EF4444',
-          glowColor: 'rgba(239, 68, 68, 0.6)',
-          icon: '🏦',
+          stroke: STROKE_CRITICAL,
+          icon: 'bank',
           amount: fraudAmount,
           warning: '配合伪造银行对账单，出具无真实资金定存证明'
         },
@@ -157,9 +199,8 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           role: '非经营性占用归集与拆借过桥',
           x: 670,
           y: 405,
-          color: '#A855F7',
-          glowColor: 'rgba(168, 85, 247, 0.6)',
-          icon: '💰',
+          stroke: STROKE_CRITICAL,
+          icon: 'pool',
           amount: fraudAmount,
           warning: '资金沉淀用于还贷、投资或流向关联私户'
         },
@@ -170,9 +211,8 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           role: '虚构购销合同与假发票过桥主体',
           x: 290,
           y: 405,
-          color: '#F59E0B',
-          glowColor: 'rgba(245, 158, 11, 0.6)',
-          icon: '📑',
+          stroke: STROKE_CRITICAL,
+          icon: 'channel',
           amount: contractAmount,
           warning: '无真实货物移转，通过签订阴阳合同过账'
         },
@@ -183,15 +223,14 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           role: '以客户名义将资金回流上市公司',
           x: 170,
           y: 190,
-          color: '#38BDF8',
-          glowColor: 'rgba(56, 189, 248, 0.6)',
-          icon: '🔄',
+          stroke: STROKE_CRITICAL,
+          icon: 'recycle',
           amount: fraudAmount,
           warning: '伪装成正常销售回款，闭环掩盖虚增营收'
         }
       ]
 
-  // Dynamic Directed Links
+  // Dynamic Directed Links — same endpoints and same control points.
   const links: LinkData[] = isClean
     ? [
         {
@@ -204,7 +243,7 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           cx: 660,
           cy: 140,
           label: '真实销售现汇结算',
-          color: '#10B981'
+          stroke: STROKE_QUIET
         },
         {
           source: 'node-clean-1',
@@ -216,7 +255,7 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           cx: 560,
           cy: 245,
           label: '采购货款公对公划转',
-          color: '#38BDF8'
+          stroke: STROKE_QUIET
         },
         {
           source: 'node-clean-1',
@@ -228,7 +267,7 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           cx: 300,
           cy: 140,
           label: '银企直连实时对账',
-          color: '#A855F7'
+          stroke: STROKE_QUIET
         }
       ]
     : [
@@ -242,7 +281,7 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           cx: 670,
           cy: 100,
           label: `异常划出 ${fraudAmount}`,
-          color: '#EF4444'
+          stroke: STROKE_CRITICAL
         },
         {
           source: 'node-fraud-2',
@@ -254,7 +293,7 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           cx: 770,
           cy: 310,
           label: '资金归集/隐匿占用',
-          color: '#A855F7'
+          stroke: STROKE_CRITICAL
         },
         {
           source: 'node-fraud-3',
@@ -266,7 +305,7 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           cx: 480,
           cy: 440,
           label: `注资过桥 ${contractAmount}`,
-          color: '#F59E0B'
+          stroke: STROKE_QUIET
         },
         {
           source: 'node-fraud-4',
@@ -278,7 +317,7 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           cx: 190,
           cy: 310,
           label: '无商业实质购销冲账',
-          color: '#38BDF8'
+          stroke: STROKE_QUIET
         },
         {
           source: 'node-fraud-5',
@@ -290,328 +329,395 @@ export const FundTopologyGraph: React.FC<FundTopologyGraphProps> = ({ currentCas
           cx: 290,
           cy: 100,
           label: '销售回款闭环自循环',
-          color: '#00F2FE'
+          stroke: STROKE_CRITICAL
         }
       ]
 
   const activeNode = nodes.find((n) => n.id === (selectedNodeId || hoveredNodeId))
+  const isNodeCritical = (node: NodeData) => node.stroke === STROKE_CRITICAL
 
   return (
-    <div className="flex-1 min-w-0 w-full overflow-y-auto p-6 space-y-6">
-      <div className="glass-panel rounded-2xl p-6 border border-white/10 relative overflow-hidden">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-1">
-              <Network className="w-4 h-4" />
-              <span>资金体外循环与关联方穿透拓扑 (Interactive Cyber Topology Matrix)</span>
+    <div
+      className={cn(
+        'flex-1 min-w-0 w-full overflow-y-auto bg-field',
+        'px-5 pt-5 pb-8 space-y-5 sm:px-8 sm:pt-8'
+      )}
+    >
+      <Panel
+        bare
+        title={companyName}
+        note="资金体外循环与关联方穿透拓扑：从受审主体出发，沿银行流水、关联方披露与发票价税合计逐条追下去。"
+        meta={
+          isClean ? (
+            <Status tone="clear">合规直连网络 · 零体外循环</Status>
+          ) : (
+            <Status tone="critical">已捕获体外资金空转自循环回路</Status>
+          )
+        }
+      >
+        <Reveal index={0} className="px-5 pb-5">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 bg-field-raised2 px-5 py-4">
+            <div className="flex items-center gap-2 text-body text-fg">
+              <span
+                aria-hidden
+                className="inline-block h-[3px] w-8"
+                style={{ backgroundColor: STROKE_QUIET }}
+              />
+              <span>正常结算路径</span>
             </div>
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span>{companyName}</span>
-              <span className="text-xs font-mono px-2 py-0.5 rounded bg-white/10 text-slate-300 font-normal">
-                {isClean ? '正常商业直连结算网络' : '体外涉案资金池闭环网络'}
-              </span>
-            </h2>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="text-xs text-slate-400 font-mono flex items-center gap-2">
-              <span className={`w-2.5 h-2.5 rounded-full ${isClean ? 'bg-emerald-400' : 'bg-rose-500 animate-ping'}`} />
-              <span className={isClean ? 'text-emerald-300' : 'text-rose-300 font-bold'}>
-                {isClean ? '合规直连网络·零体外循环' : '已捕获体外资金空转自循环回路'}
-              </span>
+            <div className="flex items-center gap-2 text-body text-fg">
+              <span
+                aria-hidden
+                className="inline-block h-[3px] w-8"
+                style={{ backgroundColor: STROKE_CRITICAL }}
+              />
+              <span>{isClean ? '—' : '判定为体外 / 异常的路径'}</span>
+            </div>
+            <div className="flex items-center gap-2 text-body text-fg">
+              <span
+                aria-hidden
+                className="inline-block h-0 w-8 border-t-2 border-dashed"
+                style={{ borderColor: STROKE_STRONG }}
+              />
+              <span>虚线方向即资金流向</span>
             </div>
           </div>
-        </div>
+        </Reveal>
 
-        {/* SVG Interactive Topology Canvas */}
-        <div className="w-full mt-4 rounded-2xl bg-gradient-to-b from-[#060912] to-[#0A0F1D] border border-white/5 relative overflow-hidden shadow-inner p-2">
-          {/* Background Ambient Cyber Grid */}
-          <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
-
-          {/* SVG Diagram */}
-          <svg
-            viewBox="0 0 960 480"
-            className="w-full h-auto min-h-[460px] relative z-10 select-none"
-          >
-            <defs>
-              {/* Arrow Markers */}
-              <marker id="arrow-cyan" viewBox="0 0 10 10" refX="28" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#00F2FE" />
-              </marker>
-              <marker id="arrow-rose" viewBox="0 0 10 10" refX="28" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#EF4444" />
-              </marker>
-              <marker id="arrow-purple" viewBox="0 0 10 10" refX="28" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#A855F7" />
-              </marker>
-              <marker id="arrow-amber" viewBox="0 0 10 10" refX="28" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#F59E0B" />
-              </marker>
-              <marker id="arrow-sky" viewBox="0 0 10 10" refX="28" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#38BDF8" />
-              </marker>
-              <marker id="arrow-emerald" viewBox="0 0 10 10" refX="28" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#10B981" />
-              </marker>
-
-              {/* Node Glow Filters */}
-              <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="0" stdDeviation="8" floodColor="#00F2FE" floodOpacity="0.8" />
-              </filter>
-              <filter id="glow-rose" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="0" stdDeviation="8" floodColor="#EF4444" floodOpacity="0.8" />
-              </filter>
-            </defs>
-
-            {/* 1. Curved Flow Links */}
-            {links.map((link, idx) => {
-              const pathD = `M ${link.x1} ${link.y1} Q ${link.cx} ${link.cy} ${link.x2} ${link.y2}`
-              return (
-                <g key={idx}>
-                  {/* Background Glow Path */}
-                  <path
-                    d={pathD}
-                    fill="none"
-                    stroke={link.color}
-                    strokeWidth="5"
-                    strokeOpacity="0.2"
-                  />
-                  {/* Foreground Animated Dashed Flow Path */}
-                  <path
-                    d={pathD}
-                    fill="none"
-                    stroke={link.color}
-                    strokeWidth="2.5"
-                    strokeDasharray="8 8"
-                    className="animate-fund-flow"
-                    markerEnd={`url(#arrow-${link.color === '#EF4444' ? 'rose' : link.color === '#A855F7' ? 'purple' : link.color === '#F59E0B' ? 'amber' : link.color === '#10B981' ? 'emerald' : link.color === '#38BDF8' ? 'sky' : 'cyan'})`}
-                  />
-                  {/* Edge Label Pill Badge */}
-                  <g transform={`translate(${link.cx}, ${link.cy})`}>
-                    <rect
-                      x="-70"
-                      y="-12"
-                      width="140"
-                      height="24"
-                      rx="12"
-                      fill="#0B132B"
-                      stroke={link.color}
-                      strokeWidth="1.2"
-                      opacity="0.95"
-                    />
-                    <text
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill="#F1F5F9"
-                      fontSize="10"
-                      fontFamily="JetBrains Mono, monospace"
-                      fontWeight="bold"
-                    >
-                      {link.label}
-                    </text>
-                  </g>
-                </g>
-              )
-            })}
-
-            {/* 2. Interactive Nodes */}
-            {nodes.map((node) => {
-              const isSelected = selectedNodeId === node.id || hoveredNodeId === node.id
-              return (
-                <g
-                  key={node.id}
-                  transform={`translate(${node.x}, ${node.y})`}
-                  className="cursor-pointer transition-transform duration-200"
-                  onClick={() => setSelectedNodeId(node.id)}
-                  onMouseEnter={() => setHoveredNodeId(node.id)}
-                  onMouseLeave={() => setHoveredNodeId(null)}
+        {/* The lit evidence: the canvas itself, drawn on the sunken field. */}
+        <Reveal index={1} className="px-5 pb-5">
+          <div className="w-full overflow-hidden bg-field-sunken p-2 sm:p-4">
+            <svg
+              viewBox="0 0 960 480"
+              role="img"
+              aria-label={`${companyName} 资金往来拓扑：正常结算路径与判定为体外的资金路径`}
+              className="w-full h-auto min-h-[460px] select-none"
+            >
+              <defs>
+                {/* One arrowhead. It takes the colour of the path it closes. */}
+                <marker
+                  id="fund-arrow"
+                  viewBox="0 0 10 10"
+                  refX="28"
+                  refY="5"
+                  markerWidth="6"
+                  markerHeight="6"
+                  orient="auto-start-reverse"
+                  markerUnits="strokeWidth"
                 >
-                  {/* Concentric Glow Pulse Ring */}
-                  <circle
-                    r={isSelected ? 42 : 36}
-                    fill={node.glowColor}
-                    opacity="0.3"
-                    className="transition-all duration-300"
-                  />
-                  <circle
-                    r={isSelected ? 36 : 30}
-                    fill="#0F172A"
-                    stroke={node.color}
-                    strokeWidth={isSelected ? 3.5 : 2.5}
-                    style={{ filter: `drop-shadow(0 0 12px ${node.color})` }}
-                  />
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="context-stroke" />
+                </marker>
+              </defs>
 
-                  {/* Icon or Symbol inside */}
-                  <text
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fontSize="18"
-                    y="-1"
-                  >
-                    {node.icon}
-                  </text>
-
-                  {/* Text Label Below Node */}
-                  <g transform="translate(0, 44)">
-                    <rect
-                      x="-85"
-                      y="-11"
-                      width="170"
-                      height="22"
-                      rx="6"
-                      fill="#060912"
-                      stroke={node.color}
-                      strokeWidth="1"
-                      opacity="0.95"
+              {/* 1. Curved Flow Links */}
+              {links.map((link, idx) => {
+                const pathD = `M ${link.x1} ${link.y1} Q ${link.cx} ${link.cy} ${link.x2} ${link.y2}`
+                const isCritical = link.stroke === STROKE_CRITICAL
+                return (
+                  <g key={idx}>
+                    {/* Resting stroke: one quiet weight step, no bloom */}
+                    <path
+                      d={pathD}
+                      fill="none"
+                      stroke={link.stroke}
+                      strokeWidth={isCritical ? 3 : 2}
+                      strokeOpacity={isCritical ? 0.28 : 0.16}
                     />
+                    {/* Directed, animated dashed flow. The dash IS the direction
+                        of the money and is the only motion on this screen. */}
+                    <path
+                      d={pathD}
+                      fill="none"
+                      stroke={link.stroke}
+                      strokeWidth={isCritical ? 3 : 1.8}
+                      strokeLinecap="square"
+                      strokeDasharray="8 8"
+                      className="animate-fund-flow"
+                      markerEnd="url(#fund-arrow)"
+                    />
+                    {/* Edge Label */}
+                    <g transform={`translate(${link.cx}, ${link.cy})`}>
+                      <rect
+                        x="-92"
+                        y="-15"
+                        width="184"
+                        height="30"
+                        rx="0"
+                        fill={CANVAS_LABEL_BG}
+                      />
+                      <text
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fill={isCritical ? STROKE_CRITICAL : STROKE_QUIET}
+                        fontSize="14"
+                        fontWeight="500"
+                      >
+                        {link.label}
+                      </text>
+                    </g>
+                  </g>
+                )
+              })}
+
+              {/* 2. Interactive Nodes */}
+              {nodes.map((node) => {
+                const isSelected = selectedNodeId === node.id || hoveredNodeId === node.id
+                const Icon = NODE_ICONS[node.icon] ?? Building2
+                const critical = isNodeCritical(node)
+                return (
+                  <g
+                    key={node.id}
+                    transform={`translate(${node.x}, ${node.y})`}
+                    className="cursor-pointer transition-opacity duration-200 ease-out hover:opacity-90"
+                    onClick={() => setSelectedNodeId(node.id)}
+                    onMouseEnter={() => setHoveredNodeId(node.id)}
+                    onMouseLeave={() => setHoveredNodeId(null)}
+                  >
+                    {/* Selection halo: a tone step, never a glow */}
+                    <circle
+                      r={isSelected ? 42 : 36}
+                      fill={critical ? STROKE_CRITICAL : STROKE_STRONG}
+                      opacity={isSelected ? 0.16 : 0.06}
+                    />
+                    <circle
+                      r={isSelected ? 36 : 30}
+                      fill={NODE_BODY_BG}
+                      stroke={node.stroke}
+                      strokeWidth={isSelected ? 3 : 2}
+                    />
+
+                    {/* Role mark inside the node */}
+                    <Icon
+                      x={-11}
+                      y={-11}
+                      width={22}
+                      height={22}
+                      strokeWidth={1.75}
+                      color={critical ? STROKE_CRITICAL : STROKE_STRONG}
+                    />
+
+                    {/* Name plate below the node */}
+                    <g transform="translate(0, 44)">
+                      <rect
+                        x="-92"
+                        y="-13"
+                        width="184"
+                        height="26"
+                        rx="0"
+                        fill={CANVAS_LABEL_BG}
+                      />
+                      <text
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fill={critical ? STROKE_CRITICAL : STROKE_STRONG}
+                        fontSize="14"
+                        fontWeight="500"
+                      >
+                        {node.name.length > 12 ? `${node.name.substring(0, 11)}…` : node.name}
+                      </text>
+                    </g>
+
+                    {/* Role sub-label below */}
                     <text
+                      x="0"
+                      y="68"
                       textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill="#FFFFFF"
-                      fontSize="11"
-                      fontWeight="bold"
+                      fill={STROKE_QUIET}
+                      fontSize="13"
                     >
-                      {node.name.length > 12 ? `${node.name.substring(0, 11)}…` : node.name}
+                      {node.subText}
                     </text>
                   </g>
-
-                  {/* Subtext Label Below */}
-                  <text
-                    x="0"
-                    y="68"
-                    textAnchor="middle"
-                    fill="#94A3B8"
-                    fontSize="10"
-                    fontFamily="JetBrains Mono, monospace"
-                  >
-                    {node.subText}
-                  </text>
-                </g>
-              )
-            })}
-          </svg>
-        </div>
-
-        {/* Selected Node Details Inspection Card */}
-        {activeNode && (
-          <div className="mt-4 p-4 rounded-xl bg-slate-900/90 border border-cyan-500/40 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs font-mono animate-fade-in shadow-xl">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl p-2 rounded-lg bg-black/40 border border-white/10">
-                {activeNode.icon}
-              </span>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-white">{activeNode.name}</span>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold" style={{ backgroundColor: `${activeNode.color}25`, color: activeNode.color }}>
-                    {activeNode.subText}
-                  </span>
-                  {activeNode.amount && (
-                    <span className="text-rose-300 font-bold bg-rose-950/60 px-2 py-0.5 rounded border border-rose-500/30">
-                      涉案规模: {activeNode.amount}
-                    </span>
-                  )}
-                </div>
-                <div className="text-slate-400 mt-1 flex items-center gap-1.5 font-sans">
-                  <Info className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>{activeNode.role}</span>
-                </div>
-              </div>
-            </div>
-
-            {activeNode.warning && (
-              <div className="text-rose-300 bg-rose-950/40 p-2.5 rounded-lg border border-rose-500/30 text-xs max-w-md">
-                <span className="font-bold">【疑点定性】: </span>
-                {activeNode.warning}
-              </div>
-            )}
+                )
+              })}
+            </svg>
           </div>
-        )}
+        </Reveal>
 
-        {/* 5-Step Money Loop Breakdown Cards */}
-        <div className="mt-5 pt-4 border-t border-white/10 space-y-3">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-            <span className="font-bold text-white flex items-center gap-1.5">
-              <Layers className="w-4 h-4 text-cyan-400" />
-              <span>全链路资金穿透流转明细 (Five-Step Fund Traceability Matrix)</span>
+        {/* Inspected counterparty. Real data, so it keeps its own surface. */}
+        {activeNode ? (
+          <Reveal index={2} className="px-5 pb-5">
+            <Surface
+              level="raised2"
+              className="flex flex-col gap-4 px-5 py-4 lg:flex-row lg:items-start lg:justify-between"
+            >
+              <div className="flex min-w-0 items-start gap-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center bg-field-raised3">
+                  {(() => {
+                    const Icon = NODE_ICONS[activeNode.icon] ?? Building2
+                    return (
+                      <Icon
+                        size={20}
+                        strokeWidth={1.75}
+                        className={isNodeCritical(activeNode) ? 'text-risk-critical' : 'text-fg-muted'}
+                      />
+                    )
+                  })()}
+                </span>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-body font-semibold text-fg">{activeNode.name}</span>
+                    <Chip tone="neutral">{activeNode.subText}</Chip>
+                    {activeNode.amount ? (
+                      <Chip tone="critical">涉案规模 {activeNode.amount}</Chip>
+                    ) : (
+                      <Chip tone="clear">未标注涉案金额</Chip>
+                    )}
+                  </div>
+                  <p className="mt-2 flex items-start gap-2 text-body text-fg">
+                    <Info size={16} strokeWidth={1.75} className="mt-0.5 shrink-0 text-fg-faint" />
+                    <span>{activeNode.role}</span>
+                  </p>
+                </div>
+              </div>
+
+              {activeNode.warning ? (
+                <div className="max-w-[52ch] bg-field-raised3 px-4 py-3">
+                  <div className="text-label text-risk-critical">疑点定性</div>
+                  <p className="mt-1 text-body text-fg">{activeNode.warning}</p>
+                </div>
+              ) : (
+                <div className="max-w-[52ch] bg-field-raised3 px-4 py-3">
+                  <div className="text-label text-risk-clear">疑点定性</div>
+                  <p className="mt-1 text-body text-fg">该主体处于真实货物与资金对流路径，未发现体外占用特征。</p>
+                </div>
+              )}
+            </Surface>
+          </Reveal>
+        ) : null}
+
+        {/* Full-chain traceability: a real table, so it keeps its rules. */}
+        <Reveal index={3} className="px-5 pb-5">
+          <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+            <h3 className="text-title font-semibold text-fg">全链路资金穿透明细</h3>
+            <span className={cn('text-small', isClean ? 'text-risk-clear' : 'text-risk-critical')}>
+              {isClean ? '货物流与资金流一致' : '检出无商业实质的资金自循环'}
             </span>
-            <span className="text-cyan-400 font-bold">{isClean ? '正常货物流与资金流一致' : '检出闭环无商业实质资金自循环'}</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-2.5 text-xs font-mono">
-            {isClean ? (
-              <>
-                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-cyan-500/30 space-y-1">
-                  <div className="text-cyan-400 font-bold">1. 企业主体</div>
-                  <div className="text-white text-[11px] truncate">{companyName}</div>
-                  <div className="text-slate-400 text-[10px]">生产制造与经营核心</div>
-                </div>
-                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-emerald-500/30 space-y-1">
-                  <div className="text-emerald-400 font-bold">2. 核心客户</div>
-                  <div className="text-white text-[11px]">战略主机厂/客户</div>
-                  <div className="text-slate-400 text-[10px]">真实销售与现汇回款</div>
-                </div>
-                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-blue-500/30 space-y-1">
-                  <div className="text-blue-400 font-bold">3. 合格供应商</div>
-                  <div className="text-white text-[11px]">主要物料供应商</div>
-                  <div className="text-slate-400 text-[10px]">真实采购货物交割</div>
-                </div>
-                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-purple-500/30 space-y-1">
-                  <div className="text-purple-400 font-bold">4. 银企直连</div>
-                  <div className="text-white text-[11px]">开户银行监管户</div>
-                  <div className="text-slate-400 text-[10px]">全额资金直连存管</div>
-                </div>
-                <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/40 space-y-1 flex flex-col justify-center text-center">
-                  <div className="text-emerald-300 font-bold">5. 审计结论</div>
-                  <div className="text-emerald-400 text-[11px] font-bold">勾稽完全一致</div>
-                  <div className="text-slate-400 text-[10px]">无体外自循环</div>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-cyan-500/30 space-y-1">
-                  <div className="text-cyan-400 font-bold">1. 资金划出</div>
-                  <div className="text-white text-[11px] truncate">{node1Name}</div>
-                  <div className="text-rose-400 text-[10px]">{fraudAmount}</div>
-                </div>
-                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-rose-500/30 space-y-1">
-                  <div className="text-rose-400 font-bold">2. 虚假账户</div>
-                  <div className="text-white text-[11px] truncate">{node2Name}</div>
-                  <div className="text-slate-400 text-[10px]">伪造存单/联动池</div>
-                </div>
-                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-purple-500/30 space-y-1">
-                  <div className="text-purple-400 font-bold">3. 体外过桥</div>
-                  <div className="text-white text-[11px]">实控人资金池</div>
-                  <div className="text-slate-400 text-[10px]">隐瞒关联方占用</div>
-                </div>
-                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-amber-500/30 space-y-1">
-                  <div className="text-amber-400 font-bold">4. 虚假购销</div>
-                  <div className="text-white text-[11px] truncate">{node3Name}</div>
-                  <div className="text-slate-400 text-[10px]">无商业实质冲账</div>
-                </div>
-                <div className="p-3.5 rounded-xl bg-rose-950/40 border border-rose-500/40 space-y-1 flex flex-col justify-center text-center">
-                  <div className="text-rose-300 font-bold">5. 资金回流</div>
-                  <div className="text-rose-400 text-[11px] font-bold">完成造假自循环</div>
-                  <div className="text-slate-400 text-[10px]">虚构收入与资产</div>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
+          <DataTable>
+            <thead>
+              <tr>
+                <Th className="w-[72px]">步骤</Th>
+                <Th>主体</Th>
+                <Th>性质</Th>
+                <Th className="w-[160px] text-right">金额</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {isClean ? (
+                <>
+                  <tr>
+                    <Td className="text-fg-faint">1</Td>
+                    <Td>{companyName}</Td>
+                    <Td className="text-fg-muted">生产制造与经营核心</Td>
+                    <TdNum className="text-fg-faint">—</TdNum>
+                  </tr>
+                  <tr>
+                    <Td className="text-fg-faint">2</Td>
+                    <Td>战略主机厂/客户</Td>
+                    <Td className="text-fg-muted">真实销售与现汇回款</Td>
+                    <TdNum className="text-fg-faint">—</TdNum>
+                  </tr>
+                  <tr>
+                    <Td className="text-fg-faint">3</Td>
+                    <Td>主要物料供应商</Td>
+                    <Td className="text-fg-muted">真实采购货物交割</Td>
+                    <TdNum className="text-fg-faint">—</TdNum>
+                  </tr>
+                  <tr>
+                    <Td className="text-fg-faint">4</Td>
+                    <Td>开户银行监管户</Td>
+                    <Td className="text-fg-muted">全额资金直连存管</Td>
+                    <TdNum className="text-fg-faint">—</TdNum>
+                  </tr>
+                  <tr>
+                    <Td className="text-fg-faint">5</Td>
+                    <Td>审计结论</Td>
+                    <Td className="text-risk-clear">勾稽完全一致，无体外自循环</Td>
+                    <TdNum className="text-fg-faint">—</TdNum>
+                  </tr>
+                </>
+              ) : (
+                <>
+                  <tr>
+                    <Td className="text-fg-faint">1</Td>
+                    <Td>{node1Name}</Td>
+                    <Td className="text-fg-muted">资金划出，账面资产被体外抽逃</Td>
+                    <TdNum className="text-risk-critical">{fraudAmount}</TdNum>
+                  </tr>
+                  <tr>
+                    <Td className="text-fg-faint">2</Td>
+                    <Td>{node2Name}</Td>
+                    <Td className="text-fg-muted">伪造存单与联动池，资金中转</Td>
+                    <TdNum className="text-risk-critical">{fraudAmount}</TdNum>
+                  </tr>
+                  <tr>
+                    <Td className="text-fg-faint">3</Td>
+                    <Td>实控人资金池</Td>
+                    <Td className="text-fg-muted">隐瞒关联方非经营性占用</Td>
+                    <TdNum className="text-risk-critical">{fraudAmount}</TdNum>
+                  </tr>
+                  <tr>
+                    <Td className="text-fg-faint">4</Td>
+                    <Td>{node3Name}</Td>
+                    <Td className="text-fg-muted">无商业实质冲账，阴阳合同过桥</Td>
+                    <TdNum className="text-fg-muted">{contractAmount}</TdNum>
+                  </tr>
+                  <tr>
+                    <Td className="text-fg-faint">5</Td>
+                    <Td>回流上市公司</Td>
+                    <Td className="text-risk-critical">完成造假自循环，虚构收入与资产</Td>
+                    <TdNum className="text-risk-critical">{fraudAmount}</TdNum>
+                  </tr>
+                </>
+              )}
+            </tbody>
+          </DataTable>
+        </Reveal>
 
-        {/* Pedagogical Explanation Footer */}
-        <div className="mt-4 p-4 rounded-xl bg-slate-950/70 border border-white/5 text-xs text-slate-300 space-y-1.5 font-mono">
-          <div className={`${isClean ? 'text-emerald-400' : 'text-cyan-400'} font-semibold flex items-center gap-1.5`}>
-            <AlertCircle className="w-4 h-4" />
-            <span>【数智审计专家穿透提示】:</span>
+        {/* The one lit surface on the screen: the conclusion. */}
+        <Reveal index={4} className="px-5 pb-5">
+          <Verdict
+            conclusion={isClean ? '未发现体外循环' : '存在体外资金循环'}
+            figureLabel={isClean ? '涉案金额' : '体外循环资金规模'}
+            figure={isClean ? '—' : verdictFigure}
+            tone={isClean ? 'clear' : 'critical'}
+            basis={
+              isClean
+                ? '判定依据：资金进出均具真实货物购销背景，银企直连流水与发票价税合计逐笔勾稽一致。'
+                : '判定依据：银行流水附言、关联方披露与发票价税合计三方勾稽，检出“预付采购—资金池归集—体外过桥—虚假销售回款”四步闭环。'
+            }
+          />
+        </Reveal>
+
+        {/* Why the machine reads the loop this way. */}
+        <Reveal index={5} className="px-5 pb-5">
+          <div className="bg-field-raised2 px-5 py-4">
+            <div className="flex items-center gap-2 text-label text-fg-muted">
+              <Sparkles size={16} strokeWidth={1.75} className="text-seal" />
+              <span>穿透提示</span>
+            </div>
+            <p className="mt-2 max-w-[80ch] text-body text-fg">
+              {isClean
+                ? '本拓扑图反映受审企业与主机厂客户、合格供应商及开户银行之间的真实交易结算路径。资金进出均具有真实货物购销背景与银企直连流水印证，无异常关联方闭环与体外过桥回流特征。'
+                : '本拓扑图由 DeepSeek-AuditMind 智能分析引擎结合银行流水附言、关联方披露及发票价税合计自动推演构建。通过对“预付采购-资金池归集-体外过桥-虚假销售回款”四步闭环特征识别，精准锁定无实质商业背景的资金空转回路。'}
+            </p>
           </div>
-          <p className="text-slate-300 leading-relaxed font-sans">
-            {isClean
-              ? '本拓扑图反映受审企业与主机厂客户、合格供应商及开户银行之间的真实交易结算路径。资金进出均具有真实货物购销背景与银企直连流水印证，无异常关联方闭环与体外过桥回流特征。'
-              : '本拓扑图由 DeepSeek-AuditMind 智能分析引擎结合银行流水附言、关联方披露及发票价税合计自动推演构建。通过对“预付采购-资金池归集-体外过桥-虚假销售回款”四步闭环特征识别，精准锁定无实质商业背景的资金空转回路。'}
-          </p>
-        </div>
-      </div>
+        </Reveal>
+
+        <Reveal index={6} className="px-5 pb-5">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-small text-fg-faint">
+            <span className="flex items-center gap-2">
+              <ShieldCheck size={16} strokeWidth={1.75} />
+              <span>数据源：银行流水 / 关联方披露 / 发票价税合计</span>
+            </span>
+            <span>
+              拓扑节点 {nodes.length} 个，资金路径 {links.length} 条
+            </span>
+          </div>
+        </Reveal>
+      </Panel>
     </div>
   )
 }

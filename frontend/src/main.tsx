@@ -29,21 +29,21 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-[#080C14] text-white flex flex-col items-center justify-center p-6 text-center font-mono">
-          <div className="max-w-md p-6 rounded-2xl bg-slate-900/80 border border-rose-500/40 shadow-2xl space-y-4">
-            <div className="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 mx-auto flex items-center justify-center font-bold text-xl">
+        <div className="flex min-h-dvh flex-col items-center justify-center bg-field p-6 text-center">
+          <div className="w-full max-w-lg space-y-4 bg-field-raised p-6">
+            <div className="flex h-12 w-12 items-center justify-center bg-risk-critical/15 text-title font-semibold text-risk-critical">
               !
             </div>
-            <h2 className="text-lg font-bold text-rose-300">界面渲染捕获异常</h2>
-            <p className="text-xs text-slate-400 text-left bg-black/50 p-3 rounded-lg overflow-x-auto">
+            <h1 className="text-title font-semibold text-fg">界面渲染捕获异常</h1>
+            <pre className="max-h-64 max-w-[70ch] overflow-auto whitespace-pre-wrap break-words bg-field-sunken p-3 text-left text-small text-fg-muted">
               {this.state.error?.message || '未知渲染错误'}
-            </p>
+            </pre>
             <button
               onClick={() => {
                 this.setState({ hasError: false, error: null })
                 window.location.reload()
               }}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-xs font-bold"
+              className="press min-h-[40px] w-full bg-seal px-4 text-body font-medium text-paper transition-colors duration-150 hover:bg-seal-deep"
             >
               刷新并恢复页面
             </button>

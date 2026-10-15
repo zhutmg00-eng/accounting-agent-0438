@@ -1,11 +1,41 @@
-import React, { useState } from 'react'
-import { X, UploadCloud, FileSpreadsheet, Receipt, Landmark, CheckCircle2, AlertCircle, Download } from 'lucide-react'
+import React, { useId, useRef, useState } from 'react'
+import { X, FileSpreadsheet, Receipt, Landmark, Download } from 'lucide-react'
+import { Btn, ErrorNote, Surface } from '../ui/primitives'
+import { useFocusTrap } from '../lib/useFocusTrap'
 
 interface CustomUploadModalProps {
   isOpen: boolean
   onClose: () => void
   onCaseImported: (caseData: any) => void
 }
+
+/** The three upload slots, described by the columns the parser actually needs. */
+const SLOTS = [
+  {
+    key: 'vouchers' as const,
+    order: '凭证',
+    title: '企业记账凭证表',
+    accept: '.xlsx,.xls',
+    hint: '必填列：凭证号、记账日期、科目编码、科目名称、借方金额、贷方金额',
+    Icon: FileSpreadsheet
+  },
+  {
+    key: 'invoices' as const,
+    order: '发票',
+    title: '增值税发票清单',
+    accept: '.csv',
+    hint: '必填列：发票号码、开票日期、购买方名称、销售方名称、价税合计',
+    Icon: Receipt
+  },
+  {
+    key: 'bank_flows' as const,
+    order: '流水',
+    title: '银行对账单明细',
+    accept: '.csv',
+    hint: '必填列：交易流水号、交易时间、对手方户名、交易金额、附言',
+    Icon: Landmark
+  }
+]
 
 export const CustomUploadModal: React.FC<CustomUploadModalProps> = ({
   isOpen,
@@ -23,11 +53,31 @@ export const CustomUploadModal: React.FC<CustomUploadModalProps> = ({
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
 
+  const panelRef = useRef<HTMLDivElement>(null)
+  const dialogTitleId = useId()
+
+  // The overlay owes a keyboard user the same contract the whitepaper modal
+  // keeps: focus enters the panel, Tab stays inside it, Escape closes it and
+  // focus goes back to 导入实测账套.
+  useFocusTrap(isOpen, onClose, { dialogRef: panelRef, panelRef })
+
   const handleDownloadTemplate = (type: 'vouchers' | 'invoices' | 'bank_flows') => {
     window.open(`/api/templates/download/${type}`, '_blank')
   }
 
   if (!isOpen) return null
+
+  const selectedFiles: Record<'vouchers' | 'invoices' | 'bank_flows', File | null> = {
+    vouchers: vouchersFile,
+    invoices: invoicesFile,
+    bank_flows: bankFlowsFile
+  }
+
+  const selectFile = (type: 'vouchers' | 'invoices' | 'bank_flows', file: File | null) => {
+    if (type === 'vouchers') setVouchersFile(file)
+    if (type === 'invoices') setInvoicesFile(file)
+    if (type === 'bank_flows') setBankFlowsFile(file)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -65,157 +115,150 @@ export const CustomUploadModal: React.FC<CustomUploadModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-      <div className="glass-panel w-full max-w-2xl rounded-2xl p-6 border border-white/10 shadow-2xl relative">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
-          <div className="flex items-center gap-2">
-            <UploadCloud className="w-5 h-5 text-cyan-400" />
-            <h3 className="text-base font-bold text-white">导入真实企业财务文件 (Excel / CSV)</h3>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
+    >
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={dialogTitleId}
+        tabIndex={-1}
+        className="flex max-h-[92svh] w-full max-w-2xl flex-col overflow-hidden overscroll-contain bg-field-raised shadow-overlay"
+      >
+        <div className="flex items-start justify-between gap-6 px-5 pt-5 pb-4">
+          <div className="min-w-0">
+            <h2 id={dialogTitleId} className="text-title font-semibold text-fg">
+              导入真实企业财务文件
+            </h2>
+            <p className="mt-1 max-w-[60ch] text-body text-fg">
+              三张表齐备时穿透最完整。缺一张也能导入，对应算子会在穿透阶段标记为无数据。
+            </p>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
-            <X className="w-5 h-5" />
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="关闭导入浮层"
+            className="press -mr-2 -mt-1 shrink-0 p-2 text-fg-muted hover:bg-field-raised2 hover:text-fg"
+          >
+            <X className="h-5 w-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-          {uploadError && (
-            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>{uploadError}</span>
-            </div>
-          )}
+        <form onSubmit={handleSubmit} className="flex min-h-0 flex-col">
+          <div className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 pb-5">
+            {uploadError ? <ErrorNote title="导入失败" detail={uploadError} /> : null}
 
-          <div className="grid grid-cols-3 gap-3">
-            <div>
-              <label className="text-[11px] text-slate-400 block mb-1">受审公司全称</label>
-              <input
-                type="text"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                className="w-full px-3 py-1.5 text-xs rounded-lg bg-slate-800 border border-white/10 text-white focus:outline-none focus:border-cyan-500"
-              />
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div>
+                <label htmlFor="upload-company-name" className="mb-1.5 block text-label text-fg-muted">
+                  受审公司全称
+                </label>
+                <input
+                  id="upload-company-name"
+                  name="company-name"
+                  type="text"
+                  autoComplete="off"
+                  spellCheck={false}
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  className="min-h-[40px] w-full border border-white/10 bg-field-sunken px-3 text-small text-fg placeholder:text-fg-faint"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="upload-stock-code" className="mb-1.5 block text-label text-fg-muted">
+                  股票代码 / 账套编号
+                </label>
+                <input
+                  id="upload-stock-code"
+                  name="stock-code"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  spellCheck={false}
+                  value={stockCode}
+                  onChange={(e) => setStockCode(e.target.value)}
+                  className="min-h-[40px] w-full border border-white/10 bg-field-sunken px-3 text-small tabular-nums text-fg placeholder:text-fg-faint"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="upload-industry" className="mb-1.5 block text-label text-fg-muted">
+                  所属行业领域
+                </label>
+                <input
+                  id="upload-industry"
+                  name="industry"
+                  type="text"
+                  autoComplete="off"
+                  spellCheck={false}
+                  value={industry}
+                  onChange={(e) => setIndustry(e.target.value)}
+                  className="min-h-[40px] w-full border border-white/10 bg-field-sunken px-3 text-small text-fg placeholder:text-fg-faint"
+                />
+              </div>
             </div>
 
-            <div>
-              <label className="text-[11px] text-slate-400 block mb-1">股票代码 / 账套编号</label>
-              <input
-                type="text"
-                value={stockCode}
-                onChange={(e) => setStockCode(e.target.value)}
-                className="w-full px-3 py-1.5 text-xs rounded-lg bg-slate-800 border border-white/10 text-white focus:outline-none focus:border-cyan-500 font-mono"
-              />
-            </div>
+            <div className="space-y-3">
+              <div className="flex items-baseline justify-between gap-4">
+                <h3 className="text-label text-fg-muted">待导入文件</h3>
+                <span className="text-label text-fg-faint">支持 .xlsx / .xls / .csv</span>
+              </div>
 
-            <div>
-              <label className="text-[11px] text-slate-400 block mb-1">所属行业领域</label>
-              <input
-                type="text"
-                value={industry}
-                onChange={(e) => setIndustry(e.target.value)}
-                className="w-full px-3 py-1.5 text-xs rounded-lg bg-slate-800 border border-white/10 text-white focus:outline-none focus:border-cyan-500"
-              />
+              {SLOTS.map((slot) => {
+                const chosen = selectedFiles[slot.key]
+                return (
+                  <Surface key={slot.key} level="raised2" className="px-4 py-4">
+                    <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
+                      <div className="flex min-w-0 items-start gap-3">
+                        <slot.Icon aria-hidden className="mt-0.5 h-5 w-5 shrink-0 text-fg-muted" />
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                            <span className="text-small font-semibold text-fg">
+                              {slot.order} · {slot.title}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleDownloadTemplate(slot.key)}
+                              className="inline-flex items-center gap-1 text-label text-fg-muted underline decoration-white/20 underline-offset-4 hover:text-seal"
+                            >
+                              <Download aria-hidden className="h-3.5 w-3.5" />
+                              下载标准模板
+                            </button>
+                          </div>
+                          <p className="mt-1 max-w-[52ch] text-label text-fg-muted">{slot.hint}</p>
+                          <p className="mt-1 text-label text-fg-faint">
+                            {chosen ? `已选择：${chosen.name}` : '尚未选择文件'}
+                          </p>
+                        </div>
+                      </div>
+
+                      <input
+                        type="file"
+                        name={`${slot.key}-files`}
+                        aria-label={`选择${slot.title}文件`}
+                        accept={slot.accept}
+                        onChange={(e) => selectFile(slot.key, e.target.files?.[0] || null)}
+                        className="cursor-pointer text-label text-fg-muted file:mr-3 file:cursor-pointer file:border-0 file:bg-field-raised3 file:px-3 file:py-2 file:text-label file:font-medium file:text-fg hover:file:bg-field-raised"
+                      />
+                    </div>
+                  </Surface>
+                )
+              })}
             </div>
           </div>
 
-          {/* 3 File Inputs */}
-          <div className="space-y-3 pt-2">
-            {/* Vouchers File */}
-            <div className="p-3.5 rounded-xl bg-slate-900/60 border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <FileSpreadsheet className="w-5 h-5 text-cyan-400 flex-shrink-0" />
-                <div>
-                  <div className="text-xs font-bold text-white flex items-center gap-2">
-                    <span>1. 企业记账凭证表 (Excel: .xlsx)</span>
-                    <button
-                      type="button"
-                      onClick={() => handleDownloadTemplate('vouchers')}
-                      className="text-[10px] text-cyan-400 hover:text-cyan-300 underline font-normal flex items-center gap-0.5 cursor-pointer"
-                    >
-                      <Download className="w-2.5 h-2.5" />
-                      下载标准模板
-                    </button>
-                  </div>
-                  <div className="text-[11px] text-slate-400">必填列: 凭证号、记账日期、科目编码、科目名称、借方金额、贷方金额</div>
-                </div>
-              </div>
-              <input
-                type="file"
-                accept=".xlsx,.xls"
-                onChange={(e) => setVouchersFile(e.target.files?.[0] || null)}
-                className="text-xs text-slate-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:bg-cyan-500/20 file:text-cyan-300 hover:file:bg-cyan-500/30 cursor-pointer"
-              />
-            </div>
-
-            {/* Invoices File */}
-            <div className="p-3.5 rounded-xl bg-slate-900/60 border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <Receipt className="w-5 h-5 text-purple-400 flex-shrink-0" />
-                <div>
-                  <div className="text-xs font-bold text-white flex items-center gap-2">
-                    <span>2. 增值税发票清单 (CSV: .csv)</span>
-                    <button
-                      type="button"
-                      onClick={() => handleDownloadTemplate('invoices')}
-                      className="text-[10px] text-purple-400 hover:text-purple-300 underline font-normal flex items-center gap-0.5 cursor-pointer"
-                    >
-                      <Download className="w-2.5 h-2.5" />
-                      下载标准模板
-                    </button>
-                  </div>
-                  <div className="text-[11px] text-slate-400">必填列: 发票号码、开票日期、购买方名称、销售方名称、价税合计</div>
-                </div>
-              </div>
-              <input
-                type="file"
-                accept=".csv"
-                onChange={(e) => setInvoicesFile(e.target.files?.[0] || null)}
-                className="text-xs text-slate-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:bg-purple-500/20 file:text-purple-300 hover:file:bg-purple-500/30 cursor-pointer"
-              />
-            </div>
-
-            {/* Bank Flows File */}
-            <div className="p-3.5 rounded-xl bg-slate-900/60 border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <Landmark className="w-5 h-5 text-blue-400 flex-shrink-0" />
-                <div>
-                  <div className="text-xs font-bold text-white flex items-center gap-2">
-                    <span>3. 银行对账单明细 (CSV: .csv)</span>
-                    <button
-                      type="button"
-                      onClick={() => handleDownloadTemplate('bank_flows')}
-                      className="text-[10px] text-blue-400 hover:text-blue-300 underline font-normal flex items-center gap-0.5 cursor-pointer"
-                    >
-                      <Download className="w-2.5 h-2.5" />
-                      下载标准模板
-                    </button>
-                  </div>
-                  <div className="text-[11px] text-slate-400">必填列: 交易流水号、交易时间、对手方户名、交易金额、附言</div>
-                </div>
-              </div>
-              <input
-                type="file"
-                accept=".csv"
-                onChange={(e) => setBankFlowsFile(e.target.files?.[0] || null)}
-                className="text-xs text-slate-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:bg-blue-500/20 file:text-blue-300 hover:file:bg-blue-500/30 cursor-pointer"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-xl text-xs text-slate-400 hover:text-white"
-            >
+          <div className="flex items-center justify-end gap-3 bg-field-raised px-5 py-4">
+            <Btn type="button" variant="ghost" onClick={onClose}>
               取消
-            </button>
-            <button
-              type="submit"
-              disabled={uploading}
-              className="px-5 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25 active:scale-95 transition-all"
-            >
-              {uploading ? '解析校验中...' : '提交并加载账套'}
-            </button>
+            </Btn>
+            <Btn type="submit" variant="primary" disabled={uploading ? true : undefined}>
+              {uploading ? '解析校验中…' : '提交并加载账套'}
+            </Btn>
           </div>
         </form>
       </div>

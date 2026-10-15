@@ -221,7 +221,7 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#080C14] bg-grid-pattern text-slate-100">
+    <div className="flex min-h-dvh flex-col bg-field text-fg">
       {/* Top Header */}
       <Header
         currentTab={currentTab}
@@ -235,10 +235,17 @@ export function App() {
         onOpenComplianceModal={() => setIsComplianceOpen(true)}
       />
 
-      {/* Main Layout Body */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar */}
+      {/* Main Layout Body. On a phone the case list becomes a band above the
+          workspace instead of a column beside it - at 390px a fixed 320px rail
+          leaves the content about 70px wide, which shreds every Chinese label
+          into a one-character column. */}
+      <div className="flex flex-1 overflow-hidden max-lg:flex-col max-lg:overflow-y-auto">
+        {/* Left Sidebar. On a phone the order flips: the chosen case's cockpit
+            is what the screen is for, and a case list you must scroll past to
+            reach the finding is a list in the wrong place. Selection is still
+            reachable, one screen down. */}
         <CaseSidebar
+          className="max-lg:order-2"
           cases={cases}
           selectedCaseId={selectedCaseId}
           onSelectCase={setSelectedCaseId}
@@ -248,7 +255,7 @@ export function App() {
         />
 
         {/* Center Workspace Content Area */}
-        <main className="flex-1 min-w-0 w-full flex flex-col overflow-hidden bg-slate-950/40">
+        <main className="flex w-full min-w-0 flex-1 flex-col overflow-hidden max-lg:order-1 max-lg:overflow-visible">
           {currentTab === 'cockpit' && (
             <AuditCockpit
               currentCase={currentCase}

@@ -1,14 +1,38 @@
 import React, { useState } from 'react'
-import { Award, Play, CheckCircle2, AlertCircle, Zap, Clock, Target, BarChart2 } from 'lucide-react'
 import confetti from 'canvas-confetti'
+import {
+  Btn,
+  DataTable,
+  DataValue,
+  EmptyState,
+  Panel,
+  Skeleton,
+  StatRow,
+  Status,
+  Surface,
+  Td,
+  TdNum,
+  Th
+} from '../ui/primitives'
+import { Reveal, useAnimatedNumber, usePrefersReducedMotion } from '../ui/motion'
 
 interface BenchmarkArenaProps {
   cases: any[]
 }
 
+/**
+ * Beat 5 - 对战. Twenty-eight cases scored side by side.
+ *
+ * That is tabular data by nature, so it is a real table rather than a grid of
+ * score cards. The screen is dark and continuous; the one lit surface carries
+ * the single figure the whole arena exists to produce - the mean score.
+ */
 export const BenchmarkArena: React.FC<BenchmarkArenaProps> = ({ cases }) => {
   const [isRunning, setIsRunning] = useState(false)
   const [benchmarkResult, setBenchmarkResult] = useState<any | null>(null)
+
+  // The only motion on this screen that CSS alone cannot switch off.
+  const reducedMotion = usePrefersReducedMotion()
 
   const handleRunBenchmark = async () => {
     setIsRunning(true)
@@ -18,11 +42,13 @@ export const BenchmarkArena: React.FC<BenchmarkArenaProps> = ({ cases }) => {
         const data = await resp.json()
         setBenchmarkResult(data)
         // Fire celebration confetti on 100% pass!
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 }
-        })
+        if (!reducedMotion) {
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.6 }
+          })
+        }
       }
     } catch (e) {
       console.error('Failed to run benchmark', e)
@@ -33,133 +59,129 @@ export const BenchmarkArena: React.FC<BenchmarkArenaProps> = ({ cases }) => {
 
   const totalCases = benchmarkResult?.total_cases || cases.length || 28
   const passedCases = benchmarkResult?.passed_cases || cases.length || 28
-  const meanF1 = benchmarkResult?.mean_f1_score !== undefined ? (benchmarkResult.mean_f1_score * 100).toFixed(1) : '100.0'
-  const mathAcc = benchmarkResult?.math_accuracy_rate !== undefined ? (benchmarkResult.math_accuracy_rate * 100).toFixed(1) : '100.0'
-  const totalTime = benchmarkResult?.total_time_seconds !== undefined ? benchmarkResult.total_time_seconds.toFixed(4) : '0.0210'
+  const meanF1 =
+    benchmarkResult?.mean_f1_score !== undefined ? benchmarkResult.mean_f1_score * 100 : 100
+  const mathAcc =
+    benchmarkResult?.math_accuracy_rate !== undefined
+      ? (benchmarkResult.math_accuracy_rate * 100).toFixed(1)
+      : '100.0'
+  const totalTime =
+    benchmarkResult?.total_time_seconds !== undefined
+      ? benchmarkResult.total_time_seconds.toFixed(4)
+      : '0.0210'
+
+  // The one number this screen is about, and the only thing that moves.
+  const meanF1Display = useAnimatedNumber(meanF1).toFixed(1)
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-6">
-      {/* Executive Header Banner */}
-      <div className="glass-panel rounded-2xl p-6 border border-white/10 relative overflow-hidden">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-1">
-              <Award className="w-4 h-4" />
-              <span>28 案例全量严谨竞技场 (Benchmark Live Arena)</span>
-            </div>
-            <h2 className="text-xl font-bold text-white">
-              中国资本市场真实监管处罚与合规对照用例 · 全要素高严谨度评测
-            </h2>
-            <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-              涵盖货币造假、虚构购销、跨期调节、存货灭失、资金占用、欺诈发行 6 大舞弊类型及标准无保留意见对照组。对字段精准率、金额容差率（≤1%）及零误报率进行穿透评测。
+    <div className="flex-1 overflow-y-auto">
+      {/* What this arena is, and the single action that runs it. */}
+      <Reveal index={0} className="px-5 pt-6 pb-5 sm:px-6">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="min-w-0">
+            <h2 className="text-title font-semibold text-fg">28 案例全量严谨竞技场</h2>
+            <p className="mt-2 max-w-[70ch] text-body text-fg">
+              中国资本市场真实监管处罚与合规对照用例，全要素高严谨度评测。涵盖货币造假、虚构购销、跨期调节、
+              存货灭失、资金占用、欺诈发行六类舞弊，另设标准无保留意见对照组；逐例比对字段精准率、
+              金额容差率（≤1%）与零误报率。
             </p>
           </div>
-
-          <button
+          <Btn
+            variant="primary"
+            size="lg"
             disabled={isRunning}
             onClick={handleRunBenchmark}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold transition-colors shadow-sm flex-shrink-0 cursor-pointer ${
-              isRunning
-                ? 'bg-slate-800 text-slate-400 border border-slate-700 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-500 text-white border border-blue-500'
-            }`}
+            className="shrink-0"
           >
-            {isRunning ? (
-              <>
-                <Zap className="w-4 h-4 animate-spin text-cyan-300" />
-                <span>正在逐例高压评测中...</span>
-              </>
-            ) : (
-              <>
-                <Play className="w-4 h-4 fill-current text-blue-200" />
-                <span>一键执行全库 28 案例评测</span>
-              </>
-            )}
-          </button>
+            {isRunning ? '正在逐例评测…' : '一键执行全库 28 案例评测'}
+          </Btn>
         </div>
+      </Reveal>
 
-        {/* 4 Metrics Scorecard */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-          <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
-            <div className="flex items-center justify-between text-xs text-slate-400 font-mono mb-1">
-              <span>案例通过率</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+      {/* The lit artifact: the score the whole screen is about. */}
+      <Reveal index={1} className="px-5 sm:px-6">
+        <Surface paper className="px-6 py-6">
+          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
+            <div>
+              <div className="text-label text-ink-muted">全库平均 F1 得分 · {totalCases} 例</div>
+              {isRunning ? (
+                <Skeleton className="mt-2 h-11 w-44" />
+              ) : (
+                <div className="mt-1 text-display font-semibold tabular-nums text-ink">
+                  {meanF1Display}%
+                </div>
+              )}
             </div>
-            <div className="text-2xl font-bold font-mono text-emerald-400">
-              {passedCases} / {totalCases} (100%)
-            </div>
+            <p className="max-w-[44ch] text-small text-ink-muted">
+              判定口径：字段精准率与金额容差率（≤1%）同时满足记为命中；任一不满足即判未命中，并计入误报。
+            </p>
           </div>
+          <p className="mt-5 bg-paper-deep px-4 py-3 text-small text-ink-muted">
+            用例来源为中国证监会公开行政处罚决定书，逐例复核智能体输出的舞弊类型、涉案金额与凭证指向。
+          </p>
+        </Surface>
+      </Reveal>
 
-          <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
-            <div className="flex items-center justify-between text-xs text-slate-400 font-mono mb-1">
-              <span>平均 F1-Score</span>
-              <Target className="w-4 h-4 text-cyan-400" />
+      {/* Secondary readings: separated by tone and space, not by cards. */}
+      <Reveal index={2} className="px-5 pt-5 sm:px-6">
+        <StatRow className="sm:grid-cols-3 lg:grid-cols-3">
+          <DataValue label="案例通过率" value={`${passedCases} / ${totalCases}`} />
+          <DataValue label="金额误差精确率（≤1%）" value={`${mathAcc}%`} />
+          <DataValue label="全库总耗时" value={`${totalTime}s`} />
+        </StatRow>
+      </Reveal>
+
+      {/* Twenty-eight cases: a real table, with its rules. */}
+      <Reveal index={3} className="px-5 py-5 sm:px-6">
+        {cases.length === 0 ? (
+          <Panel bare>
+            <EmptyState
+              title="尚未载入评测案例集"
+              body="竞技场按左侧清单的类别取用例。先在案例清单中选择一个类别，再回到本页执行全量评测。"
+            />
+          </Panel>
+        ) : (
+          <Panel bare>
+            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 px-5 pt-5 pb-4">
+              <h2 className="text-title font-semibold text-fg">全量案例单例表现</h2>
+              <span className="text-small text-fg-muted">
+                {cases.length} 例 · 逐例 F1 得分、金额误差与用时
+              </span>
             </div>
-            <div className="text-2xl font-bold font-mono text-slate-100">
-              {meanF1}%
-            </div>
-          </div>
-
-          <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
-            <div className="flex items-center justify-between text-xs text-slate-400 font-mono mb-1">
-              <span>金额误差精确率 (≤1%)</span>
-              <BarChart2 className="w-4 h-4 text-purple-400" />
-            </div>
-            <div className="text-2xl font-bold font-mono text-slate-100">
-              {mathAcc}%
-            </div>
-          </div>
-
-          <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
-            <div className="flex items-center justify-between text-xs text-slate-400 font-mono mb-1">
-              <span>全库总耗时</span>
-              <Clock className="w-4 h-4 text-blue-400" />
-            </div>
-            <div className="text-2xl font-bold font-mono text-slate-100">
-              {totalTime}s
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 28 Case Matrix Scorecard Grid */}
-      <div className="p-5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-4">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
-          <Award className="w-4 h-4 text-blue-400" />
-          <span>全量案例单例表现得分矩阵 ({cases.length} 例)</span>
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-          {cases.map((c, i) => (
-            <div
-              key={c.case_id}
-              className="p-3 rounded-lg bg-slate-950/70 border border-slate-800/80 hover:border-slate-700 transition-colors text-xs font-mono space-y-2"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-slate-200">[{c.stock_code}]</span>
-                <span className="text-[10px] px-1.5 py-0.2 rounded font-mono bg-emerald-950/50 text-emerald-300 border border-emerald-900/40 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                  PASS
-                </span>
-              </div>
-
-              <div className="font-bold text-white font-sans truncate" title={c.company_name}>
-                {c.company_name}
-              </div>
-
-              <div className="text-slate-400 text-[11px] truncate">
-                {c.penalty_decision_no}
-              </div>
-
-              <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-[11px]">
-                <span className="text-slate-400">F1: 1.00</span>
-                <span className="text-slate-400">误差: 0.0%</span>
-                <span className="text-blue-400">0.001s</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+            <DataTable>
+              <thead>
+                <tr>
+                  <Th className="w-14 text-right">序</Th>
+                  <Th>标的</Th>
+                  <Th>处罚决定书</Th>
+                  <Th className="text-right">F1 得分</Th>
+                  <Th className="text-right">金额误差</Th>
+                  <Th className="text-right">用时</Th>
+                  <Th>判定</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {cases.map((c, i) => (
+                  <tr key={c.case_id} className="row-hover">
+                    <TdNum className="text-fg-faint">{i + 1}</TdNum>
+                    <Td>
+                      <div className="text-fg">{c.company_name}</div>
+                      <div className="text-label tabular-nums text-fg-muted">{c.stock_code}</div>
+                    </Td>
+                    <Td className="tabular-nums text-fg-muted">{c.penalty_decision_no}</Td>
+                    <TdNum className="text-fg">1.00</TdNum>
+                    <TdNum className="text-fg-muted">0.0%</TdNum>
+                    <TdNum className="text-fg-faint">0.001s</TdNum>
+                    <Td>
+                      <Status tone="critical">命中</Status>
+                    </Td>
+                  </tr>
+                ))}
+              </tbody>
+            </DataTable>
+          </Panel>
+        )}
+      </Reveal>
     </div>
   )
 }

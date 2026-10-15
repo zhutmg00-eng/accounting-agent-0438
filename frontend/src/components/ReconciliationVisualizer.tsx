@@ -1,6 +1,19 @@
 import React, { useState } from 'react'
-import { Layers, AlertTriangle, CheckCircle2, ArrowRightLeft, FileSpreadsheet, Receipt, Landmark, HelpCircle } from 'lucide-react'
-import { AccountingVoucher, InvoiceItem, BankFlowRecord } from '../types'
+import {
+  Panel,
+  Surface,
+  Status,
+  StatusMark,
+  Chip,
+  DataTable,
+  Th,
+  Td,
+  TdNum,
+  EmptyState,
+  cn,
+  type Tone
+} from '../ui/primitives'
+import { useAnimatedNumber, Reveal } from '../ui/motion'
 
 interface ReconciliationVisualizerProps {
   currentCase: any
@@ -13,234 +26,313 @@ interface ReconciliationVisualizerProps {
   } | null
 }
 
+type ReconTab = 'discrepancies' | 'vouchers' | 'invoices' | 'bank_flows'
+
+/**
+ * Beat 2 "穿透": the three documents of one transaction set (合同 / 发票 / 凭证)
+ * either close or they do not.
+ *
+ * The screen is about one number, the amount that fails to close. Matched rows
+ * stay quiet on the tone ladder; only the breaks and the missing counterparts
+ * carry a status hue, and only as a small mark next to the figure.
+ */
 export const ReconciliationVisualizer: React.FC<ReconciliationVisualizerProps> = ({
   currentCase,
   reconData
 }) => {
-  const [activeTab, setActiveTab] = useState<'discrepancies' | 'vouchers' | 'invoices' | 'bank_flows'>('discrepancies')
+  const [activeTab, setActiveTab] = useState<ReconTab>('discrepancies')
 
-  const vouchers: AccountingVoucher[] = currentCase?.vouchers || []
-  const invoices: InvoiceItem[] = currentCase?.invoices || []
-  const bankFlows: BankFlowRecord[] = currentCase?.bank_flows || []
-  const discrepancies = reconData?.discrepancies || []
+  const vouchers = currentCase?.vouchers || []
+  const invoices = currentCase?.invoices || []
+  const bankFlows = currentCase?.bank_flows || []
+  const discrepancies: any[] = reconData?.discrepancies || []
+
+  /* --------------------------------------------------------------------- */
+  /* Figures                                                                */
+  /* --------------------------------------------------------------------- */
+
+  const abnormalTotal = Number(reconData?.total_abnormal_amount || 0)
+  const breakCount = reconData?.total_discrepancies_count || discrepancies.length
+  const isClean = Boolean(reconData?.reconciliation_clean)
+  const recordTotal = vouchers.length + invoices.length + bankFlows.length
+  const displayedAbnormal = useAnimatedNumber(abnormalTotal)
+
+  const money = (v: unknown) =>
+    Number(v ?? 0).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
+  const breakTone: Tone = !reconData ? 'neutral' : isClean ? 'clear' : 'critical'
+
+  const conclusion = !reconData
+    ? '本案例尚未执行三单勾稽'
+    : isClean
+      ? '三单闭合，未发现勾稽断裂'
+      : '三单未闭合，发现勾稽断裂'
+
+  const basis = !reconData
+    ? '在【审计指挥舱】点击「启动穿透」或在工作台调用 perform_three_way_reconciliation 算子后，本页会给出逐条差异证据。'
+    : isClean
+      ? `已核对记账凭证 ${vouchers.length} 笔、税务发票 ${invoices.length} 张、银行流水 ${bankFlows.length} 笔，记账金额、发票税额与银行回执相互印证。`
+      : `已核对业务记录 ${recordTotal} 条，检出 ${breakCount} 处断裂。断裂明细与本页异常金额一一对应，可直接作为底稿索引。`
+
+  /* --------------------------------------------------------------------- */
+  /* Raw record inspection                                                  */
+  /* --------------------------------------------------------------------- */
+
+  const tabs: { id: ReconTab; label: string; count: number }[] = [
+    { id: 'discrepancies', label: '勾稽断裂明细', count: breakCount },
+    { id: 'vouchers', label: '记账凭证', count: vouchers.length },
+    { id: 'invoices', label: '税务发票', count: invoices.length },
+    { id: 'bank_flows', label: '银行流水', count: bankFlows.length }
+  ]
+
+  const renderDiscrepancyRows = () => {
+    if (discrepancies.length === 0) {
+      return (
+        <tr>
+          <Td colSpan={4} className="p-0">
+            <EmptyState
+              title={reconData ? '本案例未检出勾稽断裂' : '尚未执行勾稽核对'}
+              body={
+                reconData
+                  ? '记账金额、发票税额与银行回执三向吻合。可以继续做凭证抽样或转向资金体外拓扑核查。'
+                  : '先在工作台调用三单穿透勾稽算子，差异证据会逐条落到这张表上。'
+              }
+            />
+          </Td>
+        </tr>
+      )
+    }
+
+    return discrepancies.map((d: any, i: number) => (
+      <tr key={i}>
+        <Td>
+          <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <StatusMark tone="critical" />
+            <span className="text-small font-medium text-fg">{d.type || '勾稽异常'}</span>
+          </span>
+        </Td>
+        <Td className="text-fg-muted">
+          <span className="tabular-nums">{d.voucher_id || d.doc_id || '未关联单号'}</span>
+        </Td>
+        <Td className="max-w-[38ch] text-fg-muted">{d.detail}</Td>
+        <TdNum className="font-medium text-risk-critical">¥{money(d.amount)}</TdNum>
+      </tr>
+    ))
+  }
+
+  const renderVoucherRows = () =>
+    vouchers.map((v: any, idx: number) => {
+      const debit = v.entries.reduce((acc: number, e: any) => acc + (e.debit || 0), 0)
+      const credit = v.entries.reduce((acc: number, e: any) => acc + (e.credit || 0), 0)
+      const isBalanced = Math.abs(debit - credit) < 0.01
+      return (
+        <tr key={idx}>
+          <Td>
+            <span className="tabular-nums text-small font-medium text-fg">{v.voucher_id}</span>
+          </Td>
+          <Td className="tabular-nums text-fg-muted">{v.voucher_date}</Td>
+          <Td className="max-w-[32ch] text-fg-muted">{v.entries[0]?.summary || '业务记账'}</Td>
+          <TdNum>¥{debit.toLocaleString('zh-CN')}</TdNum>
+          <Td>
+            <Status tone={isBalanced ? 'neutral' : 'critical'}>
+              {isBalanced ? '借贷平衡' : '借贷不平'}
+            </Status>
+          </Td>
+        </tr>
+      )
+    })
+
+  const renderInvoiceRows = () =>
+    invoices.map((inv: any, idx: number) => (
+      <tr key={idx}>
+        <Td>
+          <span className="tabular-nums text-small font-medium text-fg">{inv.invoice_no}</span>
+        </Td>
+        <Td className="tabular-nums text-fg-muted">{inv.invoice_date}</Td>
+        <Td className="max-w-[32ch] text-fg-muted">{inv.customer_or_vendor}</Td>
+        <TdNum>¥{Number(inv.total_amount || 0).toLocaleString('zh-CN')}</TdNum>
+      </tr>
+    ))
+
+  const renderBankFlowRows = () =>
+    bankFlows.map((b: any, idx: number) => (
+      <tr key={idx}>
+        <Td>
+          <span className="tabular-nums text-small font-medium text-fg">{b.transaction_id}</span>
+        </Td>
+        <Td className="tabular-nums text-fg-muted">{b.transaction_time}</Td>
+        <Td className="max-w-[32ch] text-fg-muted">
+          {b.counterparty_name}
+          <span className="ml-2 text-label text-fg-faint">{b.remark || '无附言'}</span>
+        </Td>
+        <TdNum className={b.amount < 0 ? 'text-risk-critical' : 'text-fg'}>
+          ¥{Number(b.amount || 0).toLocaleString('zh-CN')}
+        </TdNum>
+      </tr>
+    ))
+
+  const columnCount = activeTab === 'discrepancies' || activeTab === 'vouchers' ? 5 : 4
+  const visibleRows =
+    activeTab === 'discrepancies'
+      ? discrepancies.length
+      : activeTab === 'vouchers'
+        ? vouchers.length
+        : activeTab === 'invoices'
+          ? invoices.length
+          : bankFlows.length
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-6">
-      {/* Executive Summary Header */}
-      <div className="glass-panel rounded-2xl p-6 border border-white/10 relative overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-1">
-              <Layers className="w-4 h-4" />
-              <span>三单业财闭环穿透核对飞轮 (Tripartite Reconciliation)</span>
+    <div className="flex-1 overflow-y-auto bg-field">
+      <div className="mx-auto max-w-[80rem] space-y-8 px-6 py-8">
+        {/* ---------------------------------------------------------------- */}
+        {/* The one number: what fails to close.                             */}
+        {/* ---------------------------------------------------------------- */}
+        <Reveal index={0}>
+          <header className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+            <div className="min-w-0">
+              <h2 className="text-title font-semibold text-fg">
+                {currentCase?.company_name || '未选定案例'}
+                <span className="ml-3 text-body font-normal text-fg">
+                  业务凭证 ⟷ 税务发票 ⟷ 资金流水闭环勾稽
+                </span>
+              </h2>
+              <div className="mt-5 text-label text-fg-muted">勾稽差异金额</div>
+              <div
+                className={cn(
+                  'mt-1 tabular-nums text-display font-semibold',
+                  reconData && !isClean ? 'text-risk-critical' : 'text-fg'
+                )}
+                aria-label="三单勾稽差异金额合计"
+              >
+                ¥{money(displayedAbnormal)}
+              </div>
             </div>
-            <h2 className="text-xl font-bold text-white">
-              {currentCase?.company_name} · 业务凭证 ⟷ 税务发票 ⟷ 资金流水 闭环勾稽
-            </h2>
-          </div>
 
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <span className="text-[11px] text-slate-400 block font-mono">勾稽核对状态</span>
-              <span className={`text-sm font-bold font-mono px-3 py-1 rounded-md inline-block mt-0.5 ${
-                !reconData
-                  ? 'bg-slate-800 text-slate-400 border border-white/10'
-                  : reconData.reconciliation_clean
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                  : 'bg-rose-500/20 text-rose-300 border border-rose-500/30 glow-crimson'
-              }`}>
+            <div className="flex flex-col items-start gap-3 sm:items-end">
+              <Chip tone={breakTone} filled={Boolean(reconData) && !isClean}>
                 {!reconData
                   ? '待核验'
-                  : reconData.reconciliation_clean
-                  ? '三单勾稽一致 (CLEAN)'
-                  : `检出 ${reconData.total_discrepancies_count || 0} 处重大勾稽断裂`}
+                  : isClean
+                    ? '三单勾稽一致'
+                    : `检出 ${breakCount} 处勾稽断裂`}
+              </Chip>
+              <span className="text-body text-fg">
+                已核对 <span className="tabular-nums text-fg">{recordTotal}</span> 条业务记录
               </span>
             </div>
-          </div>
-        </div>
+          </header>
+        </Reveal>
 
-        {/* 3 Key Entity Counts */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-cyan-500/20 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center border border-cyan-500/30">
-              <FileSpreadsheet className="w-5 h-5 text-cyan-400" />
-            </div>
-            <div>
-              <div className="text-xs text-slate-400 font-mono">记账凭证 (Vouchers)</div>
-              <div className="text-lg font-bold font-mono text-white">{vouchers.length} 笔入账</div>
-            </div>
-          </div>
+        {/* ---------------------------------------------------------------- */}
+        {/* The verdict, on the one lit surface of this screen.              */}
+        {/* ---------------------------------------------------------------- */}
+        <Reveal index={1}>
+          <Surface paper className="px-6 py-6" aria-label="勾稽结论">
+            <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
+              <div className="min-w-0 max-w-[34ch]">
+                <div className="text-label text-ink-muted">勾稽结论</div>
+                <p className="mt-2 text-title font-semibold text-ink">{conclusion}</p>
+              </div>
 
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-purple-500/20 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center border border-purple-500/30">
-              <Receipt className="w-5 h-5 text-purple-400" />
-            </div>
-            <div>
-              <div className="text-xs text-slate-400 font-mono">税务发票 (Invoices)</div>
-              <div className="text-lg font-bold font-mono text-white">{invoices.length} 张单据</div>
-            </div>
-          </div>
-
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-blue-500/20 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/30">
-              <Landmark className="w-5 h-5 text-blue-400" />
-            </div>
-            <div>
-              <div className="text-xs text-slate-400 font-mono">银行流水 (Bank Flows)</div>
-              <div className="text-lg font-bold font-mono text-white">{bankFlows.length} 笔收支</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Discrepancies Alert Table */}
-      <div className="glass-panel rounded-2xl p-6 border border-white/10 space-y-4">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
-          <h3 className="text-base font-bold text-white flex items-center gap-2">
-            <AlertTriangle className="w-5 h-5 text-amber-400" />
-            <span>三单勾稽穿透断裂与造假疑点明细 ({discrepancies.length})</span>
-          </h3>
-          <span className="text-xs font-mono text-rose-400">
-            涉及异常金额合计: ¥{(reconData?.total_abnormal_amount || 0).toLocaleString('zh-CN', { minimumFractionDigits: 2 })}
-          </span>
-        </div>
-
-        {discrepancies.length === 0 ? (
-          <div className="p-8 text-center text-slate-400 text-xs">
-            <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2 opacity-80" />
-            该案例业财三单高度吻合，记账金额、发票税额与银行回执无勾稽差异。
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {discrepancies.map((d, i) => (
-              <div
-                key={i}
-                className="p-4 rounded-xl bg-rose-950/20 border border-rose-500/30 hover:border-rose-500/60 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4"
-              >
-                <div className="space-y-1 max-w-3xl">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-[11px] font-bold font-mono bg-rose-500/20 text-rose-300 border border-rose-500/40">
-                      {d.type}
-                    </span>
-                    {d.voucher_id && (
-                      <span className="text-xs font-mono text-cyan-300 bg-slate-900 px-2 py-0.5 rounded border border-white/10">
-                        凭证: {d.voucher_id}
-                      </span>
-                    )}
-                    {d.doc_id && (
-                      <span className="text-xs font-mono text-purple-300 bg-slate-900 px-2 py-0.5 rounded border border-white/10">
-                        单据: {d.doc_id}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-slate-200 leading-relaxed font-mono pt-1">
-                    {d.detail}
-                  </p>
+              <div className="text-right">
+                <div className="text-label text-ink-muted">
+                  {reconData ? (isClean ? '待复核断裂' : '差异条目') : '差异条目'}
                 </div>
-
-                <div className="text-right flex-shrink-0">
-                  <span className="text-[11px] text-slate-400 block font-mono">异动金额</span>
-                  <span className="text-sm font-bold font-mono text-rose-400">
-                    ¥{Number(d.amount).toLocaleString('zh-CN', { minimumFractionDigits: 2 })}
-                  </span>
+                <div
+                  className={cn(
+                    'mt-1 tabular-nums text-title font-semibold',
+                    reconData && !isClean ? 'text-risk-critical' : 'text-ink'
+                  )}
+                >
+                  {reconData ? breakCount : '---'}
+                  <span className="ml-1.5 text-small font-medium text-ink-muted">处</span>
+                </div>
+                <div className="mt-3 text-label text-ink-muted">差异金额</div>
+                <div className="mt-1 tabular-nums text-body font-semibold text-ink">
+                  ¥{money(abnormalTotal)}
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+            </div>
 
-      {/* Raw Entity Inspection Columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Vouchers Inspection */}
-        <div className="glass-panel rounded-2xl p-4 border border-white/10 space-y-3">
-          <div className="flex items-center justify-between text-xs font-bold text-white border-b border-white/10 pb-2">
-            <span className="flex items-center gap-1.5 text-cyan-300">
-              <FileSpreadsheet className="w-4 h-4" />
-              <span>记账凭证明细</span>
-            </span>
-            <span className="font-mono text-slate-400">{vouchers.length} 条</span>
-          </div>
+            <p className="mt-5 max-w-[75ch] bg-paper-deep px-3 py-2 text-small text-ink-muted">{basis}</p>
+          </Surface>
+        </Reveal>
 
-          <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
-            {vouchers.map((v, idx) => {
-              const debit = v.entries.reduce((acc, e) => acc + (e.debit || 0), 0)
-              const credit = v.entries.reduce((acc, e) => acc + (e.credit || 0), 0)
-              const isBalanced = Math.abs(debit - credit) < 0.01
-              return (
-                <div key={idx} className="p-3 rounded-lg bg-slate-900/70 border border-white/5 text-xs space-y-1.5 font-mono">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-cyan-400">{v.voucher_id}</span>
-                    <span className="text-slate-400 text-[11px]">{v.voucher_date}</span>
-                  </div>
-                  <div className="text-slate-300 truncate">{v.entries[0]?.summary || '业务记账'}</div>
-                  <div className="flex items-center justify-between pt-1 border-t border-white/5 text-[11px]">
-                    <span className="text-slate-400">金额: ¥{debit.toLocaleString('zh-CN')}</span>
-                    <span className={isBalanced ? 'text-emerald-400' : 'text-rose-400 font-bold'}>
-                      {isBalanced ? '借贷平衡' : '借贷不平'}
-                    </span>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
+        {/* ---------------------------------------------------------------- */}
+        {/* Evidence: one real table, four views over it.                    */}
+        {/* ---------------------------------------------------------------- */}
+        <Reveal index={2}>
+          <Panel
+            title="穿透证据台账"
+            note="断裂明细与三类原始单据共用一张台账，切换视图不丢失上下文。"
+            meta={<span className="tabular-nums">当前视图 {visibleRows} 条</span>}
+            bare
+          >
+            <div className="scroll-x flex items-center gap-1 bg-field-sunken px-5 py-2">
+              {tabs.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => setActiveTab(t.id)}
+                  aria-pressed={activeTab === t.id}
+                  className={cn(
+                    'press flex items-center gap-2 px-3 py-2 text-small',
+                    activeTab === t.id
+                      ? 'bg-field-raised2 font-medium text-fg'
+                      : 'text-fg-muted hover:bg-field-raised hover:text-fg'
+                  )}
+                >
+                  <span>{t.label}</span>
+                  <span className="tabular-nums text-label text-fg-faint">{t.count}</span>
+                </button>
+              ))}
+            </div>
 
-        {/* Invoices Inspection */}
-        <div className="glass-panel rounded-2xl p-4 border border-white/10 space-y-3">
-          <div className="flex items-center justify-between text-xs font-bold text-white border-b border-white/10 pb-2">
-            <span className="flex items-center gap-1.5 text-purple-300">
-              <Receipt className="w-4 h-4" />
-              <span>税务发票清单</span>
-            </span>
-            <span className="font-mono text-slate-400">{invoices.length} 张</span>
-          </div>
-
-          <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
-            {invoices.map((inv, idx) => (
-              <div key={idx} className="p-3 rounded-lg bg-slate-900/70 border border-white/5 text-xs space-y-1.5 font-mono">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-purple-400">{inv.invoice_no}</span>
-                  <span className="text-slate-400 text-[11px]">{inv.invoice_date}</span>
-                </div>
-                <div className="text-slate-300 truncate">客户/销售方: {inv.customer_or_vendor}</div>
-                <div className="flex items-center justify-between pt-1 border-t border-white/5 text-[11px]">
-                  <span className="text-slate-400">价税合计</span>
-                  <span className="text-slate-200 font-bold">¥{inv.total_amount.toLocaleString('zh-CN')}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Bank Flows Inspection */}
-        <div className="glass-panel rounded-2xl p-4 border border-white/10 space-y-3">
-          <div className="flex items-center justify-between text-xs font-bold text-white border-b border-white/10 pb-2">
-            <span className="flex items-center gap-1.5 text-blue-300">
-              <Landmark className="w-4 h-4" />
-              <span>银行对账单流水</span>
-            </span>
-            <span className="font-mono text-slate-400">{bankFlows.length} 笔</span>
-          </div>
-
-          <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
-            {bankFlows.map((b, idx) => (
-              <div key={idx} className="p-3 rounded-lg bg-slate-900/70 border border-white/5 text-xs space-y-1.5 font-mono">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-blue-400">{b.transaction_id}</span>
-                  <span className="text-slate-400 text-[11px]">{b.transaction_time}</span>
-                </div>
-                <div className="text-slate-300 truncate">对手方: {b.counterparty_name}</div>
-                <div className="flex items-center justify-between pt-1 border-t border-white/5 text-[11px]">
-                  <span className="text-slate-400 truncate max-w-[120px]">{b.remark || '无附言'}</span>
-                  <span className={`font-bold ${b.amount < 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
-                    ¥{b.amount.toLocaleString('zh-CN')}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+            <DataTable>
+              <thead>
+                {activeTab === 'discrepancies' ? (
+                  <tr>
+                    <Th>断裂类型</Th>
+                    <Th>关联单号</Th>
+                    <Th>证据说明</Th>
+                    <Th className="text-right">异动金额</Th>
+                  </tr>
+                ) : activeTab === 'vouchers' ? (
+                  <tr>
+                    <Th>凭证号</Th>
+                    <Th>记账日期</Th>
+                    <Th>摘要</Th>
+                    <Th className="text-right">借方金额</Th>
+                    <Th>借贷校验</Th>
+                  </tr>
+                ) : activeTab === 'invoices' ? (
+                  <tr>
+                    <Th>发票号</Th>
+                    <Th>开票日期</Th>
+                    <Th>客户 / 销售方</Th>
+                    <Th className="text-right">价税合计</Th>
+                  </tr>
+                ) : (
+                  <tr>
+                    <Th>交易号</Th>
+                    <Th>交易时间</Th>
+                    <Th>对手方</Th>
+                    <Th className="text-right">发生额</Th>
+                  </tr>
+                )}
+              </thead>
+              <tbody>
+                {activeTab === 'discrepancies'
+                  ? renderDiscrepancyRows()
+                  : activeTab === 'vouchers'
+                    ? renderVoucherRows()
+                    : activeTab === 'invoices'
+                      ? renderInvoiceRows()
+                      : renderBankFlowRows()}
+              </tbody>
+            </DataTable>
+          </Panel>
+        </Reveal>
       </div>
     </div>
   )

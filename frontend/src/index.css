@@ -2,65 +2,186 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===========================================================================
+   AuditMind base layer
+   The direction is "dark room, lit artifacts": one continuous dark field, and
+   in it the evidence is the bright thing. Surfaces are separated by a step in
+   tone, never by a hairline border, a shadow or a glass blur. taste-skill-ignore
+   See DESIGN.md.
+   =========================================================================== */
+
 @layer base {
   :root {
-    --bg-base: #0B0F19;
-    --surface-panel: #111827;
-    --surface-card: #151F32;
-    --border-subtle: rgba(255, 255, 255, 0.08);
-    --border-strong: rgba(255, 255, 255, 0.16);
+    /* field - the room */
+    --field: #0e0f12;
+    --field-sunken: #0a0b0d;
+    --field-raised: #17191d;
+    --field-raised-2: #1f2227;
+    --field-raised-3: #2a2c31;
+
+    /* paper - the lit artifact (evidence, workpapers) */
+    --paper: #efefef;
+    --paper-deep: #e2e2e2;
+    --ink: #14151a;
+    --ink-muted: #5a5c63;
+
+    /* running text on the field */
+    --fg: #ecedef;
+    --fg-muted: #a3a7ae;
+    --fg-faint: #7d8188;
+
+    /* the single accent, plus data-only status hues */
+    --seal: #d92b21;
+    --seal-deep: #b01f18;
+    --risk-critical: #d92b21;
+    --risk-high: #d97b4a;
+    --risk-medium: #c9a03f;
+    --risk-clear: #5c9070;
+
+    /* motion */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --dur-fast: 140ms;
+    --dur: 220ms;
+    --dur-slow: 420ms;
+
+    color-scheme: dark;
+  }
+
+  html {
+    background-color: var(--field);
   }
 
   body {
-    background-color: var(--bg-base);
-    color: #F8FAFC;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--field);
+    color: var(--fg);
+    font-family: 'IBM Plex Sans', system-ui, -apple-system, 'PingFang SC', 'HarmonyOS Sans SC',
+      'Microsoft YaHei', sans-serif;
+    /* Data is the product: align every numeral by default. */
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Headlines hold two lines or fewer and never carry an orphan. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Keyboard focus is a requirement, not an option. */
+  :focus-visible {
+    outline: 2px solid var(--seal);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--seal);
+    color: var(--paper);
+  }
+
+  /* Literal code keeps monospace - the one place it is correct. */
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-variant-numeric: tabular-nums;
   }
 }
 
-/* Institutional Terminal Surfaces */
-.surface-panel {
-  background: rgba(17, 24, 39, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-subtle);
+@layer components {
+  /* -------------------------------------------------------------------------
+     Surfaces - defined by fill, one tone step apart. No border, no blur, no
+     shadow at rest. taste-skill-ignore
+     The old glass utilities are kept as names so unmigrated call sites render
+     flat instead of breaking.
+     ------------------------------------------------------------------------- */
+
+  .surface-panel {
+    background-color: var(--field-raised);
+  }
+
+  .surface-card {
+    background-color: var(--field-raised-2);
+  }
+
+  .surface-subtle {
+    background-color: rgba(23, 25, 29, 0.55);
+  }
+
+  /* Legacy name. Renders as a flat fill on purpose: this is the migration net
+     for call sites that still ask for glass, not a glass surface. */
+  .glass-panel {
+    background-color: var(--field-raised);
+    backdrop-filter: none; /* taste-skill-ignore */
+    -webkit-backdrop-filter: none; /* taste-skill-ignore */
+    border: 0;
+    box-shadow: none; /* taste-skill-ignore */
+  }
+
+  .glass-panel-hover {
+    transition: background-color var(--dur) var(--ease-out);
+  }
+
+  .glass-panel-hover:hover {
+    background-color: var(--field-raised-2);
+  }
+
+  /* The lit artifact. Used where the product shows evidence, not chrome. */
+  .surface-paper {
+    background-color: var(--paper);
+    color: var(--ink);
+  }
+
+  .surface-paper-deep {
+    background-color: var(--paper-deep);
+    color: var(--ink);
+  }
+
+  /* Interactive rows/controls: tone step on hover, inset on press. */
+  .row-hover {
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .row-hover:hover {
+    background-color: var(--field-raised-2);
+  }
+
+  .press {
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+  }
+
+  .press:active {
+    transform: translateY(1px);
+  }
 }
 
-.surface-card {
-  background: rgba(21, 31, 50, 0.6);
-  border: 1px solid var(--border-subtle);
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  /* Real tables and form fields are allowed their rules; nothing else is. */
+  .data-rule {
+    border-color: rgba(255, 255, 255, 0.06);
+  }
 }
 
-.surface-subtle {
-  background: rgba(15, 23, 42, 0.4);
-}
-
-/* Glass panel fallback */
-.glass-panel {
-  background: rgba(17, 24, 39, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
-}
-
-.glass-panel-hover {
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.glass-panel-hover:hover {
-  border-color: rgba(59, 130, 246, 0.4);
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6);
-}
-
-/* Restrained, Purposeful Status Indicators (No Gaudy Neon) */
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
-}
-
-/* Flow animation for topology */
+/* ---------------------------------------------------------------------------
+   Data flow animation for the fund topology graph. It encodes direction of
+   money movement, so it is information rather than decoration.
+   --------------------------------------------------------------------------- */
 @keyframes fundFlowDash {
   to {
     stroke-dashoffset: -32;
@@ -71,26 +192,74 @@
   animation: fundFlowDash 1.2s linear infinite;
 }
 
-/* Ambient Subtle Grid (Very faint, not distracting) */
-.bg-grid-pattern {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+/* Tabular data can scroll sideways inside its own box on small screens. */
+.scroll-x {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
 }
 
-/* Professional Scrollbar */
+/* Scrollbar: quiet, square, matches the field. */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0B0F19;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1E293B;
-  border-radius: 4px;
+  background: #2a2c31;
+  border-radius: 0;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #3f4247;
+}
+* {
+  scrollbar-color: #2a2c31 transparent;
+  scrollbar-width: thin;
+}
+
+/* ---------------------------------------------------------------------------
+   Motion. Every move is transform/opacity only and every move has a
+   reduced-motion fallback that keeps the content and drops the travel.
+   --------------------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+/* Content must never stay hidden if the script or the observer fails. */
+.no-js .reveal,
+.reveal.is-static {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  .animate-fund-flow {
+    animation: none;
+  }
 }
