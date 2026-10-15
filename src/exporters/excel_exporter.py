@@ -4,10 +4,17 @@ Enhanced with Execution Mode badge and Three-Layer Evidence Traceability (Issue 
 """
 
 from pathlib import Path
+import re
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from typing import Optional, Dict, Any
 from src.core.schemas import AnalysisReportResult, AuditWorkpaper, ExecutionMode
+
+
+def _cell_text(value: object) -> str:
+    """Neutralise Excel formula injection: prefix risky leading chars with an apostrophe."""
+    s = "" if value is None else str(value)
+    return "'" + s if s[:1] in ("=", "+", "-", "@", "\t", "\r") else s
 
 
 def export_workpaper_to_excel(report: AnalysisReportResult, output_path: Path, cpa_signoff: Optional[Dict[str, Any]] = None) -> Path:
@@ -33,17 +40,18 @@ def export_workpaper_to_excel(report: AnalysisReportResult, output_path: Path, c
     )
 
     # Title
-    ws_summary["A1"] = f"{report.company_name} - 数智审计穿透与风险研判底稿"
+    ws_summary["A1"] = _cell_text(f"{report.company_name} - 数智审计穿透与风险研判底稿")
     ws_summary["A1"].font = title_font
     ws_summary.merge_cells("A1:H1")
 
     # Meta & Execution Mode
     mode_text = "🟢 实时在线推理 (DeepSeek-V3)" if report.execution_mode in (ExecutionMode.ONLINE, ExecutionMode.STRICT_ONLINE) and not report.fallback_occurred else "🟡 离线确定性模拟 (Demo Mode)"
     ws_summary["A3"] = "被审计单位:"
-    ws_summary["B3"] = report.company_name
+    ws_summary["B3"] = _cell_text(report.company_name)
     ws_summary["C3"] = "综合风险评级:"
-    ws_summary["D3"] = report.overall_risk_rating.value
+    ws_summary["D3"] = _cell_text(report.overall_risk_rating.value)
     ws_summary["E3"] = "Beneish M-Score:"
+    # 纯数值文本，保持数字原样（避免负数被加上防注入前缀）
     ws_summary["F3"] = str(report.beneish_m_score if report.beneish_m_score is not None else "N/A")
     ws_summary["G3"] = "执行模式:"
     ws_summary["H3"] = mode_text
@@ -53,7 +61,7 @@ def export_workpaper_to_excel(report: AnalysisReportResult, output_path: Path, c
     # Executive Summary
     ws_summary["A5"] = "管理层与主审评委摘要:"
     ws_summary["A5"].font = bold_font
-    ws_summary["A6"] = report.executive_summary
+    ws_summary["A6"] = _cell_text(report.executive_summary)
     ws_summary["A6"].font = normal_font
     ws_summary.merge_cells("A6:H7")
     ws_summary["A6"].alignment = Alignment(wrap_text=True, vertical="top")
@@ -71,14 +79,14 @@ def export_workpaper_to_excel(report: AnalysisReportResult, output_path: Path, c
 
     current_row = 11
     for f in report.findings:
-        ws_summary.cell(row=current_row, column=1, value=f.finding_id).font = normal_font
-        ws_summary.cell(row=current_row, column=2, value=f.title).font = bold_font
-        ws_summary.cell(row=current_row, column=3, value=f.risk_level.value).font = bold_font
+        ws_summary.cell(row=current_row, column=1, value=_cell_text(f.finding_id)).font = normal_font
+        ws_summary.cell(row=current_row, column=2, value=_cell_text(f.title)).font = bold_font
+        ws_summary.cell(row=current_row, column=3, value=_cell_text(f.risk_level.value)).font = bold_font
         ws_summary.cell(row=current_row, column=4, value=f.impact_amount).font = normal_font
-        ws_summary.cell(row=current_row, column=5, value=f.rule_evidence or f.suspected_mechanism).font = normal_font
-        ws_summary.cell(row=current_row, column=6, value=f.model_explanation or f.suspected_mechanism).font = normal_font
-        ws_summary.cell(row=current_row, column=7, value=f.human_verification_flag or f.suggested_procedure).font = normal_font
-        ws_summary.cell(row=current_row, column=8, value=f.accounting_standard).font = normal_font
+        ws_summary.cell(row=current_row, column=5, value=_cell_text(f.rule_evidence or f.suspected_mechanism)).font = normal_font
+        ws_summary.cell(row=current_row, column=6, value=_cell_text(f.model_explanation or f.suspected_mechanism)).font = normal_font
+        ws_summary.cell(row=current_row, column=7, value=_cell_text(f.human_verification_flag or f.suggested_procedure)).font = normal_font
+        ws_summary.cell(row=current_row, column=8, value=_cell_text(f.accounting_standard)).font = normal_font
         
         for col_idx in range(1, 9):
             ws_summary.cell(row=current_row, column=col_idx).border = border_thin
@@ -87,20 +95,21 @@ def export_workpaper_to_excel(report: AnalysisReportResult, output_path: Path, c
 
     # Individual Workpaper Sheets
     for wp_idx, wp in enumerate(report.workpapers, start=1):
-        sheet_name = f"底稿_{wp.workpaper_id}"[:30]
+        # Excel 工作表名禁止 / \ ? * [ ] : 字符；重名去重仍交由 openpyxl 处理
+        sheet_name = re.sub(r"[\[\]:*?/\\]", "-", f"底稿_{wp.workpaper_id}")[:31] or "底稿"
         ws_wp = wb.create_sheet(title=sheet_name)
         ws_wp.views.sheetView[0].showGridLines = True
 
-        ws_wp["A1"] = wp.title
+        ws_wp["A1"] = _cell_text(wp.title)
         ws_wp["A1"].font = title_font
         ws_wp.merge_cells("A1:H1")
 
         ws_wp["A3"] = "底稿编号:"
-        ws_wp["B3"] = wp.workpaper_id
+        ws_wp["B3"] = _cell_text(wp.workpaper_id)
         ws_wp["C3"] = "编制人:"
-        ws_wp["D3"] = wp.prepared_by
+        ws_wp["D3"] = _cell_text(wp.prepared_by)
         ws_wp["E3"] = "核查日期:"
-        ws_wp["F3"] = wp.review_date
+        ws_wp["F3"] = _cell_text(wp.review_date)
 
         headers_wp = ["凭证号", "记账日期", "业务摘要", "账面金额(元)", "核实确认金额(元)", "差异金额(元)", "审计结论", "数据来源与追溯"]
         for col_idx, h in enumerate(headers_wp, start=1):
@@ -111,14 +120,14 @@ def export_workpaper_to_excel(report: AnalysisReportResult, output_path: Path, c
 
         r_idx = 6
         for r in wp.rows:
-            ws_wp.cell(row=r_idx, column=1, value=r.voucher_no).font = normal_font
-            ws_wp.cell(row=r_idx, column=2, value=r.date).font = normal_font
-            ws_wp.cell(row=r_idx, column=3, value=r.summary).font = normal_font
+            ws_wp.cell(row=r_idx, column=1, value=_cell_text(r.voucher_no)).font = normal_font
+            ws_wp.cell(row=r_idx, column=2, value=_cell_text(r.date)).font = normal_font
+            ws_wp.cell(row=r_idx, column=3, value=_cell_text(r.summary)).font = normal_font
             ws_wp.cell(row=r_idx, column=4, value=r.ledger_amount).font = normal_font
             ws_wp.cell(row=r_idx, column=5, value=r.verified_amount).font = normal_font
             ws_wp.cell(row=r_idx, column=6, value=r.discrepancy).font = normal_font
-            ws_wp.cell(row=r_idx, column=7, value=r.audit_conclusion).font = normal_font
-            ws_wp.cell(row=r_idx, column=8, value=r.evidence_trace or r.source_file or "标准凭证库").font = normal_font
+            ws_wp.cell(row=r_idx, column=7, value=_cell_text(r.audit_conclusion)).font = normal_font
+            ws_wp.cell(row=r_idx, column=8, value=_cell_text(r.evidence_trace or r.source_file or "标准凭证库")).font = normal_font
 
             for col_idx in range(1, 9):
                 ws_wp.cell(row=r_idx, column=col_idx).border = border_thin
@@ -126,7 +135,7 @@ def export_workpaper_to_excel(report: AnalysisReportResult, output_path: Path, c
 
         # Summary footer
         ws_wp.cell(row=r_idx + 1, column=1, value="底稿综合意见:").font = bold_font
-        ws_wp.cell(row=r_idx + 1, column=2, value=wp.audit_opinion_summary).font = normal_font
+        ws_wp.cell(row=r_idx + 1, column=2, value=_cell_text(wp.audit_opinion_summary)).font = normal_font
         ws_wp.merge_cells(start_row=r_idx + 1, start_column=2, end_row=r_idx + 2, end_column=8)
 
     # Sheet: Ethics & CPA Sign-off (CPA终审签章与独立性声明)
@@ -155,20 +164,20 @@ def export_workpaper_to_excel(report: AnalysisReportResult, output_path: Path, c
 
     for idx, (lbl1, val1, lbl2, val2) in enumerate(meta_rows, start=3):
         ws_signoff.cell(row=idx, column=1, value=lbl1).font = bold_font
-        ws_signoff.cell(row=idx, column=2, value=val1).font = normal_font
+        ws_signoff.cell(row=idx, column=2, value=_cell_text(val1)).font = normal_font
         ws_signoff.cell(row=idx, column=4, value=lbl2).font = bold_font
-        ws_signoff.cell(row=idx, column=5, value=val2).font = normal_font
+        ws_signoff.cell(row=idx, column=5, value=_cell_text(val2)).font = normal_font
 
     ws_signoff["A7"] = "注册会计师职业怀疑复核意见:"
     ws_signoff["A7"].font = bold_font
-    ws_signoff["A8"] = signoff_data.get("professional_skepticism_notes", "")
+    ws_signoff["A8"] = _cell_text(signoff_data.get("professional_skepticism_notes", ""))
     ws_signoff["A8"].font = normal_font
     ws_signoff.merge_cells("A8:G9")
     ws_signoff["A8"].alignment = Alignment(wrap_text=True, vertical="top")
 
     ws_signoff["A11"] = "伦理合规与责任界定声明:"
     ws_signoff["A11"].font = bold_font
-    ws_signoff["A12"] = signoff_data.get("ethical_declaration", "")
+    ws_signoff["A12"] = _cell_text(signoff_data.get("ethical_declaration", ""))
     ws_signoff["A12"].font = normal_font
     ws_signoff.merge_cells("A12:G14")
     ws_signoff["A12"].alignment = Alignment(wrap_text=True, vertical="top")

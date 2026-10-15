@@ -10,7 +10,7 @@ import re
 import hashlib
 import datetime
 from typing import Dict, Any, List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from src.core.schemas import AccountingCaseData, BankFlowRecord, AccountingVoucher, InvoiceItem, BusinessContract
 
@@ -105,6 +105,19 @@ class CpaApprovalRequest(BaseModel):
     )
     compliance_confirmed: bool = Field(default=True, description="是否确认符合审计独立性准则")
 
+    @model_validator(mode="after")
+    def _require_independence_confirmation(self) -> "CpaApprovalRequest":
+        """Refuse a sign-off request that declares non-compliance.
+
+        The receipt below is a non-repudiation artefact whose body asserts
+        strict independence compliance, so issuing one for a caller who has
+        explicitly answered "no" would make the declaration false.  Rejecting
+        the request here turns it into an automatic 422 at the API boundary.
+        """
+        if not self.compliance_confirmed:
+            raise ValueError("未确认审计独立性，禁止签发 CPA 终审签章")
+        return self
+
 
 class CpaApprovalReceipt(BaseModel):
     receipt_id: str
@@ -121,6 +134,11 @@ class CpaApprovalReceipt(BaseModel):
 
 def generate_cpa_signoff(req: CpaApprovalRequest) -> CpaApprovalReceipt:
     """Generate tamper-evident digital sign-off receipt for audit workpapers."""
+    # Defence in depth: the model validator above rejects this at the API
+    # boundary, but this function is also reachable from the CLI and tests.
+    if not req.compliance_confirmed:
+        raise ValueError("未确认审计独立性，禁止签发 CPA 终审签章")
+
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     hash_payload = f"{req.case_id}|{req.auditor_name}|{req.cert_no}|{timestamp}|{req.opinion_type}"
     verification_hash = hashlib.sha256(hash_payload.encode("utf-8")).hexdigest()[:24].upper()

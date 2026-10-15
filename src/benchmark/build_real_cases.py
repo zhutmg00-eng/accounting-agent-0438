@@ -6,6 +6,53 @@ and official annual audit reports.
 
 import json
 from pathlib import Path
+from typing import Any, Dict, List
+
+
+def preserve_enriched_fields(cases: List[Dict[str, Any]], out_file: Path) -> List[Dict[str, Any]]:
+    """Merge back fields that exist on disk but are not produced by this builder.
+
+    ``generate_28_real_cases`` emits only the eight core income-statement and
+    balance-sheet lines and no ``prior_financial_summary`` at all. The shipped
+    database is enriched with the comparative period plus ``fixed_assets``,
+    ``depreciation``, ``sga_expenses`` and ``leverage_ratio``, which the
+    Beneish M-Score requires (see src/plugins/audit_fraud_plugin/tools.py:131-160).
+
+    Regenerating without this merge silently makes the M-Score incalculable for
+    every case -- which is exactly what happened once, and it is not obvious
+    from the output because the generator reports success either way.
+    """
+    if not out_file.exists():
+        return cases
+    try:
+        previous = {c["case_id"]: c for c in json.loads(out_file.read_text(encoding="utf-8"))}
+    except Exception as exc:
+        print(f"[Warning] 无法读取既有案例库以保留增值字段（{exc}），本次将直接覆盖写入。")
+        return cases
+
+    restored_lines = 0
+    restored_prior = 0
+    for case in cases:
+        old = previous.get(case.get("case_id"))
+        if not old:
+            continue
+        new_fs = case.get("financial_summary") or {}
+        for key, value in (old.get("financial_summary") or {}).items():
+            if key not in new_fs and value is not None:
+                new_fs[key] = value
+                restored_lines += 1
+        if new_fs:
+            case["financial_summary"] = new_fs
+        if "prior_financial_summary" not in case and old.get("prior_financial_summary"):
+            case["prior_financial_summary"] = old["prior_financial_summary"]
+            restored_prior += 1
+    if restored_lines or restored_prior:
+        print(
+            f"[Preserve] 保留既有增值字段：financial_summary 补回 {restored_lines} 项，"
+            f"prior_financial_summary 补回 {restored_prior} 例。"
+        )
+    return cases
+
 
 def generate_28_real_cases():
     cases = [
@@ -1190,6 +1237,7 @@ def generate_28_real_cases():
 
     out_file = Path("data/cases/real_cases_database.json")
     out_file.parent.mkdir(parents=True, exist_ok=True)
+    cases = preserve_enriched_fields(cases, out_file)
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(cases, f, ensure_ascii=False, indent=2)
     print(f"[Success] Built {len(cases)} authentic Chinese capital market accounting cases into {out_file}")

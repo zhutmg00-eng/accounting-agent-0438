@@ -6,12 +6,13 @@ Exposes REST and SSE Streaming APIs for the modern frontend presentation.
 import os
 import io
 import json
+import re
 import time
 import asyncio
 import uuid
 from pathlib import Path
 from typing import Dict, Any, List, Optional
-from fastapi import FastAPI, Query, HTTPException, UploadFile, File, Form, Body
+from fastapi import FastAPI, Query, HTTPException, UploadFile, File, Form, Body, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
@@ -85,6 +86,25 @@ async def add_no_cache_headers_for_spa(request, call_next):
 # Global harness instance
 _HARNESS = AccountingAgentHarness()
 
+# Upload cap: read uploads in chunks and abort as soon as one file exceeds settings.max_upload_mb
+_UPLOAD_CHUNK_SIZE = 1024 * 1024
+_UPLOAD_OVERHEAD_SLACK = 1024 * 1024  # multipart framing allowance for the Content-Length pre-check
+
+
+async def _read_upload_capped(upload: UploadFile, limit_bytes: int) -> bytes:
+    """Read an upload in chunks, raising 413 as soon as the running total exceeds the limit."""
+    chunks: List[bytes] = []
+    total = 0
+    while True:
+        chunk = await upload.read(_UPLOAD_CHUNK_SIZE)
+        if not chunk:
+            break
+        total += len(chunk)
+        if total > limit_bytes:
+            raise HTTPException(status_code=413, detail="上传文件超过大小限制")
+        chunks.append(chunk)
+    return b"".join(chunks)
+
 
 class AuditRunRequest(BaseModel):
     case_id: str
@@ -147,7 +167,7 @@ def get_health():
         "service": "DeepSeek-AuditMind Agent",
         "version": "2.0.0",
         "mode": "MOCK" if settings.use_mock_llm else "ONLINE",
-        "cases_count": len(get_benchmark_cases()),
+        "cases_count": len(get_all_cases()),
         "categories_count": len(get_case_categories()),
     }
 
@@ -170,14 +190,20 @@ def detect_models_endpoint(req: ModelDetectRequest):
 @app.post("/api/deepseek/config")
 def update_deepseek_config(req: ModelConfigRequest):
     """Dynamically switch active DeepSeek model or update API credentials."""
-    if req.model_name:
-        settings.model_name = req.model_name
+    supplied = req.model_fields_set
+
+    if "model_name" in supplied:
+        if req.model_name is None or not req.model_name.strip():
+            raise HTTPException(status_code=400, detail="模型名称不能为空")
+        settings.model_name = req.model_name.strip()
     if req.api_key:
         settings.api_key = req.api_key
         if req.api_key not in ("mock-key", ""):
             settings.use_mock_llm = False
-    if req.api_base:
-        settings.api_base = req.api_base
+    if "api_base" in supplied:
+        if req.api_base is None or not req.api_base.strip():
+            raise HTTPException(status_code=400, detail="API Base 地址不能为空")
+        settings.api_base = req.api_base.strip().rstrip("/")
 
     profile = MODEL_PROFILES.get(settings.model_name, {
         "id": settings.model_name,
@@ -315,7 +341,7 @@ def agent_goal_endpoint(req: AgentGoalRequest):
 @app.get("/api/categories")
 def get_categories():
     """List all available case categories with counts."""
-    all_cases = get_benchmark_cases()
+    all_cases = get_all_cases()
     cats = {}
     for c in all_cases:
         cats[c.case_category] = cats.get(c.case_category, 0) + 1
@@ -350,6 +376,17 @@ def list_cases(category: Optional[str] = Query(None)):
             "is_clean": len(c.ground_truth_findings or []) == 0
         })
     return {"cases": result, "total": len(result)}
+
+
+@app.post("/api/cases/reload")
+def reload_custom_cases():
+    """Re-scan the persisted custom-case directory so newly added case files appear without a restart."""
+    _load_custom_cases_from_disk(settings.data_dir)
+    return {
+        "status": "success",
+        "message": "已重新扫描自定义案例目录",
+        "total_cases": len(get_all_cases())
+    }
 
 
 @app.get("/api/cases/{case_id}")
@@ -495,6 +532,7 @@ def run_benchmark():
 
 @app.post("/api/upload")
 async def upload_files(
+    request: Request,
     vouchers_file: Optional[UploadFile] = File(None),
     invoices_file: Optional[UploadFile] = File(None),
     bank_flows_file: Optional[UploadFile] = File(None),
@@ -510,13 +548,19 @@ async def upload_files(
             detail="未检测到上传文件，请至少上传凭证表、发票表或银行流水表之一。"
         )
 
+    # Reject oversized payloads before reading any body (per-file cap x 3 optional files)
+    limit_bytes = max(1, settings.max_upload_mb) * 1024 * 1024
+    declared_length = request.headers.get("content-length", "")
+    if declared_length.isdigit() and int(declared_length) > limit_bytes * 3 + _UPLOAD_OVERHEAD_SLACK:
+        raise HTTPException(status_code=413, detail="上传文件超过大小限制")
+
     vouchers = []
     invoices = []
     bank_flows = []
     validation_errors = []
 
     if vouchers_file:
-        v_bytes = await vouchers_file.read()
+        v_bytes = await _read_upload_capped(vouchers_file, limit_bytes)
         if len(v_bytes) == 0:
             validation_errors.append(f"凭证文件 '{vouchers_file.filename}' 为空文件（0字节）")
         else:
@@ -527,7 +571,7 @@ async def upload_files(
                 vouchers = parsed_v
 
     if invoices_file:
-        i_bytes = await invoices_file.read()
+        i_bytes = await _read_upload_capped(invoices_file, limit_bytes)
         if len(i_bytes) == 0:
             validation_errors.append(f"发票文件 '{invoices_file.filename}' 为空文件（0字节）")
         else:
@@ -538,7 +582,7 @@ async def upload_files(
                 invoices = parsed_i
 
     if bank_flows_file:
-        b_bytes = await bank_flows_file.read()
+        b_bytes = await _read_upload_capped(bank_flows_file, limit_bytes)
         if len(b_bytes) == 0:
             validation_errors.append(f"银行流水文件 '{bank_flows_file.filename}' 为空文件（0字节）")
         else:
@@ -632,13 +676,39 @@ def download_template_endpoint(template_type: str):
     )
 
 
+_UNSAFE_FILENAME_CHARS = re.compile(r"[^0-9A-Za-z_\-\u4e00-\u9fff]")
+
+
+def _safe_name(raw: object, fallback: str = "CASE") -> str:
+    """Sanitize an untrusted identifier so it can only ever be one file-name component."""
+    s = _UNSAFE_FILENAME_CHARS.sub("_", str(raw or ""))[:64].strip("_")
+    return s or fallback
+
+
+def _checked_export_case_id(raw: object) -> str:
+    """Reject blank or file-name-hostile case ids before they reach an export path."""
+    text = str(raw or "")
+    if not text.strip() or _UNSAFE_FILENAME_CHARS.search(text):
+        raise HTTPException(status_code=400, detail="非法的导出案例编号")
+    return _safe_name(text)
+
+
+def _export_path(out_dir: Path, filename: str) -> Path:
+    """Resolve an export target inside out_dir, refusing any path that escapes it."""
+    out_path = (out_dir / filename).resolve()
+    if not str(out_path).startswith(str(out_dir.resolve())):
+        raise HTTPException(status_code=400, detail="非法的导出文件名")
+    return out_path
+
+
 @app.post("/api/export/excel")
 def export_excel_endpoint(report_data: Dict[str, Any] = Body(...)):
     """Export workpaper to Excel and return file download."""
     report = AnalysisReportResult(**report_data)
+    case_id = _checked_export_case_id(report.case_id)
     out_dir = Path("output/excel")
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"AuditWorkpaper_{report.case_id}_{int(time.time())}.xlsx"
+    out_path = _export_path(out_dir, f"AuditWorkpaper_{case_id}_{int(time.time())}.xlsx")
     export_workpaper_to_excel(report, out_path)
     return FileResponse(
         str(out_path),
@@ -651,9 +721,10 @@ def export_excel_endpoint(report_data: Dict[str, Any] = Body(...)):
 def export_pdf_endpoint(report_data: Dict[str, Any] = Body(...)):
     """Export audit report to PDF and return file download."""
     report = AnalysisReportResult(**report_data)
+    case_id = _checked_export_case_id(report.case_id)
     out_dir = Path("output/pdf")
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"AuditReport_{report.case_id}_{int(time.time())}.pdf"
+    out_path = _export_path(out_dir, f"AuditReport_{case_id}_{int(time.time())}.pdf")
     export_report_to_pdf(report, out_path)
     return FileResponse(
         str(out_path),
@@ -666,9 +737,10 @@ def export_pdf_endpoint(report_data: Dict[str, Any] = Body(...)):
 def export_json_endpoint(report_data: Dict[str, Any] = Body(...)):
     """Export full report to JSON package."""
     report = AnalysisReportResult(**report_data)
+    case_id = _checked_export_case_id(report.case_id)
     out_dir = Path("output/json")
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"AuditPackage_{report.case_id}_{int(time.time())}.json"
+    out_path = _export_path(out_dir, f"AuditPackage_{case_id}_{int(time.time())}.json")
     export_report_to_json(report, out_path)
     return FileResponse(
         str(out_path),
@@ -699,7 +771,6 @@ def sanitize_case_endpoint(case_id: str):
     if not case:
         raise HTTPException(status_code=404, detail=f"案例 {case_id} 未找到")
     sanitized = DataSanitizer.sanitize_case_data(case)
-    register_custom_case(sanitized)
     return {
         "status": "success",
         "case_id": case_id,

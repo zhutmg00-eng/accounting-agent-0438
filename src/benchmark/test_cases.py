@@ -6,6 +6,7 @@ Contains 28 Genuine Chinese Capital Market Accounting & Audit Cases:
 """
 
 import json
+import logging
 from pathlib import Path
 from typing import List, Optional, Dict
 from src.core.schemas import (
@@ -14,6 +15,8 @@ from src.core.schemas import (
     GroundTruthRiskItem, RiskLevel
 )
 from src.benchmark.build_real_cases import generate_28_real_cases
+
+logger = logging.getLogger(__name__)
 
 _DATABASE_FILE = Path(__file__).resolve().parent.parent.parent / "data" / "cases" / "real_cases_database.json"
 _CACHED_CASES: Optional[List[AccountingCaseData]] = None
@@ -96,17 +99,24 @@ _DYNAMIC_CASES_STORE: Dict[str, AccountingCaseData] = {}
 
 
 def _load_custom_cases_from_disk(data_dir: Optional[Path] = None) -> None:
-    """Load persisted custom cases from disk into _DYNAMIC_CASES_STORE."""
+    """Load persisted custom cases from disk into _DYNAMIC_CASES_STORE.
+
+    Idempotent and cheap, so it is safe to call again on demand (e.g. to pick up
+    case files written after process start) — it re-scans the directory and never
+    clears cases already registered in memory. A corrupt file is logged and skipped
+    instead of disappearing silently.
+    """
     custom_dir = (data_dir or Path(__file__).resolve().parent.parent.parent / "data" / "cases") / "custom_cases"
     if custom_dir.exists():
-        for json_file in custom_dir.glob("*.json"):
+        for json_file in sorted(custom_dir.glob("*.json")):
             try:
                 with open(json_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                    case = AccountingCaseData(**data)
-                    _DYNAMIC_CASES_STORE[case.case_id] = case
-            except Exception:
-                pass
+                case = AccountingCaseData(**data)
+            except Exception as exc:
+                logger.warning("自定义案例文件加载失败，已跳过 %s: %s", json_file.name, exc)
+                continue
+            _DYNAMIC_CASES_STORE[case.case_id] = case
 
 
 def register_custom_case(case: AccountingCaseData) -> None:
@@ -146,17 +156,35 @@ def get_case_categories() -> List[str]:
 
 
 def get_case_by_id(case_id: str) -> Optional[AccountingCaseData]:
-    """Retrieve case by case_id, stock_code, or company name, including custom uploaded cases."""
-    if case_id in _DYNAMIC_CASES_STORE:
-        return _DYNAMIC_CASES_STORE[case_id]
+    """Retrieve case by case_id, stock_code, or company name, including custom uploaded cases.
+
+    Lookup order is deterministic: exact case_id, then exact stock_code, then
+    company-name substring (never the other way round, and never on a blank lookup).
+    """
+    lookup = str(case_id).strip() if case_id is not None else ""
+    if not lookup:
+        return None
+
+    if lookup in _DYNAMIC_CASES_STORE:
+        return _DYNAMIC_CASES_STORE[lookup]
 
     cases = _load_cases_from_json()
     for c in cases:
-        if c.case_id == case_id or case_id in c.company_name or (c.stock_code and case_id == c.stock_code):
+        if c.case_id == lookup:
+            return c
+    for c in cases:
+        if c.stock_code and c.stock_code == lookup:
+            return c
+    for c in cases:
+        if c.company_name and lookup in c.company_name:
             return c
 
     for c in _DYNAMIC_CASES_STORE.values():
-        if case_id in c.company_name or (c.stock_code and case_id == c.stock_code):
+        if c.case_id == lookup:
+            return c
+        if c.stock_code and c.stock_code == lookup:
+            return c
+        if c.company_name and lookup in c.company_name:
             return c
 
     return None

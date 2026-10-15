@@ -11,8 +11,15 @@ from src.data_loader.file_importer import (
 
 
 @pytest.fixture(scope="module")
-def sample_templates():
-    tmp_dir = Path("data/templates")
+def sample_templates(tmp_path_factory):
+    """Generate the sample templates in a throwaway directory.
+
+    This fixture used to call ``generate_sample_templates(Path("data/templates"))``,
+    which re-saved the tracked ``企业记账凭证模板.xlsx`` on every test run and left
+    the working tree permanently dirty with a content-identical binary. The
+    module-scoped factory below keeps the suite hermetic.
+    """
+    tmp_dir = tmp_path_factory.mktemp("templates")
     generate_sample_templates(tmp_dir)
     return tmp_dir
 

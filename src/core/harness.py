@@ -19,6 +19,22 @@ from src.plugins.audit_fraud_plugin.tools import (
 )
 
 
+def voucher_entry_direction(entry: Any) -> str:
+    """Return the 借/贷 marker for a journal entry line.
+
+    ``JournalEntryLine`` (src/core/schemas.py:33-38) stores ``debit`` and
+    ``credit`` amounts only -- it has no ``direction`` field, so the direction
+    has to be derived from which side carries the amount.
+    """
+    if entry.debit and entry.credit:
+        return "借贷"
+    if entry.debit:
+        return "借"
+    if entry.credit:
+        return "贷"
+    return "平"
+
+
 class AccountingAgentHarness:
     """
     Agent Harness built on the Cordis Meta-framework.
@@ -217,7 +233,24 @@ class AccountingAgentHarness:
         f1 = (2 * precision * recall) / max(precision + recall, 1e-6)
 
         json_valid = len(report.findings) > 0 and report.overall_risk_rating is not None
-        math_acc = 1.0 if (report.beneish_m_score is None or isinstance(report.beneish_m_score, float)) else 0.0
+
+        # Beneish M-Score cross-check against the deterministic tool.
+        # The previous expression was a tautology -- ``beneish_m_score`` is
+        # ``Optional[float]`` (src/core/schemas.py), so pydantic had already
+        # guaranteed the predicate was true and this metric could never fail,
+        # which made the published "零算术幻觉 / 100%" claim unfalsifiable.
+        tool_beneish = calculate_beneish_from_case(case)
+        if tool_beneish.get("is_calculable"):
+            math_acc = 1.0 if (
+                report.beneish_m_score is not None
+                and abs(report.beneish_m_score - tool_beneish["m_score"]) < 1e-6
+                and bool(report.is_beneish_manipulator) == bool(tool_beneish["is_manipulator"])
+            ) else 0.0
+        else:
+            # Not calculable from the available statements: the report must
+            # refuse a number rather than invent one.
+            math_acc = 1.0 if report.beneish_m_score is None else 0.0
+
         standards_valid = all(len(f.accounting_standard) > 3 for f in report.findings) if report.findings else True
 
         # A case is only passed when the headline metrics and the material
@@ -314,7 +347,7 @@ class AccountingAgentHarness:
             if any(k in last_user_msg for k in ("凭证", "分录", "科目", "借贷")):
                 vouchers_summary = []
                 for v in case.vouchers[:5]:
-                    entries_text = ", ".join(f"{e.direction} {e.account_name} ¥{e.debit or e.credit:,.2f}" for e in v.entries)
+                    entries_text = ", ".join(f"{voucher_entry_direction(e)} {e.account_name} ¥{e.debit or e.credit:,.2f}" for e in v.entries)
                     vouchers_summary.append(f"凭证号:{v.voucher_id} | 日期:{v.voucher_date} | 分录:[{entries_text}]")
                 tool_calls.append({
                     "tool_name": "search_vouchers",
@@ -328,7 +361,7 @@ class AccountingAgentHarness:
             if any(k in last_user_msg for k in ("流水", "银行", "对手方", "转账", "资金")):
                 flows_summary = []
                 for b in case.bank_flows[:5]:
-                    flows_summary.append(f"流水号:{b.flow_id} | 对手方:{b.counterparty_name} | 金额:¥{b.amount:,.2f} | 摘要:{b.summary}")
+                    flows_summary.append(f"流水号:{b.transaction_id} | 对手方:{b.counterparty_name} | 金额:¥{b.amount:,.2f} | 摘要:{b.remark}")
                 tool_calls.append({
                     "tool_name": "search_bank_flows",
                     "tool_input": {"case_id": case.case_id, "sample_size": len(case.bank_flows)},
@@ -397,7 +430,7 @@ class AccountingAgentHarness:
         beneish_call = next((tc for tc in tool_calls if tc["tool_name"] == "calculate_beneish_m_score"), None)
 
         response_lines = [
-            f"### 📋 注册会计师审计专业意见 · {case.company_name} ({case.stock_code})",
+            f"### 注册会计师审计专业意见 · {case.company_name} ({case.stock_code})",
             ""
         ]
 
@@ -408,7 +441,7 @@ class AccountingAgentHarness:
                 is_man = b_data.get("is_manipulator", False)
                 response_lines.append(f"**1. Beneish M-Score 操纵指数分析**：")
                 response_lines.append(f"- 测算得分：`{m_val:.2f}`（阈值标准：大于 -1.78 即存在高危财务操纵嫌疑）。")
-                response_lines.append(f"- 评价结论：{'⚠️ 存在显著盈余操纵/财报粉饰风险' if is_man else '✅ 指标处于常规合理波动区间'}。")
+                response_lines.append(f"- 评价结论：{'存在显著盈余操纵/财报粉饰风险' if is_man else '指标处于常规合理波动区间'}。")
             else:
                 response_lines.append(f"**1. Beneish M-Score 操纵指数分析**：")
                 response_lines.append(f"- 状态：`不可计算`（{b_data.get('reason')}）。智能体遵循客观严谨原则，未采用主观估算数据。")

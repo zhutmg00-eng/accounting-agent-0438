@@ -6,6 +6,7 @@ and produces validated AccountingCaseData with actionable field-level diagnostic
 
 from typing import List, Dict, Any, Tuple, Optional
 import io
+import math
 import re
 from datetime import datetime
 import pandas as pd
@@ -57,6 +58,27 @@ def _parse_float(val: Any) -> Optional[float]:
         return float(s)
     except ValueError:
         return None
+
+
+def _parse_float_required(val: Any) -> Optional[float]:
+    """Strict variant of ``_parse_float`` for bank-flow cells that must not default to 0.
+
+    An empty/NaN cell means MISSING (returns None) instead of 0.0, so the caller's
+    existing row-level error path rejects the row rather than silently importing
+    ¥0.00.  ``_parse_float`` itself keeps its legacy blank == 0.0 behaviour, because
+    double-entry debit/credit columns legitimately have one blank side.
+    """
+    if val is None:
+        return None
+    if isinstance(val, str):
+        if not val.strip():
+            return None
+    elif pd.isna(val):
+        return None
+    parsed = _parse_float(val)
+    if parsed is None or not math.isfinite(parsed):
+        return None
+    return parsed
 
 
 def parse_vouchers_file(file_obj_or_path: Any, filename: str = "凭证表.xlsx") -> Tuple[List[AccountingVoucher], FileValidationResult]:
@@ -306,7 +328,8 @@ def parse_bank_flows_file(file_obj_or_path: Any, filename: str = "银行流水.c
     for idx, row in df.iterrows():
         row_num = idx + 2
         t_id = str(row["transaction_id"]).strip()
-        amt = _parse_float(row["amount"])
+        # 空白金额单元格视为“缺失”而非 0，交由下方行级错误消息整行拦截
+        amt = _parse_float_required(row["amount"])
         if amt is None:
             res.errors.append(f"第 {row_num} 行流水 [{t_id}] 金额格式错误: '{row['amount']}'")
             res.is_valid = False
@@ -318,7 +341,8 @@ def parse_bank_flows_file(file_obj_or_path: Any, filename: str = "银行流水.c
             counterparty_name=str(row["counterparty_name"]).strip(),
             counterparty_account=str(row.get("counterparty_account", "622***")).strip() if not pd.isna(row.get("counterparty_account")) else "622***",
             amount=amt,
-            balance_after=_parse_float(row.get("balance_after", 0.0)) or 0.0,
+            # 余额列为可选列，BankFlowRecord.balance_after 为必填 float，缺失时仍回落 0.0
+            balance_after=_parse_float_required(row.get("balance_after", 0.0)) or 0.0,
             remark=str(row.get("remark", "")).strip() if not pd.isna(row.get("remark")) else "",
             source_file=filename
         ))

@@ -12,7 +12,19 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 import os
+from xml.sax.saxutils import escape
 from src.core.schemas import AnalysisReportResult, ExecutionMode
+
+
+def _esc(value: object) -> str:
+    """Escape data interpolated into reportlab's mini-XML Paragraph dialect.
+
+    Only the interpolated *data* is escaped; the literal markup written by this
+    module (``<b>``, ``<br/>``, ``<i>``) is left intact.  Escaping is lossless
+    for plain text, and ``str()`` keeps non-string values (None/number) rendering
+    exactly as the previous f-string interpolation did.
+    """
+    return escape(str(value))
 
 
 def export_report_to_pdf(report: AnalysisReportResult, output_path: Path, cpa_signoff: dict = None) -> Path:
@@ -89,21 +101,21 @@ def export_report_to_pdf(report: AnalysisReportResult, output_path: Path, cpa_si
     story = []
 
     # Title
-    story.append(Paragraph(f"数智审计与舞弊穿透报告 - {report.company_name}", title_style))
+    story.append(Paragraph(f"数智审计与舞弊穿透报告 - {_esc(report.company_name)}", title_style))
     
     # Mode badge
     mode_str = "🟢 实时在线推理 (DeepSeek-V3)" if report.execution_mode in (ExecutionMode.ONLINE, ExecutionMode.STRICT_ONLINE) and not report.fallback_occurred else "🟡 离线确定性模拟演示 (Demo Mode)"
     story.append(Paragraph(
-        f"<b>综合风险评级:</b> {report.overall_risk_rating.value} | "
-        f"<b>Beneish M-Score:</b> {report.beneish_m_score or 'N/A'} | "
-        f"<b>执行模式:</b> {mode_str}", 
+        f"<b>综合风险评级:</b> {_esc(report.overall_risk_rating.value)} | "
+        f"<b>Beneish M-Score:</b> {_esc(report.beneish_m_score or 'N/A')} | "
+        f"<b>执行模式:</b> {_esc(mode_str)}", 
         body_style
     ))
     story.append(Spacer(1, 8))
 
     # Executive Summary Box
     story.append(Paragraph("一、管理层与评审专家摘要 (Executive Summary)", h2_style))
-    story.append(Paragraph(report.executive_summary, body_style))
+    story.append(Paragraph(_esc(report.executive_summary), body_style))
     story.append(Spacer(1, 8))
 
     # Risk Findings Section with Evidence Trail
@@ -119,11 +131,11 @@ def export_report_to_pdf(report: AnalysisReportResult, output_path: Path, cpa_si
     ]
 
     for f in report.findings:
-        col1 = f"<b>{f.finding_id}</b><br/>{f.title}<br/><i>[{f.risk_level.value}]</i>"
-        col2 = f"¥{f.impact_amount:,.2f}"
+        col1 = f"<b>{_esc(f.finding_id)}</b><br/>{_esc(f.title)}<br/><i>[{_esc(f.risk_level.value)}]</i>"
+        col2 = "¥" + _esc(format(f.impact_amount, ",.2f"))
         
-        evidence_text = f"<b>[客观事实]</b>: {f.rule_evidence or f.suspected_mechanism}<br/><b>[模型研判]</b>: {f.model_explanation or f.accounting_standard}"
-        remedy_text = f"<b>[人工复核]</b>: {f.human_verification_flag}<br/><b>[建议程序]</b>: {f.suggested_procedure}"
+        evidence_text = f"<b>[客观事实]</b>: {_esc(f.rule_evidence or f.suspected_mechanism)}<br/><b>[模型研判]</b>: {_esc(f.model_explanation or f.accounting_standard)}"
+        remedy_text = f"<b>[人工复核]</b>: {_esc(f.human_verification_flag)}<br/><b>[建议程序]</b>: {_esc(f.suggested_procedure)}"
 
         table_data.append([
             Paragraph(col1, body_style),
@@ -153,11 +165,12 @@ def export_report_to_pdf(report: AnalysisReportResult, output_path: Path, cpa_si
     story.append(Paragraph("三、抽查与实质性测试底稿索引 (Workpaper Index)", h2_style))
     for wp in report.workpapers:
         story.append(Paragraph(
-            f"<b>底稿编号:</b> {wp.workpaper_id} - {wp.title} | "
-            f"<b>核查金额:</b> ¥{wp.total_audited_amount:,.2f} | <b>异常:</b> ¥{wp.abnormal_amount:,.2f}",
+            f"<b>底稿编号:</b> {_esc(wp.workpaper_id)} - {_esc(wp.title)} | "
+            f"<b>核查金额:</b> ¥{_esc(format(wp.total_audited_amount, ',.2f'))} | "
+            f"<b>异常:</b> ¥{_esc(format(wp.abnormal_amount, ',.2f'))}",
             body_bold
         ))
-        story.append(Paragraph(f"<b>综合意见:</b> {wp.audit_opinion_summary}", body_style))
+        story.append(Paragraph(f"<b>综合意见:</b> {_esc(wp.audit_opinion_summary)}", body_style))
         story.append(Spacer(1, 4))
 
     # CPA Ethics & Sign-off Section
@@ -171,9 +184,9 @@ def export_report_to_pdf(report: AnalysisReportResult, output_path: Path, cpa_si
         "declaration": "签字注册会计师恪守《中国注册会计师职业道德守则》。AI 智能体仅作为实质性程序辅助初筛，最终审计结论与法律责任由签字注会全权负责。"
     }
     sign_table_data = [
-        [Paragraph(f"<b>签字CPA:</b> {signoff.get('auditor_name')}", body_style), Paragraph(f"<b>证书编号:</b> {signoff.get('cert_no')}", body_style)],
-        [Paragraph(f"<b>复核意见:</b> {signoff.get('opinion')}", body_style), Paragraph(f"<b>防伪核验码:</b> {signoff.get('verification_hash')}", body_style)],
-        [Paragraph(f"<b>伦理声明:</b> {signoff.get('declaration')}", body_style), Paragraph("<b>状态:</b> [已复核签章生效]", body_bold)]
+        [Paragraph(f"<b>签字CPA:</b> {_esc(signoff.get('auditor_name'))}", body_style), Paragraph(f"<b>证书编号:</b> {_esc(signoff.get('cert_no'))}", body_style)],
+        [Paragraph(f"<b>复核意见:</b> {_esc(signoff.get('opinion'))}", body_style), Paragraph(f"<b>防伪核验码:</b> {_esc(signoff.get('verification_hash'))}", body_style)],
+        [Paragraph(f"<b>伦理声明:</b> {_esc(signoff.get('declaration'))}", body_style), Paragraph("<b>状态:</b> [已复核签章生效]", body_bold)]
     ]
     t_sign = Table(sign_table_data, colWidths=[260, 260])
     t_sign.setStyle(TableStyle([

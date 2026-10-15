@@ -5,8 +5,9 @@ domestic OpenAI-compatible endpoints, and offline mock mode.
 """
 
 import os
+from typing import Any
 from pathlib import Path
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validator
 from dotenv import load_dotenv
 
 # Load .env if present
@@ -21,6 +22,10 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 
 class Settings(BaseModel):
+    # Re-validate on attribute assignment so a single bad runtime update
+    # (e.g. `settings.api_base = None`) can never poison this shared singleton.
+    model_config = ConfigDict(validate_assignment=True)
+
     # LLM Settings
     api_key: str = Field(default_factory=lambda: os.getenv("DEEPSEEK_API_KEY", "mock-key"))
     api_base: str = Field(default_factory=lambda: os.getenv("DEEPSEEK_API_BASE", "https://api.deepseek.com"))
@@ -33,6 +38,9 @@ class Settings(BaseModel):
     use_mock_llm: bool = Field(default_factory=lambda: os.getenv("USE_MOCK_LLM", "true").lower() in ("true", "1", "yes"))
     timeout_seconds: int = 60
     max_retries: int = 3
+
+    # Upload safety limit (per uploaded file, in MB)
+    max_upload_mb: int = Field(default_factory=lambda: int(os.getenv("MAX_UPLOAD_MB", "50")))
     
     # Competition Meta
     competition_name: str = "2026年北京市大学生数智会计创新应用竞赛"
@@ -43,6 +51,15 @@ class Settings(BaseModel):
     base_dir: Path = BASE_DIR
     data_dir: Path = DATA_DIR
     output_dir: Path = OUTPUT_DIR
+
+    @field_validator("api_base", "model_name", mode="before")
+    @classmethod
+    def _blank_llm_setting_falls_back_to_default(cls, value: Any, info: ValidationInfo) -> Any:
+        """Coerce None / empty / whitespace-only LLM settings back to their configured default."""
+        if value is None or (isinstance(value, str) and not value.strip()):
+            field = cls.model_fields[info.field_name]
+            return field.default_factory() if field.default_factory else field.default
+        return value
 
 
 settings = Settings()

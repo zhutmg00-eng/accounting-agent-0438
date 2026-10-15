@@ -27,6 +27,23 @@ class DeepSeekAPIError(Exception):
         self.response_text = response_text
 
 
+def retry_delay_seconds(resp: Optional[Any], attempt: int) -> float:
+    """Backoff delay for a retryable LLM call, honouring a ``Retry-After`` header.
+
+    Falls back to exponential backoff (1s, 2s, 4s ... capped at 8s) when the
+    server does not tell us how long to wait.
+    """
+    headers = getattr(resp, "headers", None)
+    if headers:
+        raw = headers.get("Retry-After")
+        if raw:
+            try:
+                return min(max(float(raw), 0.0), 30.0)
+            except (TypeError, ValueError):
+                pass
+    return float(min(2 ** attempt, 8))
+
+
 # 2026 DeepSeek Model Intelligence Profiles
 MODEL_PROFILES: Dict[str, Dict[str, Any]] = {
     "deepseek-v4.1-flash": {
@@ -302,7 +319,29 @@ class DeepSeekLLMAdapter:
             payload["response_format"] = {"type": "json_object"}
 
         try:
-            resp = requests.post(url, json=payload, headers=headers, timeout=settings.timeout_seconds)
+            # ``settings.max_retries`` was declared but never used, so a single
+            # transient 429/5xx silently replaced DeepSeek's reasoning with the
+            # offline heuristic engine.  Retry the retryable failures only;
+            # 4xx (auth, bad request) still falls straight through to the
+            # existing fallback handling below.
+            attempts = max(1, int(getattr(settings, "max_retries", 1) or 1))
+            resp = None
+            last_exc: Optional[Exception] = None
+            for attempt in range(attempts):
+                try:
+                    resp = requests.post(url, json=payload, headers=headers, timeout=settings.timeout_seconds)
+                except Exception as exc:
+                    resp = None
+                    last_exc = exc
+                retryable = resp is None or resp.status_code == 429 or resp.status_code >= 500
+                if not retryable or attempt + 1 >= attempts:
+                    break
+                delay = retry_delay_seconds(resp, attempt)
+                print(f"[Warning] DeepSeek API attempt {attempt + 1}/{attempts} failed; retrying in {delay:.1f}s")
+                time.sleep(delay)
+            if resp is None:
+                raise last_exc if last_exc is not None else DeepSeekAPIError("DeepSeek API unreachable")
+
             if resp.status_code == 200:
                 data = resp.json()
                 choice = data["choices"][0]["message"]

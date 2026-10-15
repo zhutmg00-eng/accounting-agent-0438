@@ -176,6 +176,25 @@ def calculate_beneish_from_case(case: AccountingCaseData) -> Dict[str, Any]:
     return res
 
 
+def contract_has_supporting_evidence(contract, case: AccountingCaseData) -> bool:
+    """True when a contract-backed transaction is also evidenced by an invoice or a payment.
+
+    The counterparty name is the only key these record types share, so that is
+    what the linkage is built on.  An empty counterparty cannot be matched and
+    is therefore reported as unevidenced.
+    """
+    party = (contract.customer_or_vendor or "").strip()
+    if not party:
+        return False
+    for inv in case.invoices:
+        if party in (inv.buyer_name or "") or party in (inv.seller_name or ""):
+            return True
+    for flow in case.bank_flows:
+        if party in (flow.counterparty_name or ""):
+            return True
+    return False
+
+
 def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]:
     """
     Perform 3-way matching between:
@@ -243,6 +262,21 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
             # Matched to contract?
             elif doc_id in contract_map:
                 contract = contract_map[doc_id]
+                # A contract only *evidences* a posting if the posted amount agrees
+                # with it.  Without this check a 9,000,000 voucher against a
+                # 1,000,000 contract reconciles clean as soon as any invoice or bank
+                # flow happens to mention the counterparty -- which is exactly the
+                # 业财金额不符 case the three-way match exists to catch.
+                if abs(v_amount - contract.total_amount) > 1.0:
+                    diff = abs(v_amount - contract.total_amount)
+                    discrepancies.append({
+                        "type": "凭证与合同金额不符",
+                        "voucher_id": voucher.voucher_id,
+                        "doc_id": doc_id,
+                        "amount": diff,
+                        "detail": f"凭证金额 ({v_amount:,.2f}元) 与合同总额 ({contract.total_amount:,.2f}元) 存在差异 {diff:,.2f}元，业财金额勾稽不符。"
+                    })
+                    total_abnormal_amount += diff
                 if contract.is_related_party:
                     discrepancies.append({
                         "type": "关联方隐蔽重大交易未做专项披露",
@@ -252,7 +286,7 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
                         "detail": f"该凭证关联方合同 {contract.contract_id}（交易方: {contract.customer_or_vendor}）为关联方重大交易，需穿透商业实质。"
                     })
                     total_abnormal_amount += v_amount
-                elif len(case.invoices) == 0 and len(case.bank_flows) == 0:
+                elif not contract_has_supporting_evidence(contract, case):
                     discrepancies.append({
                         "type": "大额业务单据缺失发票及银行流水(三单勾稽缺失)",
                         "voucher_id": voucher.voucher_id,

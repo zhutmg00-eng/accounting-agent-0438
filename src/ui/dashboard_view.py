@@ -34,7 +34,10 @@ def calculate_case_diagnostics(case: AccountingCaseData, report: Optional[Analys
         beneish = report_tool_outputs["beneish_m_score"]
     else:
         beneish = calculate_beneish_from_case(case)
-        if report and getattr(report, "beneish_m_score", None) is not None:
+        # Only adopt the report's own score when the operator did not explicitly
+        # refuse.  Flipping is_calculable to True here used to turn a "缺少对比期
+        # 财务数据" refusal into a displayed, apparently-verified score.
+        if report and getattr(report, "beneish_m_score", None) is not None and beneish.get("reason") is None:
             beneish["m_score"] = report.beneish_m_score
             beneish["is_manipulator"] = bool(getattr(report, "is_beneish_manipulator", False))
             beneish["is_calculable"] = True
@@ -184,20 +187,27 @@ def calculate_case_diagnostics(case: AccountingCaseData, report: Optional[Analys
 
     # Health score calculation
     total_abnormal = sum(item["discrepancy_amount"] for item in anomaly_items)
-    total_audited = max(recon.get("total_audited_amount", 0.0), total_abnormal, 1.0)
-    
+    # total_audited is the size of the audited population and must never be raised
+    # to the abnormal total: doing so silently doubled the denominator whenever one
+    # cash movement was flagged on both the voucher and the bank leg.
+    total_audited = max(recon.get("total_audited_amount", 0.0), 1.0)
+
     if len(anomaly_items) == 0:
         health_score = 100
     else:
         anomaly_ratio = min(total_abnormal / total_audited, 1.0)
         health_score = max(int((1.0 - anomaly_ratio * 0.7 - min(len(anomaly_items) * 0.1, 0.25)) * 100), 12)
-        if report:
-            if report.overall_risk_rating == RiskLevel.HIGH:
-                health_score = min(health_score, 35)
-            elif report.overall_risk_rating == RiskLevel.MEDIUM:
-                health_score = min(health_score, 65)
-            elif report.overall_risk_rating == RiskLevel.CLEAN and not anomaly_items:
-                health_score = 100
+
+    # The report's own rating caps apply whether or not the reconciliation
+    # itemised anything: a HIGH-rated report with zero itemised anomalies must not
+    # render a flawless 100 beside a HIGH verdict.
+    if report:
+        if report.overall_risk_rating == RiskLevel.HIGH:
+            health_score = min(health_score, 35)
+        elif report.overall_risk_rating == RiskLevel.MEDIUM:
+            health_score = min(health_score, 65)
+        elif report.overall_risk_rating == RiskLevel.CLEAN and not anomaly_items:
+            health_score = 100
 
     return {
         "health_score": health_score,
