@@ -16,6 +16,10 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         python-version: ["3.12"]
+    env:
+      # windows-latest starts each Python process on a legacy code page (cp1252),
+      # which cannot encode this project's Chinese log output.
+      PYTHONIOENCODING: utf-8
 
     steps:
       - name: Checkout Repository

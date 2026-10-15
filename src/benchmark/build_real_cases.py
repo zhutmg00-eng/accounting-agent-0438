@@ -5,8 +5,25 @@ and official annual audit reports.
 """
 
 import json
+import sys
 from pathlib import Path
 from typing import Any, Dict, List
+
+
+def _log(message: str) -> None:
+    """Emit a progress line that cannot abort the run on a legacy console code page.
+
+    GitHub's ``windows-latest`` runner hands a fresh Python process a cp1252
+    stdout, where a plain ``print`` of the Chinese text below raises
+    ``UnicodeEncodeError`` and kills generation before the database is ever
+    written. A log line must not decide whether the build succeeds, so the
+    message degrades to the console's own encoding instead of raising.
+    """
+    try:
+        print(message)
+    except UnicodeEncodeError:
+        encoding = getattr(sys.stdout, "encoding", None) or "ascii"
+        print(message.encode(encoding, "replace").decode(encoding, "replace"))
 
 
 def preserve_enriched_fields(cases: List[Dict[str, Any]], out_file: Path) -> List[Dict[str, Any]]:
@@ -27,7 +44,7 @@ def preserve_enriched_fields(cases: List[Dict[str, Any]], out_file: Path) -> Lis
     try:
         previous = {c["case_id"]: c for c in json.loads(out_file.read_text(encoding="utf-8"))}
     except Exception as exc:
-        print(f"[Warning] 无法读取既有案例库以保留增值字段（{exc}），本次将直接覆盖写入。")
+        _log(f"[Warning] 无法读取既有案例库以保留增值字段（{exc}），本次将直接覆盖写入。")
         return cases
 
     restored_lines = 0
@@ -47,7 +64,7 @@ def preserve_enriched_fields(cases: List[Dict[str, Any]], out_file: Path) -> Lis
             case["prior_financial_summary"] = old["prior_financial_summary"]
             restored_prior += 1
     if restored_lines or restored_prior:
-        print(
+        _log(
             f"[Preserve] 保留既有增值字段：financial_summary 补回 {restored_lines} 项，"
             f"prior_financial_summary 补回 {restored_prior} 例。"
         )
