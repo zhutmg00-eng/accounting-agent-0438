@@ -28,6 +28,15 @@ output/
 data/cases/custom_cases/*.json
 !data/cases/custom_cases/.gitkeep
 
+# Design-tool output: taste-skill inspect screenshots/reports and before-after evidence
+frontend/.taste-skill/
+frontend/.baseline/
+frontend/.after*/
+frontend/.final*/
+frontend/.verify-*/
+frontend/.prod/
+frontend/.ship/
+
 # Local collaboration and defense privacy documents
 COLLABORATION_GUIDE.*
 ~$*
