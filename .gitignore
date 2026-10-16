@@ -23,6 +23,7 @@ deepseek-harness/
 output/
 .env
 *.pdf
+*.zip
 
 # Custom cases upload directory
 data/cases/custom_cases/*.json

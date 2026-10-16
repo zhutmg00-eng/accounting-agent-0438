@@ -45,7 +45,7 @@ def export_workpaper_to_excel(report: AnalysisReportResult, output_path: Path, c
     ws_summary.merge_cells("A1:H1")
 
     # Meta & Execution Mode
-    mode_text = "🟢 实时在线推理 (DeepSeek-V3)" if report.execution_mode in (ExecutionMode.ONLINE, ExecutionMode.STRICT_ONLINE) and not report.fallback_occurred else "🟡 离线确定性模拟 (Demo Mode)"
+    mode_text = f"🟢 实时在线推理 ({report.model_name})" if report.execution_mode in (ExecutionMode.ONLINE, ExecutionMode.STRICT_ONLINE) and not report.fallback_occurred else "🟡 离线确定性模拟 (Demo Mode)"
     ws_summary["A3"] = "被审计单位:"
     ws_summary["B3"] = _cell_text(report.company_name)
     ws_summary["C3"] = "综合风险评级:"
@@ -137,6 +137,51 @@ def export_workpaper_to_excel(report: AnalysisReportResult, output_path: Path, c
         ws_wp.cell(row=r_idx + 1, column=1, value="底稿综合意见:").font = bold_font
         ws_wp.cell(row=r_idx + 1, column=2, value=_cell_text(wp.audit_opinion_summary)).font = normal_font
         ws_wp.merge_cells(start_row=r_idx + 1, start_column=2, end_row=r_idx + 2, end_column=8)
+
+    # Sheet: Population analytics (全量分录测试 / 资金往返 / Benford)
+    analytics = report.analytics or {}
+    je = analytics.get("journal_entry_testing") or {}
+    if je.get("applicable"):
+        ws_je = wb.create_sheet(title="全量分录测试")
+        ws_je["A1"] = "会计分录测试（CSA 1141）· 全量覆盖"
+        ws_je["A1"].font = title_font
+        ws_je.merge_cells("A1:G1")
+        ws_je["A2"] = _cell_text(
+            f"总体 {je.get('population')} 张凭证，覆盖率 100%；命中风险标识 {je.get('flagged_count')} 张，高风险（≥5 分）{je.get('high_risk_count')} 张。{je.get('method', '')}"
+        )
+        ws_je.merge_cells("A2:G2")
+        ws_je["A2"].alignment = Alignment(wrap_text=True)
+        heads = ["规则编码", "规则", "命中张数", "准则依据"]
+        for c, h in enumerate(heads, 1):
+            cell = ws_je.cell(row=4, column=c, value=h)
+            cell.font, cell.fill = header_font, header_fill
+        for r, (code, name) in enumerate((je.get("rules") or {}).items(), 5):
+            vals = [code, name, (je.get("rule_hits") or {}).get(code, 0), (je.get("rule_basis") or {}).get(code, "")]
+            for c, v in enumerate(vals, 1):
+                ws_je.cell(row=r, column=c, value=v if isinstance(v, int) else _cell_text(v)).font = normal_font
+        start = 6 + len(je.get("rules") or {})
+        heads = ["凭证号", "日期", "金额(元)", "风险分", "命中规则", "来源文件", "行号"]
+        for c, h in enumerate(heads, 1):
+            cell = ws_je.cell(row=start, column=c, value=h)
+            cell.font, cell.fill = header_font, header_fill
+        for r, f in enumerate(je.get("flagged") or [], start + 1):
+            vals = [f.get("voucher_id"), f.get("date"), f.get("amount"), f.get("score"),
+                    "、".join(f.get("rule_names") or []), f.get("source_file"), f.get("row_index")]
+            for c, v in enumerate(vals, 1):
+                ws_je.cell(row=r, column=c, value=v if isinstance(v, (int, float)) else _cell_text(v)).font = normal_font
+        for col, w in zip("ABCDEFG", (16, 34, 16, 10, 48, 24, 8)):
+            ws_je.column_dimensions[col].width = w
+    rt = analytics.get("fund_round_trips") or {}
+    if rt.get("loop_count"):
+        ws_rt = wb.create_sheet(title="资金往返识别")
+        heads = ["流出流水", "流出对手方", "流出金额", "流入流水", "流入对手方", "流入金额", "间隔天数", "模式"]
+        for c, h in enumerate(heads, 1):
+            cell = ws_rt.cell(row=1, column=c, value=h)
+            cell.font, cell.fill = header_font, header_fill
+        for r, l in enumerate(rt["loops"], 2):
+            vals = [l["out_id"], l["out_party"], l["out_amount"], l["in_id"], l["in_party"], l["in_amount"], l["days"], l["pattern"]]
+            for c, v in enumerate(vals, 1):
+                ws_rt.cell(row=r, column=c, value=v if isinstance(v, (int, float)) else _cell_text(v)).font = normal_font
 
     # Sheet: Ethics & CPA Sign-off (CPA终审签章与独立性声明)
     ws_signoff = wb.create_sheet(title="CPA终审签章与合规声明")

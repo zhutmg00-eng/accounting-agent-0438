@@ -14,6 +14,7 @@ import {
 } from '../ui/primitives'
 import { Reveal, StageRail, useAnimatedNumber } from '../ui/motion'
 import { count, growthLabel, moneyParts, pct } from '../lib/format'
+import { AnalyticsPanel } from './AnalyticsPanel'
 
 interface AuditCockpitProps {
   currentCase: any
@@ -38,7 +39,7 @@ const STAGES = [
 const SHOWCASE = [
   { id: 'REAL_CSRC_001', code: '600518', name: '康美药业', tag: '虚增货币 299.44 亿 / 伪造存单' },
   { id: 'REAL_CSRC_002', code: '002450', name: '康得新', tag: '虚增存款 122 亿 / 联动池闭环' },
-  { id: 'REAL_CSRC_003', code: '600479', name: '辅仁药业', tag: '非经营性占用 / 违规担保' },
+  { id: 'REAL_CSRC_003', code: '600781', name: '辅仁药业', tag: '非经营性占用 / 违规担保' },
   { id: 'REAL_CSRC_009', code: '002069', name: '獐子岛', tag: '底播存货核销 / 异常灭失' },
   { id: 'REAL_CLEAN_027', code: '600660', name: '福耀玻璃', tag: '合规基准对照 · 零误报' }
 ]
@@ -340,7 +341,17 @@ export const AuditCockpit: React.FC<AuditCockpitProps> = ({
         <Reveal index={4}>
           <Panel
             title="财务快照"
-            note={fin.period ? `${fin.period} · 与上年同期对比` : undefined}
+            note={
+              fin.period
+                ? `${fin.period} · 与上年同期对比 · ${
+                    fin.provenance === 'reported_original'
+                      ? '摘自当年年报原始发布版'
+                      : fin.provenance === 'reported' && !(fin.estimated_fields ?? []).length
+                        ? '年报披露数'
+                        : '部分字段为结构化重构，仅演示算法'
+                  }`
+                : undefined
+            }
             className="h-full"
           >
             <dl className="-mx-4">
@@ -364,6 +375,16 @@ export const AuditCockpit: React.FC<AuditCockpitProps> = ({
                 {moneyParts(fin.total_assets).value} {moneyParts(fin.total_assets).unit}
               </Row>
             </dl>
+            {fin.source_url ? (
+              <a
+                href={fin.source_url}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-3 inline-block text-label text-fg-faint underline-offset-2 hover:text-fg hover:underline"
+              >
+                查看年报原文
+              </a>
+            ) : null}
 
             {revenueGrowth && cashNegative ? (
               <p className="mt-4 max-w-[70ch] text-body text-fg">
@@ -388,6 +409,14 @@ export const AuditCockpit: React.FC<AuditCockpitProps> = ({
                   ? `${report.execution_time_seconds.toFixed(3)} s`
                   : '—'}{' '}
                 · {report.execution_mode}
+                {report.verification ? (
+                  <>
+                    {' '}· 证据锚定 {report.verification.grounded}/{report.verification.findings_total}
+                    {report.verification.amount_unverified
+                      ? ` · 金额待复核 ${report.verification.amount_unverified}`
+                      : ''}
+                  </>
+                ) : null}
               </span>
             }
           >
@@ -424,6 +453,11 @@ export const AuditCockpit: React.FC<AuditCockpitProps> = ({
                                 </span>
                               </span>
                             ) : null}
+                            {f.grounded === false ? (
+                              <Status tone="medium">证据未锚定</Status>
+                            ) : f.cited_refs?.length ? (
+                              <Status tone="clear">已锚定 {f.cited_refs.length} 张单据</Status>
+                            ) : null}
                             <Status tone={toneOfVerdict(f.risk_level)}>{f.risk_level}</Status>
                             <button
                               type="button"
@@ -454,6 +488,14 @@ export const AuditCockpit: React.FC<AuditCockpitProps> = ({
                           </p>
                         ) : null}
 
+                        {f.verification_note ? (
+                          <p className="mt-2 max-w-[85ch] text-small text-fg-muted">
+                            <span className="text-fg-faint">校验 </span>
+                            {f.cited_refs?.length ? `${f.cited_refs.join('、')} · ` : ''}
+                            {f.verification_note}
+                          </p>
+                        ) : null}
+
                         <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-label text-fg-faint">
                           {f.accounting_standard ? <span>准则 {f.accounting_standard}</span> : null}
                           {f.csrc_standard_clause ? <span>依据 {f.csrc_standard_clause}</span> : null}
@@ -473,6 +515,13 @@ export const AuditCockpit: React.FC<AuditCockpitProps> = ({
               </ul>
             )}
           </Panel>
+        </Reveal>
+      ) : null}
+
+      {/* ---- 全量分析程序 ---- */}
+      {report?.analytics ? (
+        <Reveal index={6}>
+          <AnalyticsPanel analytics={report.analytics} />
         </Reveal>
       ) : null}
 
@@ -522,6 +571,28 @@ export const AuditCockpit: React.FC<AuditCockpitProps> = ({
                   </button>
                 )
               })}
+              <button
+                type="button"
+                onClick={async () => {
+                  const r = await fetch('/api/demo/population', { method: 'POST' })
+                  if (r.ok) {
+                    const data = await r.json()
+                    onSelectCase(data.case_id)
+                  }
+                }}
+                className={cn(
+                  'press flex min-w-[240px] flex-1 flex-col items-start gap-1 px-4 py-3 text-left',
+                  currentCase.case_id === 'DEMO-POPULATION-2025'
+                    ? 'bg-field-raised3'
+                    : 'bg-field-raised2 hover:bg-field-raised3'
+                )}
+              >
+                <span className="flex items-baseline gap-2">
+                  <span className="text-label tabular-nums text-seal-soft">DEMO</span>
+                  <span className="text-small font-medium text-fg">全量演示账套</span>
+                </span>
+                <span className="text-label text-fg-muted">合成数据 · 535 张凭证 · 已知注入异常</span>
+              </button>
             </div>
           </Panel>
         </Reveal>

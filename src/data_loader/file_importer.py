@@ -121,7 +121,10 @@ def parse_vouchers_file(file_obj_or_path: Any, filename: str = "凭证表.xlsx")
         "借方金额": "debit", "借方": "debit", "debit": "debit",
         "贷方金额": "credit", "贷方": "credit", "credit": "credit",
         "摘要": "summary", "业务摘要": "summary", "summary": "summary",
-        "关联单据号": "associated_doc_id", "关联单据": "associated_doc_id", "associated_doc_id": "associated_doc_id"
+        "关联单据号": "associated_doc_id", "关联单据": "associated_doc_id", "associated_doc_id": "associated_doc_id",
+        "制单人": "preparer", "制单": "preparer", "preparer": "preparer",
+        "复核人": "checker", "审核人": "checker", "复核": "checker", "checker": "checker",
+        "附件张数": "attachments_count", "附件数": "attachments_count", "附件": "attachments_count", "attachments_count": "attachments_count",
     }
 
     renamed_cols = {}
@@ -176,7 +179,20 @@ def parse_vouchers_file(file_obj_or_path: Any, filename: str = "凭证表.xlsx")
                 summary=str(row.get("summary", "")).strip() if not pd.isna(row.get("summary")) else ""
             ))
 
+        extra: Dict[str, Any] = {}
+        if "preparer" in grp.columns and not pd.isna(first_row.get("preparer")):
+            extra["preparer"] = str(first_row["preparer"]).strip() or "未记录"
+        if "checker" in grp.columns:
+            # 列存在：空单元格 = 明确无复核人（""），供分录测试 JE04 判断职责分离
+            extra["checker"] = "" if pd.isna(first_row.get("checker")) else str(first_row["checker"]).strip()
+        if "attachments_count" in grp.columns and not pd.isna(first_row.get("attachments_count")):
+            try:
+                extra["attachments_count"] = int(float(first_row["attachments_count"]))
+            except (TypeError, ValueError):
+                res.warnings.append(f"凭证 [{v_id_str}] 附件张数无法识别: '{first_row['attachments_count']}'")
+
         vouchers.append(AccountingVoucher(
+            **extra,
             voucher_id=v_id_str,
             voucher_date=parsed_date,
             entries=entries,

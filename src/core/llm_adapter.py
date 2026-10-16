@@ -2,8 +2,8 @@
 Unified LLM Adapter for DeepSeek-V4.1 Flash / DeepSeek-V4 Pro API, OpenAI-compatible endpoints,
 and Dynamic Domain-Aware Heuristic Engine (Mock Mode).
 Features native support for:
-- DeepSeek-V4.1-Flash (ultra-fast 427 tokens/s, multimodal native)
-- DeepSeek-V4-Pro (1.6T MoE, complex CoT thinking mode with reasoning_content)
+- DeepSeek Flash tier (low-latency agent turns) and DeepSeek Pro tier (thinking mode
+  with reasoning_content); the concrete model id is auto-detected from /models.
 - Backwards compatible with DeepSeek-V3 / DeepSeek-R1 legacy endpoints
 Strictly separates:
 - STRICT_ONLINE: Disallows any silent mock fallback; raises DeepSeekAPIError upon failure.
@@ -12,11 +12,16 @@ Strictly separates:
 """
 
 import json
+import re
 import time
 import requests
-from typing import Dict, Any, Optional, List
+import logging
+import os
+from typing import Callable, Dict, Any, Optional, List
 from src.config import settings
 from src.core.schemas import ExecutionMode
+
+logger = logging.getLogger("auditmind.llm")
 
 
 class DeepSeekAPIError(Exception):
@@ -46,15 +51,27 @@ def retry_delay_seconds(resp: Optional[Any], attempt: int) -> float:
 
 # 2026 DeepSeek Model Intelligence Profiles
 MODEL_PROFILES: Dict[str, Dict[str, Any]] = {
+    "deepseek-flash": {
+        "id": "deepseek-flash",
+        "display_name": "DeepSeek-V4.1-Flash",
+        "series": "Flash",
+        "description": "官方 /models 当前返回的低时延模型 id；支持函数调用与推理强度 low/high/max",
+        "has_thinking_mode": True,
+        "supports_tools": True,
+        "context_window": "以 /models 返回为准",
+        "throughput_tier": "Low latency",
+        "recommended_scenario": "智能体工具调度、实时问答、三单勾稽解释",
+        "is_latest_2026": True
+    },
     "deepseek-v4.1-flash": {
         "id": "deepseek-v4.1-flash",
         "display_name": "DeepSeek-V4.1 Flash",
         "series": "V4.1 Ultra-Fast",
-        "description": "2026年最新超高吞吐智能体专用模型，427 tokens/s 极致响应速度，原生工具调用优化，多模态原生支持",
+        "description": "兼容旧配置的模型别名（部分端点已改用 deepseek-flash）",
         "has_thinking_mode": False,
         "supports_tools": True,
         "context_window": "128,000 tokens (128K)",
-        "throughput_tier": "Ultra-Fast (427 tok/s)",
+        "throughput_tier": "Low latency",
         "recommended_scenario": "实时智能体对话、高频审计算子调度、极速三单勾稽比对",
         "is_latest_2026": True
     },
@@ -62,7 +79,7 @@ MODEL_PROFILES: Dict[str, Dict[str, Any]] = {
         "id": "deepseek-v4-pro",
         "display_name": "DeepSeek-V4 Pro",
         "series": "V4 Flagship",
-        "description": "1.6T MoE 超大规模旗舰模型，原生内置深度 Thinking 思维链，支持 1M 超长上下文，擅长复杂舞弊穿透与多步审计演绎",
+        "description": "旗舰推理模型，思维链（reasoning_content）输出，适合复杂舞弊穿透与多步审计演绎",
         "has_thinking_mode": True,
         "supports_tools": True,
         "context_window": "1,000,000 tokens (1M)",
@@ -78,7 +95,7 @@ MODEL_PROFILES: Dict[str, Dict[str, Any]] = {
         "has_thinking_mode": False,
         "supports_tools": True,
         "context_window": "128,000 tokens (128K)",
-        "throughput_tier": "Fast (350+ tok/s)",
+        "throughput_tier": "Fast",
         "recommended_scenario": "常规审计核验与流水检索",
         "is_latest_2026": True
     },
@@ -165,7 +182,7 @@ def detect_deepseek_models(
         model_ids = [m.get("id") for m in models_data if isinstance(m, dict) and "id" in m]
         # Prioritize 2026 latest models: v4.1-flash > v4-pro > v4-flash > others
         auto_detected = settings.model_name
-        for candidate in ("deepseek-v4.1-flash", "deepseek-v4-pro", "deepseek-v4-flash", "deepseek-chat", "deepseek-reasoner"):
+        for candidate in ("deepseek-flash", "deepseek-v4.1-flash", "deepseek-v4-pro", "deepseek-v4-flash", "deepseek-chat", "deepseek-reasoner"):
             if candidate in model_ids:
                 auto_detected = candidate
                 break
@@ -185,9 +202,19 @@ def detect_deepseek_models(
 
         # Enrich details for all found models
         details = []
+        raw_by_id = {m.get("id"): m for m in models_data if isinstance(m, dict)}
         for mid in model_ids:
             if mid in MODEL_PROFILES:
-                details.append(MODEL_PROFILES[mid])
+                prof = dict(MODEL_PROFILES[mid])
+                raw = raw_by_id.get(mid) or {}
+                # 以官方 /models 返回的真实元数据覆盖本地描述
+                if raw.get("name"):
+                    prof["display_name"] = raw["name"]
+                if raw.get("context_window"):
+                    prof["context_window"] = f"{int(raw['context_window']):,} tokens"
+                if (raw.get("effort") or {}).get("supported_levels"):
+                    prof["reasoning_effort_levels"] = raw["effort"]["supported_levels"]
+                details.append(prof)
             else:
                 details.append({
                     "id": mid,
@@ -230,6 +257,41 @@ def detect_deepseek_models(
         }
 
 
+# ---------------------------------------------------------------------------
+# Outbound privacy gate (中注协 2026-03《使用人工智能技术的风险防范》：涉密信息不得
+# 未经授权上传公共 AI 平台).  Applied to every message right before it leaves the
+# process, so no code path can forget it.
+# ---------------------------------------------------------------------------
+_REDACTIONS = [
+    ("id_or_uscc", re.compile(r"(?<![0-9A-Z])([0-9A-HJ-NPQRTUWXY]{6})[0-9A-HJ-NPQRTUWXY]{8}([0-9A-HJ-NPQRTUWXY]{3}[0-9X])(?![0-9A-Z])"), r"\1********\2"),
+    ("bank_account", re.compile(r"(?<![\d.])(\d{4})\d{8,11}(\d{4})(?![\d.])"), r"\1********\2"),
+    ("mobile", re.compile(r"(?<!\d)(1[3-9]\d)\d{4}(\d{4})(?!\d)"), r"\1****\2"),
+    ("email", re.compile(r"([A-Za-z0-9._%+-])[A-Za-z0-9._%+-]*(@[A-Za-z0-9.-]+\.[A-Za-z]{2,})"), r"\1***\2"),
+]
+
+
+def redact_outbound(messages: List[Dict[str, Any]]) -> tuple:
+    """Mask bank accounts, ID / unified social credit codes, mobiles and e-mails.
+
+    Returns ``(safe_messages, stats)``.  Monetary amounts are never touched:
+    the largest amount in the case library has 11 integer digits, while the
+    account pattern needs 16-19 consecutive digits.
+    """
+    stats = {name: 0 for name, _, _ in _REDACTIONS}
+    safe = []
+    for m in messages:
+        m2 = dict(m)
+        content = m2.get("content")
+        if isinstance(content, str):
+            for name, pattern, repl in _REDACTIONS:
+                content, n = pattern.subn(repl, content)
+                stats[name] += n
+            m2["content"] = content
+        safe.append(m2)
+    stats["total"] = sum(stats.values())
+    return safe, stats
+
+
 class LLMResponse:
     def __init__(
         self,
@@ -238,7 +300,7 @@ class LLMResponse:
         prompt_tokens: int = 0,
         completion_tokens: int = 0,
         execution_mode: ExecutionMode = ExecutionMode.MOCK,
-        model_name: str = "deepseek-v4.1-flash",
+        model_name: str = "deepseek-flash",
         fallback_occurred: bool = False,
         fallback_reason: Optional[str] = None
     ):
@@ -251,6 +313,8 @@ class LLMResponse:
         self.model_name = model_name
         self.fallback_occurred = fallback_occurred
         self.fallback_reason = fallback_reason
+        self.privacy_audit: Dict[str, Any] = {}
+        self.tool_calls: List[Dict[str, Any]] = []
 
     def json(self) -> Dict[str, Any]:
         """Try parsing JSON content, fallback to empty dict if malformed."""
@@ -309,6 +373,8 @@ class DeepSeekLLMAdapter:
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
         }
+        messages, privacy_stats = redact_outbound(messages)
+        self.last_privacy_audit = privacy_stats
         payload: Dict[str, Any] = {
             "model": self.model_name,
             "messages": messages,
@@ -317,6 +383,9 @@ class DeepSeekLLMAdapter:
         }
         if response_json:
             payload["response_format"] = {"type": "json_object"}
+        effort = os.getenv("DEEPSEEK_REASONING_EFFORT")
+        if effort:
+            payload["reasoning_effort"] = effort
 
         try:
             # ``settings.max_retries`` was declared but never used, so a single
@@ -346,9 +415,19 @@ class DeepSeekLLMAdapter:
                 data = resp.json()
                 choice = data["choices"][0]["message"]
                 usage = data.get("usage", {})
-                content = choice.get("content", "")
+                content = choice.get("content", "") or ""
                 reasoning = choice.get("reasoning_content", None)
-                return LLMResponse(
+                finish = data["choices"][0].get("finish_reason")
+                if response_json and not content.strip():
+                    # 思维链耗尽了 max_tokens，正文为空：绝不能当成"无发现"静默返回
+                    err_msg = (
+                        f"DeepSeek 返回空正文（finish_reason={finish}，completion_tokens={usage.get('completion_tokens')}），"
+                        f"多为思维链耗尽 max_tokens={max_tokens}；请调大 MAX_TOKENS 或设置 DEEPSEEK_REASONING_EFFORT=low"
+                    )
+                    if self.mode == ExecutionMode.STRICT_ONLINE:
+                        raise DeepSeekAPIError(err_msg)
+                    return self._mock_completion(messages, response_json, fallback_occurred=True, fallback_reason=err_msg)
+                out = LLMResponse(
                     content=content,
                     reasoning_content=reasoning,
                     prompt_tokens=usage.get("prompt_tokens", 0),
@@ -357,6 +436,8 @@ class DeepSeekLLMAdapter:
                     model_name=self.model_name,
                     fallback_occurred=False
                 )
+                out.privacy_audit = privacy_stats
+                return out
             else:
                 err_msg = f"DeepSeek API HTTP {resp.status_code}: {resp.text}"
                 if self.mode == ExecutionMode.STRICT_ONLINE:
@@ -371,6 +452,166 @@ class DeepSeekLLMAdapter:
                 raise DeepSeekAPIError(err_msg)
             print(f"[Warning] {err_msg}. Explicitly falling back to Domain Heuristic Engine.")
             return self._mock_completion(messages, response_json, fallback_occurred=True, fallback_reason=err_msg)
+
+    def chat_completion_stream(
+        self,
+        messages: List[Dict[str, str]],
+        on_delta: Callable[[str, str], None],
+        temperature: float = 0.1,
+        response_json: bool = True,
+        max_tokens: int = 16384
+    ) -> LLMResponse:
+        """真流式推理：逐 token 读取 DeepSeek SSE，reasoning_content / content 增量即时回调 on_delta(kind, text)。
+
+        MOCK 模式不调用模型，直接返回离线规则推理结果（不产生增量）。
+        """
+        if self.mode == ExecutionMode.MOCK:
+            return self._mock_completion(messages, response_json, fallback_occurred=False)
+
+        url = f"{self.api_base}/v1/chat/completions"
+        headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
+        messages, privacy_stats = redact_outbound(messages)
+        payload: Dict[str, Any] = {
+            "model": self.model_name,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "stream": True,
+            "stream_options": {"include_usage": True},
+        }
+        effort = os.getenv("DEEPSEEK_REASONING_EFFORT")
+        if effort:
+            payload["reasoning_effort"] = effort
+        if response_json:
+            payload["response_format"] = {"type": "json_object"}
+
+        reasoning_parts: List[str] = []
+        content_parts: List[str] = []
+        usage: Dict[str, Any] = {}
+        t0 = time.perf_counter()
+        first_token_at: Optional[float] = None
+        host = self.api_base.split("//")[-1]
+        logger.info("DeepSeek POST %s/v1/chat/completions model=%s stream=true", host, self.model_name)
+        try:
+            with requests.post(url, json=payload, headers=headers, stream=True,
+                               timeout=(10, settings.timeout_seconds)) as resp:
+                if resp.status_code != 200:
+                    raise DeepSeekAPIError(f"DeepSeek API HTTP {resp.status_code}: {resp.text}",
+                                           status_code=resp.status_code, response_text=resp.text)
+                for raw in resp.iter_lines(decode_unicode=False):
+                    if not raw or not raw.startswith(b"data:"):
+                        continue
+                    data = raw[5:].strip()
+                    if data == b"[DONE]":
+                        break
+                    chunk = json.loads(data.decode("utf-8"))
+                    if chunk.get("usage"):
+                        usage = chunk["usage"]
+                    for ch in chunk.get("choices", []):
+                        delta = ch.get("delta") or {}
+                        for kind, key in (("reasoning", "reasoning_content"), ("content", "content")):
+                            piece = delta.get(key)
+                            if piece:
+                                if first_token_at is None:
+                                    first_token_at = time.perf_counter() - t0
+                                    logger.info("DeepSeek first token after %.2fs", first_token_at)
+                                (reasoning_parts if kind == "reasoning" else content_parts).append(piece)
+                                on_delta(kind, piece)
+            logger.info("DeepSeek stream done in %.2fs, prompt_tokens=%s completion_tokens=%s",
+                        time.perf_counter() - t0, usage.get("prompt_tokens"), usage.get("completion_tokens"))
+            out = LLMResponse(
+                content="".join(content_parts),
+                reasoning_content="".join(reasoning_parts) or None,
+                prompt_tokens=usage.get("prompt_tokens", 0),
+                completion_tokens=usage.get("completion_tokens", 0),
+                execution_mode=ExecutionMode.ONLINE,
+                model_name=self.model_name,
+                fallback_occurred=False,
+            )
+            out.privacy_audit = privacy_stats
+            return out
+        except Exception as e:
+            err_msg = e.args[0] if isinstance(e, DeepSeekAPIError) else f"DeepSeek API connection failed: {e}"
+            if self.mode == ExecutionMode.STRICT_ONLINE or reasoning_parts or content_parts:
+                raise e if isinstance(e, DeepSeekAPIError) else DeepSeekAPIError(err_msg)
+            logger.warning("%s. Explicitly falling back to Domain Heuristic Engine.", err_msg)
+            return self._mock_completion(messages, response_json, fallback_occurred=True, fallback_reason=err_msg)
+
+
+    def chat_with_tools(
+        self,
+        messages: List[Dict[str, Any]],
+        tools: List[Dict[str, Any]],
+        executor,
+        max_rounds: int = 4,
+        temperature: float = 0.2,
+        max_tokens: int = 4096,
+    ) -> LLMResponse:
+        """Native OpenAI-compatible function calling loop.
+
+        The model decides which audit operator to call and with which arguments;
+        ``executor(name, args) -> dict`` runs the deterministic operator locally
+        and the JSON result is fed back as a ``tool`` message.  Every call is
+        recorded on ``LLMResponse.tool_calls`` so the UI can show a glass-box
+        trace of what the agent actually did.
+        """
+        if self.mode == ExecutionMode.MOCK:
+            raise DeepSeekAPIError("chat_with_tools requires an online mode")
+        url = f"{self.api_base}/v1/chat/completions"
+        headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
+        convo, privacy = redact_outbound(messages)
+        trace: List[Dict[str, Any]] = []
+        prompt_tokens = completion_tokens = 0
+        reasoning_parts: List[str] = []
+        for _ in range(max_rounds + 1):
+            payload = {
+                "model": self.model_name, "messages": convo, "tools": tools,
+                "tool_choice": "auto", "temperature": temperature, "max_tokens": max_tokens,
+            }
+            resp = requests.post(url, json=payload, headers=headers, timeout=settings.timeout_seconds * 2)
+            if resp.status_code != 200:
+                raise DeepSeekAPIError(f"DeepSeek API HTTP {resp.status_code}: {resp.text}",
+                                       status_code=resp.status_code, response_text=resp.text)
+            data = resp.json()
+            usage = data.get("usage", {})
+            prompt_tokens += usage.get("prompt_tokens", 0)
+            completion_tokens += usage.get("completion_tokens", 0)
+            msg = data["choices"][0]["message"]
+            if msg.get("reasoning_content"):
+                reasoning_parts.append(msg["reasoning_content"])
+            calls = msg.get("tool_calls") or []
+            if not calls:
+                out = LLMResponse(
+                    content=msg.get("content") or "", reasoning_content="\n\n".join(reasoning_parts) or None,
+                    prompt_tokens=prompt_tokens, completion_tokens=completion_tokens,
+                    execution_mode=self.mode, model_name=self.model_name,
+                )
+                out.tool_calls = trace
+                out.privacy_audit = privacy
+                return out
+            assistant_msg = {"role": "assistant", "content": msg.get("content") or "", "tool_calls": calls}
+            convo.append(assistant_msg)
+            for call in calls:
+                fn = call.get("function", {})
+                name = fn.get("name", "")
+                try:
+                    args = json.loads(fn.get("arguments") or "{}")
+                except json.JSONDecodeError:
+                    args = {}
+                t0 = time.perf_counter()
+                try:
+                    result = executor(name, args)
+                    status = "success"
+                except Exception as exc:  # operator failure is reported to the model, not hidden
+                    result = {"error": str(exc)}
+                    status = "error"
+                trace.append({
+                    "tool_name": name, "tool_input": args, "tool_output": result, "status": status,
+                    "latency_ms": round((time.perf_counter() - t0) * 1000, 2), "decided_by": "model",
+                })
+                safe_result, _ = redact_outbound([{"content": json.dumps(result, ensure_ascii=False, default=str)[:12000]}])
+                convo.append({"role": "tool", "tool_call_id": call.get("id"), "content": safe_result[0]["content"]})
+        raise DeepSeekAPIError(f"Agent exceeded {max_rounds} tool rounds without a final answer")
 
     def _mock_completion(
         self,
@@ -440,7 +681,8 @@ class DeepSeekLLMAdapter:
 
         # Fallback extraction if amount was 0: check overall total abnormal amount
         total_abnormal_parsed = 0.0
-        m_tot_abn = re.search(r"涉及异常金额:\s*([0-9,.]+)\s*元", user_prompt)
+        m_tot_abn = (re.search(r"去重后净资金敞口\s*([0-9,.]+)\s*元", user_prompt)
+                     or re.search(r"涉及异常金额:\s*([0-9,.]+)\s*元", user_prompt))
         if m_tot_abn:
             total_abnormal_parsed = float(m_tot_abn.group(1).replace(",", ""))
 
@@ -599,7 +841,11 @@ class DeepSeekLLMAdapter:
                 })
 
             abnormal_doc_ids = [d["voucher_id"] for d in discrepancies]
-            voucher_summary_str = "; ".join(v["entries_summary"] for v in vouchers_parsed) if vouchers_parsed else "无记账分录"
+            _abn = {d["voucher_id"] for d in discrepancies}
+            _rel = [v for v in vouchers_parsed if v["voucher_id"] in _abn] or vouchers_parsed
+            voucher_summary_str = "; ".join(v["entries_summary"] for v in _rel[:3]) if _rel else "无记账分录"
+            if len(_rel) > 3:
+                voucher_summary_str += f" 等（共 {len(_rel)} 张相关凭证）"
 
             # Determine risk level based on case characteristics
             risk_lvl = "MEDIUM" if ("风神" in desc_context or "轮胎" in desc_context) else "HIGH"

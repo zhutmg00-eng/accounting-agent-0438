@@ -3,7 +3,7 @@ Deterministic Accounting & Audit Tools for AuditMind Plugin.
 Includes: Beneish M-Score, Three-Way Reconciliation, Debit-Credit Check, Benford Anomaly Analysis.
 """
 
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Optional, Tuple
 from src.core.schemas import AccountingCaseData, AccountingVoucher, BusinessContract, InvoiceItem, BankFlowRecord
 
 
@@ -16,7 +16,8 @@ def calculate_beneish_m_score(
     cur_ppe: float, prev_ppe: float,
     cur_sga: float, prev_sga: float,
     cur_leverage: float, prev_leverage: float,
-    cur_net_income: float, cur_cfo: float
+    cur_net_income: float, cur_cfo: float,
+    cur_ca: Optional[float] = None, prev_ca: Optional[float] = None,
 ) -> Dict[str, Any]:
     """
     Calculate Beneish M-Score (8-variable model).
@@ -34,12 +35,22 @@ def calculate_beneish_m_score(
     # 2. GMI - Gross Margin Index
     prev_gm = (prev_sales - prev_cogs) / prev_sales
     cur_gm = (cur_sales - cur_cogs) / cur_sales
-    gmi = max(prev_gm, eps) / max(cur_gm, eps)
+    # 毛利率为负或为零时 GMI 失去经济含义（分母趋零会把 M 值推到上万），
+    # 按中性值 1.0 处理并在结果中标注，而不是输出一个荒谬的分数。
+    gmi_neutralized = cur_gm <= 0 or prev_gm <= 0
+    gmi = 1.0 if gmi_neutralized else prev_gm / cur_gm
     
-    # 3. AQI - Asset Quality Index
-    cur_aq = 1.0 - (cur_ppe / cur_assets)
-    prev_aq = 1.0 - (prev_ppe / prev_assets)
-    aqi = max(cur_aq, eps) / max(prev_aq, eps)
+    # 3. AQI - Asset Quality Index (Beneish 1999):
+    #    AQI = [1 - (CA_t + PPE_t)/TA_t] / [1 - (CA_t-1 + PPE_t-1)/TA_t-1]
+    #    流动资产缺失时不再用 1-PPE/TA 近似（那会把流动资产当成"软资产"，系统性高估 AQI），
+    #    而是按文献惯例取中性值 1.0 并明确标注。
+    aqi_neutralized = cur_ca is None or prev_ca is None
+    if aqi_neutralized:
+        aqi = 1.0
+    else:
+        cur_aq = 1.0 - ((cur_ca + cur_ppe) / cur_assets)
+        prev_aq = 1.0 - ((prev_ca + prev_ppe) / prev_assets)
+        aqi = max(cur_aq, eps) / max(prev_aq, eps)
     
     # 4. SGI - Sales Growth Index
     sgi = cur_sales / prev_sales
@@ -76,6 +87,8 @@ def calculate_beneish_m_score(
 
     return {
         "is_calculable": True,
+        "aqi_neutralized": aqi_neutralized,
+        "gmi_neutralized": gmi_neutralized,
         "m_score": round(m_score, 4),
         "is_manipulator": is_manipulator,
         "variables": {
@@ -169,10 +182,23 @@ def calculate_beneish_from_case(case: AccountingCaseData) -> Dict[str, Any]:
         cur_ppe=cur_ppe, prev_ppe=prev_ppe,
         cur_sga=cur_sga, prev_sga=prev_sga,
         cur_leverage=cur_lev, prev_leverage=prev_lev,
-        cur_net_income=cur.net_profit, cur_cfo=cur.operating_cash_flow
+        cur_net_income=cur.net_profit, cur_cfo=cur.operating_cash_flow,
+        cur_ca=cur.current_assets, prev_ca=prev.current_assets,
     )
     res["is_calculable"] = True
-    res["data_source"] = f"基于 {cur.period} 与 {prev.period} 真实对比期财务报表审定计算"
+    estimated = sorted(set(cur.estimated_fields) | {f"上期·{f}" for f in prev.estimated_fields})
+    reconstructed = "reconstructed" in {cur.provenance, prev.provenance}
+    res["input_quality"] = "reconstructed" if (reconstructed or estimated) else "reported"
+    res["estimated_fields"] = estimated
+    notes = []
+    if res.get("gmi_neutralized"):
+        notes.append("本期或上期毛利率≤0，GMI 失去经济含义，按中性值 1.0 处理")
+    if res.get("aqi_neutralized"):
+        notes.append("缺少流动资产数据，AQI 按 Beneish 文献惯例取中性值 1.0")
+    if reconstructed or estimated:
+        notes.append("部分输入为按比例结构化重构的估算值，M-Score 仅演示算法流程，不构成对该公司的量化结论；正式使用须替换为年报披露原值")
+    res["data_source"] = f"基于 {cur.period} 与 {prev.period} 两期财务数据计算" + ("（" + "；".join(notes) + "）" if notes else "")
+    res["caveats"] = notes
     return res
 
 
@@ -193,6 +219,23 @@ def contract_has_supporting_evidence(contract, case: AccountingCaseData) -> bool
         if party in (flow.counterparty_name or ""):
             return True
     return False
+
+
+def _document_amount_diff(voucher, v_amount: float, doc_amount: float) -> float:
+    """凭证与单据金额的差异。
+
+    复合凭证常把销售确认与成本结转写在同一张凭证里（借应收/贷收入、销项，借成本/贷存货），
+    此时凭证借方合计 = 价税合计 + 成本，直接与发票/合同比对会误报"金额不符"。
+    这里取凭证合计与各单行金额中最接近单据金额者计算差异；只有都对不上才算不符。
+    （该误报由外部盲测集的合规对照组发现。）
+    """
+    candidates = [v_amount]
+    for e in voucher.entries:
+        if e.debit:
+            candidates.append(e.debit)
+        if e.credit:
+            candidates.append(e.credit)
+    return min(abs(c - doc_amount) for c in candidates)
 
 
 def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]:
@@ -237,8 +280,8 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
             if doc_id in invoice_map:
                 inv = invoice_map[doc_id]
                 # Compare amount
-                if abs(v_amount - inv.total_amount) > 1.0:
-                    diff = abs(v_amount - inv.total_amount)
+                diff = _document_amount_diff(voucher, v_amount, inv.total_amount)
+                if diff > 1.0:
                     discrepancies.append({
                         "type": "凭证与发票金额不符",
                         "voucher_id": voucher.voucher_id,
@@ -267,8 +310,8 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
                 # 1,000,000 contract reconciles clean as soon as any invoice or bank
                 # flow happens to mention the counterparty -- which is exactly the
                 # 业财金额不符 case the three-way match exists to catch.
-                if abs(v_amount - contract.total_amount) > 1.0:
-                    diff = abs(v_amount - contract.total_amount)
+                diff = _document_amount_diff(voucher, v_amount, contract.total_amount)
+                if diff > 1.0:
                     discrepancies.append({
                         "type": "凭证与合同金额不符",
                         "voucher_id": voucher.voucher_id,
@@ -295,6 +338,19 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
                         "detail": f"记账凭证引用的合同 '{doc_id}'（交易方: {contract.customer_or_vendor}，金额: {contract.total_amount:,.2f}元）缺乏真实税务发票及银行收付款对账单，三单勾稽严重脱节，涉嫌虚构业务。"
                     })
                     total_abnormal_amount += v_amount
+            elif doc_id in {b.transaction_id for b in case.bank_flows}:
+                # 收付款凭证以银行回单为原始单据：核对金额即可（盲测集合规组发现此前被误报为"单据不存在"）
+                flow = next(b for b in case.bank_flows if b.transaction_id == doc_id)
+                diff = _document_amount_diff(voucher, v_amount, abs(flow.amount))
+                if diff > 1.0:
+                    discrepancies.append({
+                        "type": "凭证与银行流水金额不符",
+                        "voucher_id": voucher.voucher_id,
+                        "doc_id": doc_id,
+                        "amount": diff,
+                        "detail": f"凭证金额 ({v_amount:,.2f}元) 与银行流水 {doc_id} ({abs(flow.amount):,.2f}元) 存在差异 {diff:,.2f}元",
+                    })
+                    total_abnormal_amount += diff
             else:
                 # Document linkage missing or forged doc
                 discrepancies.append({
@@ -319,10 +375,24 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
                 })
                 total_abnormal_amount += abs(flow.amount)
 
+    # 资金敞口去重：同一笔钱常同时出现在凭证差异与银行流水差异里（如康美 299.44 亿
+    # 既是虚构凭证金额又是伪造存单流水金额）。按“凭证侧 / 流水侧”分组后，金额相同的
+    # 一对只计一次，避免把 299.44 亿报成 598.88 亿。
+    voucher_side = [d["amount"] for d in discrepancies if not str(d.get("voucher_id", "")).startswith("BANK-")]
+    bank_side = [d["amount"] for d in discrepancies if str(d.get("voucher_id", "")).startswith("BANK-")]
+    remaining = list(bank_side)
+    for a in voucher_side:
+        for j, b in enumerate(remaining):
+            if abs(a - b) <= max(abs(a) * 0.001, 1.0):
+                remaining.pop(j)
+                break
+    net_exposure = round(sum(voucher_side) + sum(remaining), 2)
+
     return {
         "discrepancies": discrepancies,
         "total_discrepancies_count": len(discrepancies),
         "total_audited_amount": total_audited_amount,
         "total_abnormal_amount": total_abnormal_amount,
+        "net_exposure_amount": net_exposure,
         "reconciliation_clean": len(discrepancies) == 0
     }

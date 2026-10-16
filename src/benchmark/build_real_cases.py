@@ -53,6 +53,15 @@ def preserve_enriched_fields(cases: List[Dict[str, Any]], out_file: Path) -> Lis
         old = previous.get(case.get("case_id"))
         if not old:
             continue
+        old_fs = old.get("financial_summary") or {}
+        if old_fs.get("provenance") in ("reported_original", "reported") and not old_fs.get("estimated_fields"):
+            # 年报原值优先：整体保留磁盘上的两期财务数据，不让生成器的旧摘要覆盖
+            case["financial_summary"] = old_fs
+            if old.get("prior_financial_summary"):
+                case["prior_financial_summary"] = old["prior_financial_summary"]
+                restored_prior += 1
+            restored_lines += len(old_fs)
+            continue
         new_fs = case.get("financial_summary") or {}
         for key, value in (old.get("financial_summary") or {}).items():
             if key not in new_fs and value is not None:
@@ -176,7 +185,7 @@ def generate_28_real_cases():
         {
             "case_id": "REAL_CSRC_003",
             "company_name": "辅仁药业集团制药股份有限公司",
-            "stock_code": "600479",
+            "stock_code": "600781",
             "penalty_decision_no": "中国证监会行政处罚决定书〔2020〕85号",
             "case_category": "货币资金与银行存单造假",
             "industry": "医药制造业",
@@ -263,7 +272,7 @@ def generate_28_real_cases():
         {
             "case_id": "REAL_CSRC_005",
             "company_name": "金正大生态工程集团股份有限公司",
-            "stock_code": "002170",
+            "stock_code": "002470",
             "penalty_decision_no": "中国证监会行政处罚决定书〔2022〕1号",
             "case_category": "虚构购销业务与体外资金闭环空转",
             "industry": "化学原料及化学制品制造业",

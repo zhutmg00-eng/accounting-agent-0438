@@ -3,12 +3,14 @@ DeepSeek Accounting Agent Harness (Powered by Cordis Microkernel).
 Orchestrates Plugins, LLM Invocation, Verification Guards, and Benchmark Scoring.
 """
 
+import json
 import time
 from typing import Dict, Any, Optional, List
 from src.core.schemas import (
     AccountingCaseData, AnalysisReportResult, CaseEvalScore, 
     GroundTruthRiskItem, RiskLevel, ExecutionMode
 )
+from src.config import settings
 from src.core.llm_adapter import DeepSeekLLMAdapter
 from src.core.plugin_registry import registry, PluginRegistry
 from src.core.cordis_kernel import Context, SessionLogger
@@ -17,6 +19,90 @@ from src.plugins.cost_analysis_plugin.plugin import CostAnalysisPlugin
 from src.plugins.audit_fraud_plugin.tools import (
     calculate_beneish_from_case, perform_three_way_reconciliation
 )
+from src.plugins.audit_fraud_plugin.analytics import (
+    journal_entry_testing, detect_fund_round_trips, benford_first_digit_test
+)
+from src.core.llm_adapter import DeepSeekAPIError
+
+
+# Tool schemas exposed to DeepSeek native function calling (OpenAI-compatible).
+AUDIT_TOOL_SCHEMAS: List[Dict[str, Any]] = [
+    {"type": "function", "function": {
+        "name": "calculate_beneish_m_score",
+        "description": "用两期财务报表计算 Beneish 8 因子 M-Score（>-1.78 为操纵预警），返回各因子、数据质量与不可计算原因。",
+        "parameters": {"type": "object", "properties": {}, "required": []}}},
+    {"type": "function", "function": {
+        "name": "perform_three_way_reconciliation",
+        "description": "凭证-合同-发票-银行流水三单勾稽，返回每项差异的类型、单据号、金额与说明。",
+        "parameters": {"type": "object", "properties": {}, "required": []}}},
+    {"type": "function", "function": {
+        "name": "journal_entry_testing",
+        "description": "全量会计分录测试（CSA 1141）：周末/节假日、期末窗口、整数金额、职责分离、无附件、收入借方、敏感摘要等 10 条规则打分。",
+        "parameters": {"type": "object", "properties": {
+            "top_n": {"type": "integer", "description": "返回风险分最高的前 N 张凭证", "default": 10}}, "required": []}}},
+    {"type": "function", "function": {
+        "name": "detect_fund_round_trips",
+        "description": "识别银行流水中同一或关联对手方在窗口期内先流出后流入、金额相近的资金往返（体外循环/过桥）。",
+        "parameters": {"type": "object", "properties": {
+            "window_days": {"type": "integer", "default": 30},
+            "amount_tolerance": {"type": "number", "description": "金额偏差容忍度，0.1 表示 10%", "default": 0.1}},
+            "required": []}}},
+    {"type": "function", "function": {
+        "name": "benford_first_digit_test",
+        "description": "Benford 首位数字检验（Nigrini MAD），样本不足 50 时返回不适用。",
+        "parameters": {"type": "object", "properties": {}, "required": []}}},
+    {"type": "function", "function": {
+        "name": "search_vouchers",
+        "description": "按凭证号、科目名或摘要关键词检索记账凭证分录。",
+        "parameters": {"type": "object", "properties": {
+            "keyword": {"type": "string"}, "limit": {"type": "integer", "default": 10}}, "required": ["keyword"]}}},
+    {"type": "function", "function": {
+        "name": "search_bank_flows",
+        "description": "按流水号、对手方或附言关键词检索银行流水。",
+        "parameters": {"type": "object", "properties": {
+            "keyword": {"type": "string"}, "limit": {"type": "integer", "default": 10}}, "required": ["keyword"]}}},
+]
+
+
+def execute_audit_tool(case: AccountingCaseData, name: str, args: Dict[str, Any]) -> Dict[str, Any]:
+    """Run one deterministic operator by name.  Never calls a model."""
+    args = args or {}
+    if name == "calculate_beneish_m_score":
+        return calculate_beneish_from_case(case)
+    if name == "perform_three_way_reconciliation":
+        return perform_three_way_reconciliation(case)
+    if name == "journal_entry_testing":
+        return journal_entry_testing(case, top_n=int(args.get("top_n", 10) or 10))
+    if name == "detect_fund_round_trips":
+        return detect_fund_round_trips(
+            case, window_days=int(args.get("window_days", 30) or 30),
+            amount_tolerance=float(args.get("amount_tolerance", 0.1) or 0.1))
+    if name == "benford_first_digit_test":
+        return benford_first_digit_test(case)
+    if name == "search_vouchers":
+        kw = str(args.get("keyword", "")).strip()
+        limit = int(args.get("limit", 10) or 10)
+        hits = []
+        for v in case.vouchers:
+            blob = v.voucher_id + " " + (v.associated_doc_id or "") + " " + " ".join(f"{e.account_name} {e.summary}" for e in v.entries)
+            if not kw or kw in blob:
+                hits.append({"voucher_id": v.voucher_id, "date": v.voucher_date, "doc": v.associated_doc_id,
+                             "preparer": v.preparer, "checker": v.checker,
+                             "entries": [{"account": e.account_name, "debit": e.debit, "credit": e.credit, "summary": e.summary} for e in v.entries]})
+            if len(hits) >= limit:
+                break
+        return {"keyword": kw, "matched": len(hits), "total_vouchers": len(case.vouchers), "vouchers": hits}
+    if name == "search_bank_flows":
+        kw = str(args.get("keyword", "")).strip()
+        limit = int(args.get("limit", 10) or 10)
+        hits = [
+            {"transaction_id": b.transaction_id, "time": b.transaction_time, "counterparty": b.counterparty_name,
+             "amount": b.amount, "remark": b.remark}
+            for b in case.bank_flows
+            if not kw or kw in f"{b.transaction_id} {b.counterparty_name} {b.remark}"
+        ][:limit]
+        return {"keyword": kw, "matched": len(hits), "total_flows": len(case.bank_flows), "flows": hits}
+    raise ValueError(f"未知工具: {name}")
 
 
 def voucher_entry_direction(entry: Any) -> str:
@@ -72,7 +158,8 @@ class AccountingAgentHarness:
         self,
         case: AccountingCaseData,
         plugin_id: str = "audit_fraud_detection",
-        temperature: float = 0.1
+        temperature: float = 0.1,
+        on_delta=None
     ) -> AnalysisReportResult:
         """
         Execute full end-to-end accounting pipeline on a given case within a Cordis Session Context.
@@ -101,11 +188,20 @@ class AccountingAgentHarness:
 
         # Step 3: LLM Inference
         session_ctx.emit("llm.inference.start", {"model": self.llm.model_name, "mode": self.llm.mode.value})
-        llm_resp = self.llm.chat_completion(
-            messages=messages,
-            temperature=temperature,
-            response_json=True
-        )
+        if on_delta is not None and not self.llm.use_mock:
+            llm_resp = self.llm.chat_completion_stream(
+                messages=messages,
+                on_delta=on_delta,
+                temperature=temperature,
+                response_json=True
+            )
+        else:
+            llm_resp = self.llm.chat_completion(
+                messages=messages,
+                temperature=temperature,
+                response_json=True,
+                max_tokens=max(settings.max_tokens, 16384)  # 思维链模型需为正文预留空间
+            )
         session_ctx.emit("llm.inference.complete", {"total_tokens": llm_resp.total_tokens})
 
         raw_json = llm_resp.json()
@@ -130,6 +226,13 @@ class AccountingAgentHarness:
         report.fallback_occurred = llm_resp.fallback_occurred
         report.fallback_reason = llm_resp.fallback_reason
         report.reasoning_content = llm_resp.reasoning_content
+        report.privacy_audit = getattr(llm_resp, "privacy_audit", None) or {
+            "outbound": False,
+            "note": "离线模式：数据未离开本机，无需出境脱敏",
+        }
+        if report.privacy_audit and "outbound" not in report.privacy_audit:
+            report.privacy_audit = {**report.privacy_audit, "outbound": True,
+                                    "note": "发送给大模型前已自动掩码银行账号、身份证/统一社会信用代码、手机号与邮箱"}
 
         session_ctx.emit("case.complete", {
             "overall_risk": report.overall_risk_rating.value,
@@ -370,6 +473,51 @@ class AccountingAgentHarness:
                 })
                 tool_context_str += f"\n【工具调用: search_bank_flows】银行流水抽样 ({min(5, len(case.bank_flows))}/{len(case.bank_flows)}):\n" + "\n".join(flows_summary)
 
+            # Population analytics intents
+            for kws, tname in (
+                (("分录测试", "全量", "周末", "节假日", "职责分离", "整数金额", "高风险分录"), "journal_entry_testing"),
+                (("闭环", "往返", "过桥", "体外循环", "资金循环", "回流"), "detect_fund_round_trips"),
+                (("benford", "本福特", "首位数字", "首位数"), "benford_first_digit_test"),
+            ):
+                if any(k in last_user_msg.lower() for k in kws):
+                    out = execute_audit_tool(case, tname, {})
+                    tool_calls.append({"tool_name": tname, "tool_input": {"case_id": case.case_id},
+                                       "tool_output": out, "status": "success"})
+                    tool_context_str += f"\n【工具调用: {tname}】" + json.dumps(out, ensure_ascii=False, default=str)[:1500]
+
+        # Online modes: let DeepSeek decide which operators to call (native function calling).
+        if tools_enabled and self.llm.mode != ExecutionMode.MOCK:
+            agent_system = (
+                "你是 DeepSeek-AuditMind 审计智能体（注册会计师视角）。"
+                f"被审计单位：{case.company_name}（{case.stock_code}），行业 {case.industry}，期间 {case.audit_period}。"
+                f"账套：凭证 {len(case.vouchers)}、发票 {len(case.invoices)}、流水 {len(case.bank_flows)}、合同 {len(case.contracts)}。"
+                "所有数字必须来自工具返回结果，禁止自行计算或编造；需要数据时先调用工具。"
+                "回答要写明：涉及单据号与金额、准则依据、舞弊机制判断、建议的进一步审计程序；最终结论由注册会计师确认。"
+            )
+            agent_messages = [{"role": "system", "content": agent_system}] + [
+                {"role": m.get("role", "user"), "content": m.get("content", "")} for m in messages
+            ]
+            try:
+                resp = self.llm.chat_with_tools(
+                    agent_messages, AUDIT_TOOL_SCHEMAS,
+                    executor=lambda n, a: execute_audit_tool(case, n, a),
+                    temperature=temperature,
+                )
+                return {
+                    "role": "assistant",
+                    "content": resp.content,
+                    "reasoning_content": resp.reasoning_content,
+                    "tool_calls": resp.tool_calls,
+                    "tool_routing": "model_function_calling",
+                    "privacy_audit": resp.privacy_audit,
+                    "model_name": resp.model_name,
+                    "execution_mode": resp.execution_mode.value,
+                }
+            except Exception as exc:
+                if self.llm.mode == ExecutionMode.STRICT_ONLINE:
+                    raise DeepSeekAPIError(f"Agent function-calling failed: {exc}")
+                print(f"[Warning] function calling failed ({exc}); falling back to keyword tool routing")
+
         # Build prompt for LLM or Heuristic Engine
         system_prompt = (
             "你是由 DeepSeek-AuditMind 驱动的数智会计与舞弊穿透智能体（注册会计师 / 资深数智审计专家）。\n"
@@ -400,6 +548,7 @@ class AccountingAgentHarness:
                 "content": content,
                 "reasoning_content": reasoning,
                 "tool_calls": tool_calls,
+                "tool_routing": "keyword_router_offline",
                 "model_name": self.llm.model_name,
                 "execution_mode": self.llm.mode.value
             }

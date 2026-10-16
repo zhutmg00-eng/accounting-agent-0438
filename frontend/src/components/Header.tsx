@@ -77,7 +77,7 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <span className="text-fg-faint">模型</span>
           <span className="truncate font-medium text-fg">
-            {modelInfo?.active_model || 'deepseek-v4.1-flash'}
+            {modelInfo?.active_model || 'deepseek-flash'}
           </span>
         </button>
 

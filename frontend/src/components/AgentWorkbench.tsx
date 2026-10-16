@@ -143,6 +143,7 @@ export const AgentWorkbench: React.FC<AgentWorkbenchProps> = ({
           content: replyData.content || '未返回有效意见',
           reasoning_content: replyData.reasoning_content,
           tool_calls: replyData.tool_calls || [],
+          tool_routing: replyData.tool_routing,
           timestamp: new Date().toLocaleTimeString()
         }
       ])
@@ -254,7 +255,7 @@ export const AgentWorkbench: React.FC<AgentWorkbenchProps> = ({
   const flowCount = currentCase?.bank_flows?.length || 0
   const evidenceTotal = voucherCount + invoiceCount + flowCount
   const loadedKinds = [voucherCount, invoiceCount, flowCount].filter((n) => n > 0).length
-  const activeModel = modelInfo?.active_model || 'deepseek-v4.1-flash'
+  const activeModel = modelInfo?.active_model || 'deepseek-flash'
 
   /** The four mounted operators, with the exact instruction each one sends. */
   const operators: { name: string; label: string; detail: string; prompt: string }[] = [
@@ -308,6 +309,11 @@ export const AgentWorkbench: React.FC<AgentWorkbenchProps> = ({
   const shortOperator = (name: string) => {
     if (name === 'calculate_beneish_m_score') return 'Beneish M-Score'
     if (name === 'perform_three_way_reconciliation') return '三单勾稽核对'
+    if (name === 'journal_entry_testing') return '全量分录测试'
+    if (name === 'detect_fund_round_trips') return '资金往返识别'
+    if (name === 'benford_first_digit_test') return 'Benford 检验'
+    if (name === 'search_vouchers') return '凭证检索'
+    if (name === 'search_bank_flows') return '流水检索'
     return name
   }
 
@@ -339,8 +345,26 @@ export const AgentWorkbench: React.FC<AgentWorkbenchProps> = ({
           </span>
         </span>
       )
+    } else if (tc.tool_name === 'journal_entry_testing' && o?.applicable) {
+      figure = (
+        <span className="tabular-nums text-body text-fg">
+          {o.population} 张凭证全量测试 · 风险标识 {o.flagged_count} 张 · 高风险 {o.high_risk_count} 张
+        </span>
+      )
+    } else if (tc.tool_name === 'detect_fund_round_trips' && o) {
+      figure = (
+        <span className="tabular-nums text-body text-fg">
+          {o.loop_count ? `检出 ${o.loop_count} 组资金往返 · ¥${(o.loop_amount || 0).toLocaleString()}` : '未发现资金往返'}
+        </span>
+      )
+    } else if (tc.tool_name === 'benford_first_digit_test' && o) {
+      figure = (
+        <span className="text-body text-fg">
+          {o.applicable ? `${o.verdict} · MAD ${o.mad} · 样本 ${o.sample_size}` : '样本不足，不适用'}
+        </span>
+      )
     } else if (o !== undefined && o !== null) {
-      figure = <span className="text-body text-fg">已返回结构化结果</span>
+      figure = <span className="text-body text-fg">{typeof o?.matched === 'number' ? `命中 ${o.matched} 条` : '已返回结构化结果'}</span>
     } else {
       figure = <span className="text-small text-fg-faint">无返回值</span>
     }
@@ -353,6 +377,11 @@ export const AgentWorkbench: React.FC<AgentWorkbenchProps> = ({
           <span className="text-small font-medium text-fg">
             {shortOperator(tc.tool_name)}
             <span className="ml-3 text-label text-fg-faint">{tc.tool_name}</span>
+            {tc.tool_input && Object.keys(tc.tool_input).length && tc.decided_by === 'model' ? (
+              <span className="ml-3 text-label tabular-nums text-fg-faint">
+                参数 {JSON.stringify(tc.tool_input)}
+              </span>
+            ) : null}
           </span>
           <Status tone={tone}>
             {tone === 'critical' ? '执行失败' : tone === 'medium' ? '执行中' : '执行成功'}
@@ -590,7 +619,16 @@ export const AgentWorkbench: React.FC<AgentWorkbenchProps> = ({
                     </div>
 
                     {hasTools ? (
-                      <div className="space-y-px">{m.tool_calls!.map(renderToolCall)}</div>
+                      <div className="space-y-px">
+                        {m.tool_routing ? (
+                          <div className="px-1 pb-1 text-label text-fg-faint">
+                            {m.tool_routing === 'model_function_calling'
+                              ? `DeepSeek 自主决定调用 ${m.tool_calls!.length} 个审计算子（原生函数调用）`
+                              : '离线模式：按关键词路由到审计算子'}
+                          </div>
+                        ) : null}
+                        {m.tool_calls!.map(renderToolCall)}
+                      </div>
                     ) : null}
 
                     {hasCoT ? (

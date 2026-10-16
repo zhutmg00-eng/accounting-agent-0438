@@ -41,8 +41,8 @@ class JournalEntryLine(BaseModel):
 class AccountingVoucher(BaseModel):
     voucher_id: str = Field(description="凭证号，例如 202512-记-0042")
     voucher_date: str = Field(description="记账日期 YYYY-MM-DD")
-    preparer: str = Field(default="张三", description="制单人")
-    checker: Optional[str] = Field(default="李四", description="复核人")
+    preparer: str = Field(default="未记录", description="制单人（源数据未提供时为“未记录”，不再伪造姓名）")
+    checker: Optional[str] = Field(default=None, description="复核人；None=源数据未提供该信息，空字符串=明确无复核人")
     entries: List[JournalEntryLine] = Field(default_factory=list, description="分录明细")
     attachments_count: int = Field(default=1, description="原始凭证附件张数")
     associated_doc_id: Optional[str] = Field(default=None, description="关联业务单据号 (合同/发票/出库单)")
@@ -98,6 +98,11 @@ class FinancialStatementsSummary(BaseModel):
     depreciation: Optional[float] = Field(default=None, description="折旧与摊销")
     sga_expenses: Optional[float] = Field(default=None, description="销售与管理费用")
     leverage_ratio: Optional[float] = Field(default=None, description="资产负债率/财务杠杆")
+    current_assets: Optional[float] = Field(default=None, description="流动资产合计（Beneish AQI 需要）")
+    provenance: Optional[str] = Field(default=None, description="数据来源：reported=年报披露原值；reconstructed=按比例结构化重构（仅用于算法演示）")
+    estimated_fields: List[str] = Field(default_factory=list, description="非年报原值、由比例估算的字段清单")
+    source_url: Optional[str] = Field(default=None, description="财务数据出处（年报 PDF 或数据库页面）")
+    source_note: Optional[str] = Field(default=None, description="版本、口径与页码说明")
 
 
 class BeneishEvaluationResult(BaseModel):
@@ -161,6 +166,10 @@ class RiskFinding(BaseModel):
     rule_evidence: str = Field(default="", description="【确定性规则发现】：算法计算得出的客观事实指标（如倒挂天数、借贷差额）")
     model_explanation: str = Field(default="", description="【DeepSeek模型推理解析】：大语言模型准则认定与实质推断")
     human_verification_flag: str = Field(default="待注册会计师实施现场核实程序", description="【待人工确认事项】：需人工跟进的审计程序")
+    # 证据锚定校验 (Grounding Guard)
+    grounded: bool = Field(default=True, description="发现项引用的单据号是否全部能在源数据中找到")
+    cited_refs: List[str] = Field(default_factory=list, description="经校验存在于源数据中的单据号")
+    verification_note: str = Field(default="", description="证据锚定与金额校准说明")
 
 
 class WorkpaperColumn(BaseModel):
@@ -205,6 +214,10 @@ class AnalysisReportResult(BaseModel):
     model_name: str = Field(default="deepseek-chat", description="实际执行模型")
     fallback_occurred: bool = Field(default=False, description="是否发生过降级回退")
     fallback_reason: Optional[str] = Field(default=None, description="降级回退原因详情")
+    # 全量分析程序与治理元数据
+    analytics: Dict[str, Any] = Field(default_factory=dict, description="全量分录测试 / 资金闭环识别 / Benford 首位数字检验等确定性程序结果")
+    verification: Dict[str, Any] = Field(default_factory=dict, description="模型输出证据锚定校验汇总")
+    privacy_audit: Dict[str, Any] = Field(default_factory=dict, description="出境数据脱敏审计（发送给大模型前的掩码统计）")
 
 
 # 4. 字段级与金额级精细化评测指标 (Benchmark Harness Metrics - Issue 4)

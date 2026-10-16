@@ -9,6 +9,7 @@ import json
 import re
 import time
 import asyncio
+import random
 import uuid
 from pathlib import Path
 from typing import Dict, Any, List, Optional
@@ -42,12 +43,16 @@ from src.data_loader.file_importer import (
 )
 from src.config import settings
 from src.benchmark.test_cases import _load_custom_cases_from_disk
+from src.plugins.audit_fraud_plugin.analytics import run_population_analytics
 from src.core.compliance import (
     DataSanitizer, CpaApprovalRequest, CpaApprovalReceipt,
     generate_cpa_signoff, get_ethics_and_compliance_manifest
 )
 
 _load_custom_cases_from_disk(settings.data_dir)
+
+import logging as _logging
+_logging.basicConfig(level=_logging.INFO, format="%(levelname)s:     %(name)s - %(message)s")
 
 app = FastAPI(
     title="DeepSeek-AuditMind Agent API",
@@ -373,7 +378,8 @@ def list_cases(category: Optional[str] = Query(None)):
             "contract_count": len(c.contracts),
             "bank_flow_count": len(c.bank_flows),
             "ground_truth_count": len(c.ground_truth_findings or []),
-            "is_clean": len(c.ground_truth_findings or []) == 0
+            "is_clean": c.ground_truth_findings is not None and len(c.ground_truth_findings) == 0,
+            "is_unlabeled": c.ground_truth_findings is None,
         })
     return {"cases": result, "total": len(result)}
 
@@ -466,28 +472,73 @@ async def stream_audit(case_id: str = Query(...), mode: str = Query("MOCK")):
         recon_res = perform_three_way_reconciliation(case)
         disc_cnt = recon_res.get("total_discrepancies_count", 0)
         abn_amt = recon_res.get("total_abnormal_amount", 0.0)
-        yield f"data: {json.dumps({'stage': 3, 'title': '三单勾稽穿透核查', 'status': 'completed', 'detail': f'发现勾稽异常 {disc_cnt} 项，涉案金额 ¥{abn_amt:,.2f}'})}\n\n"
+        analytics_res = run_population_analytics(case)
+        je_res = analytics_res["journal_entry_testing"]
+        rt_res = analytics_res["fund_round_trips"]
+        stage3_detail = f'发现勾稽异常 {disc_cnt} 项，涉案金额 ¥{abn_amt:,.2f}'
+        if je_res.get("applicable"):
+            stage3_detail += f' | 全量分录测试 {je_res["population"]} 张，风险标识 {je_res["flagged_count"]} 张'
+        if rt_res.get("loop_count"):
+            stage3_detail += f' | 资金往返 {rt_res["loop_count"]} 组'
+        yield f"data: {json.dumps({'stage': 3, 'title': '三单勾稽穿透核查', 'status': 'completed', 'detail': stage3_detail})}\n\n"
 
         # Stage 4: DeepSeek Cognitive Reasoning & CoT streaming
-        yield f"data: {json.dumps({'stage': 4, 'title': 'DeepSeek 大模型准则深度研判', 'status': 'running', 'detail': '正在调用 DeepSeek 推理引擎进行 CAS 准则条款比对与商业实质穿透'})}\n\n"
         llm = DeepSeekLLMAdapter(mode=mode_enum)
         harness = AccountingAgentHarness(llm_adapter=llm)
+        if llm.use_mock:
+            stage4_running = '离线确定性模式：调用领域规则推理引擎（不调用大模型）'
+        else:
+            stage4_running = f'正在调用 DeepSeek {llm.model_name}，思维链逐 token 实时推送'
+        yield f"data: {json.dumps({'stage': 4, 'title': 'DeepSeek 大模型准则深度研判', 'status': 'running', 'detail': stage4_running})}\n\n"
+
+        loop = asyncio.get_running_loop()
+        delta_q: asyncio.Queue = asyncio.Queue()
+
+        def on_delta(kind: str, text: str) -> None:
+            loop.call_soon_threadsafe(delta_q.put_nowait, (kind, text))
+
+        run_task = asyncio.ensure_future(
+            run_in_threadpool(harness.run_case, case, "audit_fraud_detection", 0.1, on_delta)
+        )
+        streamed_live = False
+        while True:
+            if run_task.done() and delta_q.empty():
+                break
+            try:
+                kind, text = await asyncio.wait_for(delta_q.get(), timeout=0.1)
+            except asyncio.TimeoutError:
+                continue
+            streamed_live = True
+            event_type = 'cot_token' if kind == 'reasoning' else 'answer_token'
+            yield f"data: {json.dumps({'type': event_type, 'token': text, 'live': True})}\n\n"
+
         try:
-            report = await run_in_threadpool(harness.run_case, case, "audit_fraud_detection")
+            report = run_task.result()
         except Exception as exc:
             error_code = "MODEL_UNAVAILABLE" if isinstance(exc, DeepSeekAPIError) else "AUDIT_FAILED"
             yield f"data: {json.dumps({'type': 'error', 'code': error_code, 'detail': str(exc)}, ensure_ascii=False)}\n\n"
             yield "data: [DONE]\n\n"
             return
 
-        # Stream CoT text in chunks
-        cot_text = report.reasoning_content or "DeepSeek 推理完成：业财数据已完成多模态综合研判。"
-        words = cot_text.split("，")
-        for chunk in words:
-            yield f"data: {json.dumps({'type': 'cot_token', 'token': chunk + '，'})}\n\n"
-            await asyncio.sleep(0.05)
+        if not streamed_live:
+            # 离线确定性模式：规则推理链一次生成，按句回放（非大模型实时输出）
+            cot_text = report.reasoning_content or "推理完成：业财数据已完成多模态综合研判。"
+            rng = random.Random(len(cot_text))  # 固定种子：同一输入回放节奏一致
+            pieces, i = [], 0
+            while i < len(cot_text):
+                n = rng.randint(1, 4)
+                pieces.append(cot_text[i:i + n])
+                i += n
+            budget = float(os.getenv("AUDITMIND_MOCK_COT_SECONDS", "4.5"))
+            base = budget / max(len(pieces), 1)
+            for piece in pieces:
+                yield f"data: {json.dumps({'type': 'cot_token', 'token': piece, 'live': False})}\n\n"
+                pause = base * rng.uniform(0.4, 1.6)
+                if "\n" in piece or "。" in piece:
+                    pause += base * 3
+                await asyncio.sleep(pause)
 
-        yield f"data: {json.dumps({'stage': 4, 'title': 'DeepSeek 大模型准则深度研判', 'status': 'completed', 'detail': f'研判完成，总体风险等级: {report.overall_risk_rating}'})}\n\n"
+        yield f"data: {json.dumps({'stage': 4, 'title': 'DeepSeek 大模型准则深度研判', 'status': 'completed', 'detail': (f'研判完成，总体风险等级: {report.overall_risk_rating.value}' + (f' · {report.model_name} 输出 {report.token_usage.get("completion_tokens", 0)} tokens' if streamed_live else ' · 离线规则推理'))})}\n\n"
 
         # Stage 5: Workpaper synthesis
         yield f"data: {json.dumps({'stage': 5, 'title': '审计工作底稿与结论合成', 'status': 'running', 'detail': '正在编排标准化三层证据审计底稿与监管合规建议'})}\n\n"
@@ -645,6 +696,61 @@ async def upload_files(
             "bank_flows": len(bank_flows)
         }
     }
+
+
+DEMO_LEDGER_DIR = Path("data/templates/demo_population")
+DEMO_CASE_ID = "DEMO-POPULATION-2025"
+
+
+@app.post("/api/demo/population")
+def load_demo_population_ledger():
+    """一键载入「全量分析程序」演示账套（合成数据，535 张凭证 / 260 张发票 / 300+ 笔流水）。"""
+    existing = get_case_by_id(DEMO_CASE_ID)
+    if existing:
+        return {"status": "success", "case_id": DEMO_CASE_ID, "case": existing.model_dump(), "reused": True}
+    files = {
+        "vouchers": DEMO_LEDGER_DIR / "演示账套_记账凭证.xlsx",
+        "invoices": DEMO_LEDGER_DIR / "演示账套_增值税发票.csv",
+        "bank_flows": DEMO_LEDGER_DIR / "演示账套_银行流水.csv",
+    }
+    missing = [str(p) for p in files.values() if not p.exists()]
+    if missing:
+        raise HTTPException(status_code=404, detail=f"演示账套文件缺失，请先运行 tools/make_demo_ledger.py：{missing}")
+    with open(files["vouchers"], "rb") as fh:
+        vouchers, v_res = parse_vouchers_file(fh, filename=files["vouchers"].name)
+    with open(files["invoices"], "rb") as fh:
+        invoices, i_res = parse_invoices_file(fh, filename=files["invoices"].name)
+    with open(files["bank_flows"], "rb") as fh:
+        flows, b_res = parse_bank_flows_file(fh, filename=files["bank_flows"].name)
+    errors = v_res.errors + i_res.errors + b_res.errors
+    if errors:
+        raise HTTPException(status_code=500, detail={"message": "演示账套解析失败", "errors": errors[:10]})
+    case = AccountingCaseData(
+        case_id=DEMO_CASE_ID,
+        company_name="星河精密制造有限公司（合成演示账套）",
+        stock_code="DEMO",
+        industry="通用设备制造业",
+        case_category="全量分析程序演示（合成数据）",
+        audit_period="2025年度",
+        description=(
+            f"合成演示账套（非真实企业）：凭证 {len(vouchers)} 张、发票 {len(invoices)} 张、银行流水 {len(flows)} 笔。"
+            "已知注入异常：周末记账、职责分离缺失、无附件、期末收入直接对应银行存款、引用不存在单据、3 组同一对手方资金往返。"
+            "用于验证全量分录测试、资金闭环识别与 Benford 检验能否找回注入异常。"
+        ),
+        vouchers=vouchers, invoices=invoices, bank_flows=flows, contracts=[],
+    )
+    register_custom_case(case)
+    return {"status": "success", "case_id": DEMO_CASE_ID, "case": case.model_dump(), "reused": False,
+            "counts": {"vouchers": len(vouchers), "invoices": len(invoices), "bank_flows": len(flows)}}
+
+
+@app.get("/api/analytics/{case_id}")
+def population_analytics_endpoint(case_id: str):
+    """单独运行全量分析程序（分录测试 / 资金闭环 / Benford），不调用大模型。"""
+    case = get_case_by_id(case_id)
+    if not case:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found")
+    return run_population_analytics(case)
 
 
 @app.get("/api/templates/download/{template_type}")

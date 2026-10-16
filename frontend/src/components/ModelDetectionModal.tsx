@@ -34,7 +34,7 @@ export const ModelDetectionModal: React.FC<ModelDetectionModalProps> = ({
   onRefreshModels,
   onUpdateConfig
 }) => {
-  const [selectedModel, setSelectedModel] = useState<string>(modelInfo?.active_model || 'deepseek-v4.1-flash')
+  const [selectedModel, setSelectedModel] = useState<string>(modelInfo?.active_model || 'deepseek-flash')
   const [apiKey, setApiKey] = useState<string>('')
   const [apiBase, setApiBase] = useState<string>(modelInfo?.api_base || 'https://api.deepseek.com')
   const [isTesting, setIsTesting] = useState<boolean>(false)

@@ -43,6 +43,13 @@ jobs:
       - name: Run Full Pytest Test Suite
         run: uv run pytest -v --durations=10
 
+      - name: External Blind Benchmarks (synthetic + CSRC hold-out, offline)
+        env:
+          DEEPSEEK_API_KEY: mock-key
+        run: |
+          uv run python -m src.benchmark.blind_synthetic --seeds 20
+          uv run python -m src.benchmark.blind_real --mode mock
+
   frontend-build:
     name: Frontend Vite & TypeScript Build
     runs-on: ubuntu-latest

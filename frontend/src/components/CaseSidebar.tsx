@@ -185,10 +185,10 @@ export const CaseSidebar: React.FC<CaseSidebarProps> = ({
                           </span>
                         </div>
                         <Chip
-                          tone={c.is_clean ? 'clear' : 'critical'}
+                          tone={c.is_unlabeled ? 'neutral' : c.is_clean ? 'clear' : 'critical'}
                           className="shrink-0"
                         >
-                          {c.is_clean ? '合规' : '舞弊'}
+                          {c.is_unlabeled ? '待审' : c.is_clean ? '合规' : '舞弊'}
                         </Chip>
                       </div>
 

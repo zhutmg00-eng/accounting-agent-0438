@@ -13,6 +13,7 @@ export interface CaseListItem {
   bank_flow_count: number
   ground_truth_count: number
   is_clean: boolean
+  is_unlabeled?: boolean
 }
 
 export interface JournalEntryLine {
@@ -88,6 +89,9 @@ export interface RiskFinding {
   rule_evidence?: string
   model_explanation?: string
   human_verification_flag?: string
+  grounded?: boolean
+  cited_refs?: string[]
+  verification_note?: string
 }
 
 export interface WorkpaperRow {
@@ -128,6 +132,9 @@ export interface AnalysisReportResult {
   findings: RiskFinding[]
   workpapers: WorkpaperData[]
   tool_outputs: Record<string, any>
+  analytics?: Record<string, any>
+  verification?: { findings_total: number; grounded: number; ungrounded: number; amount_unverified: number; rule?: string }
+  privacy_audit?: Record<string, any>
   reasoning_content: string
   execution_mode: string
   execution_time_seconds: number
@@ -171,6 +178,8 @@ export interface AgentToolCall {
   tool_input: any
   tool_output: any
   status: string
+  latency_ms?: number
+  decided_by?: 'model' | string
 }
 
 export interface AgentMessage {
@@ -179,6 +188,7 @@ export interface AgentMessage {
   content: string
   reasoning_content?: string
   tool_calls?: AgentToolCall[]
+  tool_routing?: string
   timestamp: string
   is_streaming?: boolean
 }
