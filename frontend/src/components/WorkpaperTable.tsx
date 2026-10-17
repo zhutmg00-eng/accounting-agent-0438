@@ -40,9 +40,10 @@ export const WorkpaperTable: React.FC<WorkpaperTableProps> = ({
 
   const [cpaReceipt, setCpaReceipt] = useState<CpaApprovalReceipt | null>(null)
   const [signing, setSigning] = useState(false)
-  const [auditorName, setAuditorName] = useState('张宇 (执业CPA)')
-  const [certNo, setCertNo] = useState('110000240982')
+  const [auditorName, setAuditorName] = useState('')
+  const [certNo, setCertNo] = useState('')
   const [opinionType, setOpinionType] = useState('保留意见/拟追加外部银行函证')
+  const [findingDispositions, setFindingDispositions] = useState<Record<string, string>>({})
 
   const handleSignOff = async () => {
     if (!report) return
@@ -103,7 +104,12 @@ export const WorkpaperTable: React.FC<WorkpaperTableProps> = ({
       const resp = await fetch(`/api/export/${format}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(report)
+        // 现场签署的注会信息与逐条发现复核意见随导出请求一并提交，写入 Excel/PDF 底稿
+        body: JSON.stringify(
+          cpaReceipt
+            ? { ...report, cpa_signoff: { ...cpaReceipt, finding_dispositions: findingDispositions } }
+            : report
+        )
       })
 
       if (resp.ok) {
@@ -276,6 +282,67 @@ export const WorkpaperTable: React.FC<WorkpaperTableProps> = ({
         </Panel>
       </Reveal>
 
+      {/* Proposed adjusting entries and their effect on the statements. */}
+      {report.adjustments?.entries?.length ? (
+        <Reveal index={2} className="px-5 pt-5 sm:px-6">
+          <Panel
+            title="拟定审计调整分录（AJE）"
+            note="仅对确定性程序锚定到具体凭证的发现项编制，借贷平衡；须经注册会计师与管理层沟通后确定。"
+          >
+            {report.adjustments.impact && report.adjustments.impact.comparable === false ? (
+              <p className="px-5 pt-4 text-small text-risk-medium">{report.adjustments.impact.caveat}</p>
+            ) : report.adjustments.impact ? (
+              <div className="grid grid-cols-1 gap-4 px-5 pt-4 sm:grid-cols-3">
+                {([
+                  ['营业收入', report.adjustments.impact.revenue_before, report.adjustments.impact.revenue_after],
+                  ['营业成本', report.adjustments.impact.cost_before, report.adjustments.impact.cost_after],
+                  ['净利润（近似）', report.adjustments.impact.profit_before, report.adjustments.impact.profit_after],
+                ] as [string, number, number][]).map(([label, before, after]) => (
+                  <div key={label}>
+                    <div className="text-label text-fg-muted">{label}</div>
+                    <div className="mt-1 text-body tabular-nums text-fg">
+                      {(before / 1e8).toFixed(2)} 亿 → <span className={after < before ? 'text-risk-critical' : ''}>{(after / 1e8).toFixed(2)} 亿</span>
+                    </div>
+                  </div>
+                ))}
+                {report.adjustments.impact.turns_to_loss ? (
+                  <div className="sm:col-span-3">
+                    <Status tone="critical">调整后由盈转亏</Status>
+                  </div>
+                ) : null}
+                <p className="text-label text-fg-faint sm:col-span-3">{report.adjustments.impact.caveat}</p>
+              </div>
+            ) : null}
+            <DataTable>
+              <thead>
+                <tr>
+                  <Th>分录</Th>
+                  <Th>科目</Th>
+                  <Th className="text-right">借方</Th>
+                  <Th className="text-right">贷方</Th>
+                  <Th>说明</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {report.adjustments.entries.flatMap((a: any) =>
+                  a.lines.map((l: any, i: number) => (
+                    <tr key={`${a.aje_id}-${i}`}>
+                      <Td className="tabular-nums text-fg-muted">{i === 0 ? a.aje_id : ''}</Td>
+                      <Td className={l.credit ? 'pl-8 text-fg' : 'text-fg'}>
+                        {l.account_code} {l.account_name}
+                      </Td>
+                      <TdNum>{l.debit ? `¥${l.debit.toLocaleString('zh-CN')}` : ''}</TdNum>
+                      <TdNum>{l.credit ? `¥${l.credit.toLocaleString('zh-CN')}` : ''}</TdNum>
+                      <Td className="text-small text-fg-muted">{i === 0 ? a.description : ''}</Td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </DataTable>
+          </Panel>
+        </Reveal>
+      ) : null}
+
       {/* Back in the room: the human who answers for the sheet. */}
       <Reveal index={2} className="px-5 py-5 sm:px-6">
         <Panel
@@ -354,6 +421,30 @@ export const WorkpaperTable: React.FC<WorkpaperTableProps> = ({
                   />
                 </label>
               </div>
+              {report.findings && report.findings.length > 0 ? (
+                <div className="space-y-2 border-t border-white/10 pt-4">
+                  <div className="text-label text-fg-muted">逐项审计发现复核处置意见（随签章写入底稿）</div>
+                  <div className="space-y-2">
+                    {report.findings.map((f: any) => (
+                      <div key={f.finding_id} className="flex flex-wrap items-center justify-between gap-3 bg-field-raised2 px-3 py-2 text-small">
+                        <span className="truncate text-fg">{f.finding_id} · {f.title}</span>
+                        <select
+                          aria-label={`复核处置 ${f.finding_id}`}
+                          value={findingDispositions[f.finding_id] || '已复核采纳'}
+                          onChange={(e) =>
+                            setFindingDispositions((prev) => ({ ...prev, [f.finding_id]: e.target.value }))
+                          }
+                          className="border border-white/10 bg-field px-2.5 py-1 text-small text-fg"
+                        >
+                          <option value="已复核采纳">已复核采纳</option>
+                          <option value="修正后采纳">修正后采纳</option>
+                          <option value="排除误报">排除误报</option>
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
               <div className="flex justify-end">
                 <Btn variant="solid" size="md" disabled={signing} onClick={handleSignOff}>
                   {signing ? '签名存证中…' : '执业注会终审签章'}

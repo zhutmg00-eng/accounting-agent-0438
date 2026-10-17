@@ -1,4 +1,4 @@
-import { AccountingCaseData, AuditReportResult, RiskFinding, AuditWorkpaper, RiskLevel } from './schemas/types';
+import { FinancialStatementsSummary, AccountingCaseData, AuditReportResult, RiskFinding, AuditWorkpaper, RiskLevel } from './schemas/types';
 import { calculateBeneishMScore, BeneishParams } from './tools/beneish';
 import { performThreeWayReconciliation } from './tools/reconciliation';
 
@@ -90,27 +90,25 @@ export class AccountingAuditPlugin {
     const recon = performThreeWayReconciliation(caseData);
     let beneish = null;
 
-    if (caseData.financialSummary) {
-      const fs = caseData.financialSummary;
+    // 与 Python 主程序口径一致：只用两期真实报表计算，缺少上期或关键字段时拒绝给出分数，
+    // 不再用"本期 × 固定比例"伪造上期数据。
+    const cur = caseData.financialSummary;
+    const prev = caseData.priorFinancialSummary;
+    const required = (f?: FinancialStatementsSummary) =>
+      !!f && [f.revenue, f.accountsReceivable, f.costOfSales, f.totalAssets, f.depreciation, f.fixedAssets,
+              f.sgaExpenses, f.leverageRatio].every((x) => typeof x === 'number' && isFinite(x as number));
+    if (cur && prev && required(cur) && required(prev)) {
       beneish = calculateBeneishMScore({
-        curSales: fs.revenue,
-        prevSales: fs.revenue * 0.75,
-        curAr: fs.accountsReceivable,
-        prevAr: fs.accountsReceivable * 0.5,
-        curCogs: fs.costOfSales,
-        prevCogs: fs.costOfSales * 0.7,
-        curAssets: fs.totalAssets,
-        prevAssets: fs.totalAssets * 0.8,
-        curDepr: fs.totalAssets * 0.05,
-        prevDepr: fs.totalAssets * 0.04,
-        curPpe: fs.totalAssets * 0.35,
-        prevPpe: fs.totalAssets * 0.32,
-        curSga: fs.revenue * 0.12,
-        prevSga: fs.revenue * 0.10,
-        curLeverage: 0.45,
-        prevLeverage: 0.40,
-        curNetIncome: fs.netProfit,
-        curCfo: fs.operatingCashFlow
+        curSales: cur.revenue, prevSales: prev.revenue,
+        curAr: cur.accountsReceivable, prevAr: prev.accountsReceivable,
+        curCogs: cur.costOfSales, prevCogs: prev.costOfSales,
+        curAssets: cur.totalAssets, prevAssets: prev.totalAssets,
+        curDepr: cur.depreciation as number, prevDepr: prev.depreciation as number,
+        curPpe: cur.fixedAssets as number, prevPpe: prev.fixedAssets as number,
+        curSga: cur.sgaExpenses as number, prevSga: prev.sgaExpenses as number,
+        curLeverage: cur.leverageRatio as number, prevLeverage: prev.leverageRatio as number,
+        curNetIncome: cur.netProfit,
+        curCfo: cur.operatingCashFlow
       });
     }
 

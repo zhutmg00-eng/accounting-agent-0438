@@ -84,7 +84,11 @@ def test_benchmark_suite():
     summary = run_benchmark_suite(harness, plugin_id="audit_fraud_detection")
 
     assert summary.total_cases >= 25
-    assert summary.passed_cases >= 25
+    # v2.3 起离线模式改为通用确定性规则推理（不含任何公司名/背景关键词模板），
+    # 开发集通过数从"模板拟合的 28/28"回落为真实的 20/28；下限防止回归。
+    assert summary.passed_cases >= 20
+    clean = [s for s in summary.case_scores if s.case_id.startswith("REAL_CLEAN")]
+    assert clean and all(s.passed and s.false_positive_count == 0 for s in clean)
     assert summary.mean_f1_score >= 0.85
     assert summary.schema_valid_rate == 1.0
     assert summary.math_accuracy_rate == 1.0

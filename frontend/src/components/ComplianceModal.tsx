@@ -17,8 +17,8 @@ interface ComplianceModalProps {
  * workpaper sheet quote one CPA rather than two.
  */
 const SIGNER = {
-  auditor_name: '张宇 (执业CPA)',
-  cert_no: '110000240982',
+  auditor_name: '',
+  cert_no: '',
   audit_firm: '数智会计联合审计项目组',
   opinion_type: '保留意见/拟追加外部银行函证',
   professional_skepticism_notes:

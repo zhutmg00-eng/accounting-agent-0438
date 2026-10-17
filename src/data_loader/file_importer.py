@@ -394,3 +394,68 @@ def generate_sample_templates(output_dir: Any):
         {"交易流水号": "BK-20251230-01", "交易时间": "2025-12-30 10:00", "对手方户名": "某科技有限公司", "对手方账号": "622848001", "交易金额": 300000.0, "交易后余额": 5000000.0, "附言": "支付首期款"}
     ]
     pd.DataFrame(bank_data).to_csv(out / "银行对账单明细模板.csv", index=False, encoding="utf-8-sig")
+
+
+def parse_contracts_file(file_obj_or_path: Any, filename: str = "业务合同台账.csv") -> Tuple[List[BusinessContract], FileValidationResult]:
+    """
+    Parse CSV or Excel contract register (业务合同台账).
+    Required: 合同编号 (contract_id), 交易对手方 (customer_or_vendor), 签订日期 (sign_date), 合同金额 (total_amount)
+    Optional: 付款条款 (payment_terms), 交付/验收条款 (delivery_condition), 是否关联方 (is_related_party)
+    合同的验收/控制权转移条款与质押担保条款是截止测试与受限资金核查的依据。
+    """
+    res = FileValidationResult(file_type="业务合同台账")
+    contracts: List[BusinessContract] = []
+    try:
+        if filename.endswith(".csv"):
+            df = pd.read_csv(file_obj_or_path, encoding="utf-8-sig")
+        else:
+            df = pd.read_excel(file_obj_or_path)
+    except Exception as e:
+        res.is_valid = False
+        res.errors.append(f"合同台账读取失败: {str(e)}")
+        return contracts, res
+    res.row_count = len(df)
+    if df.empty:
+        res.is_valid = False
+        res.errors.append("上传的合同台账为空表！")
+        return contracts, res
+    col_mapping = {
+        "合同编号": "contract_id", "合同号": "contract_id", "contract_id": "contract_id",
+        "交易对手方": "customer_or_vendor", "对手方": "customer_or_vendor", "客户/供应商": "customer_or_vendor", "customer_or_vendor": "customer_or_vendor",
+        "签订日期": "sign_date", "签署日期": "sign_date", "sign_date": "sign_date",
+        "合同金额": "total_amount", "金额": "total_amount", "total_amount": "total_amount",
+        "付款条款": "payment_terms", "信用条款": "payment_terms", "payment_terms": "payment_terms",
+        "交付验收条款": "delivery_condition", "验收条款": "delivery_condition", "交付条件": "delivery_condition", "delivery_condition": "delivery_condition",
+        "是否关联方": "is_related_party", "关联方": "is_related_party", "is_related_party": "is_related_party",
+    }
+    df = df.rename(columns={c: col_mapping[str(c).strip()] for c in df.columns if str(c).strip() in col_mapping})
+    missing = [f for f in ("contract_id", "customer_or_vendor", "sign_date", "total_amount") if f not in df.columns]
+    if missing:
+        res.is_valid = False
+        res.errors.append(f"合同台账缺少必填列: {', '.join(missing)}")
+        return contracts, res
+    for idx, row in df.iterrows():
+        row_num = idx + 2
+        cid = str(row["contract_id"]).strip()
+        d = _parse_date(row["sign_date"])
+        amt = _parse_float(row["total_amount"])
+        if not d:
+            res.is_valid = False
+            res.errors.append(f"第 {row_num} 行合同 [{cid}] 签订日期格式错误: '{row['sign_date']}'")
+            continue
+        if amt is None or amt <= 0:
+            res.is_valid = False
+            res.errors.append(f"第 {row_num} 行合同 [{cid}] 合同金额必须为有效正数: '{row['total_amount']}'")
+            continue
+        rel = str(row.get("is_related_party", "")).strip().lower() in ("是", "true", "1", "y", "yes", "关联方")
+        def txt(k):
+            v = row.get(k, "")
+            return "" if pd.isna(v) else str(v).strip()
+        contracts.append(BusinessContract(
+            contract_id=cid, customer_or_vendor=str(row["customer_or_vendor"]).strip(), sign_date=d,
+            total_amount=amt, payment_terms=txt("payment_terms"), delivery_condition=txt("delivery_condition"),
+            is_related_party=rel,
+        ))
+    if res.is_valid:
+        res.summary = f"成功解析 {len(contracts)} 份合同，合同总额 ¥{sum(c.total_amount for c in contracts):,.2f}。"
+    return contracts, res

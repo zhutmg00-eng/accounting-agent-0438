@@ -9,7 +9,7 @@ interface CustomUploadModalProps {
   onCaseImported: (caseData: any) => void
 }
 
-/** The three upload slots, described by the columns the parser actually needs. */
+/** The four upload slots, described by the columns the parser actually needs. */
 const SLOTS = [
   {
     key: 'vouchers' as const,
@@ -34,6 +34,14 @@ const SLOTS = [
     accept: '.csv',
     hint: '必填列：交易流水号、交易时间、对手方户名、交易金额、附言',
     Icon: Landmark
+  },
+  {
+    key: 'contracts' as const,
+    order: '合同',
+    title: '业务合同台账（选填）',
+    accept: '.csv,.xlsx,.xls',
+    hint: '必填列：合同编号、交易对手方、签订日期、合同金额；建议含交付验收条款（截止测试）与是否关联方',
+    Icon: FileSpreadsheet
   }
 ]
 
@@ -49,6 +57,7 @@ export const CustomUploadModal: React.FC<CustomUploadModalProps> = ({
   const [vouchersFile, setVouchersFile] = useState<File | null>(null)
   const [invoicesFile, setInvoicesFile] = useState<File | null>(null)
   const [bankFlowsFile, setBankFlowsFile] = useState<File | null>(null)
+  const [contractsFile, setContractsFile] = useState<File | null>(null)
 
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
@@ -61,22 +70,24 @@ export const CustomUploadModal: React.FC<CustomUploadModalProps> = ({
   // focus goes back to 导入实测账套.
   useFocusTrap(isOpen, onClose, { dialogRef: panelRef, panelRef })
 
-  const handleDownloadTemplate = (type: 'vouchers' | 'invoices' | 'bank_flows') => {
+  const handleDownloadTemplate = (type: 'vouchers' | 'invoices' | 'bank_flows' | 'contracts') => {
     window.open(`/api/templates/download/${type}`, '_blank')
   }
 
   if (!isOpen) return null
 
-  const selectedFiles: Record<'vouchers' | 'invoices' | 'bank_flows', File | null> = {
+  const selectedFiles: Record<'vouchers' | 'invoices' | 'bank_flows' | 'contracts', File | null> = {
     vouchers: vouchersFile,
     invoices: invoicesFile,
-    bank_flows: bankFlowsFile
+    bank_flows: bankFlowsFile,
+    contracts: contractsFile
   }
 
-  const selectFile = (type: 'vouchers' | 'invoices' | 'bank_flows', file: File | null) => {
+  const selectFile = (type: 'vouchers' | 'invoices' | 'bank_flows' | 'contracts', file: File | null) => {
     if (type === 'vouchers') setVouchersFile(file)
     if (type === 'invoices') setInvoicesFile(file)
     if (type === 'bank_flows') setBankFlowsFile(file)
+    if (type === 'contracts') setContractsFile(file)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -92,6 +103,7 @@ export const CustomUploadModal: React.FC<CustomUploadModalProps> = ({
     if (vouchersFile) formData.append('vouchers_file', vouchersFile)
     if (invoicesFile) formData.append('invoices_file', invoicesFile)
     if (bankFlowsFile) formData.append('bank_flows_file', bankFlowsFile)
+    if (contractsFile) formData.append('contracts_file', contractsFile)
 
     try {
       const resp = await fetch('/api/upload', {

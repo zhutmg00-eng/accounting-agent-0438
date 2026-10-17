@@ -6,6 +6,19 @@ from typing import List, Dict, Any, Optional, Union
 from enum import Enum
 from pydantic import BaseModel, Field
 
+if not hasattr(BaseModel, "model_dump"):
+    import json as _pyd_json
+    def _model_dump(self, mode="python", **kw):
+        if mode == "json":
+            return _pyd_json.loads(self.json(**kw))
+        return self.dict(**kw)
+    BaseModel.model_dump = _model_dump
+    BaseModel.model_dump_json = lambda self, **kw: self.json(**kw)
+    BaseModel.model_copy = lambda self, **kw: self.copy(**kw)
+    BaseModel.model_validate = classmethod(lambda cls, obj, **kw: cls.parse_obj(obj))
+    BaseModel.model_fields_set = property(lambda self: getattr(self, "__fields_set__", set()))
+
+
 
 class ExecutionMode(str, Enum):
     STRICT_ONLINE = "strict-online"  # 严格在线模式 (失败直接报错，绝不静默降级)
@@ -170,6 +183,10 @@ class RiskFinding(BaseModel):
     grounded: bool = Field(default=True, description="发现项引用的单据号是否全部能在源数据中找到")
     cited_refs: List[str] = Field(default_factory=list, description="经校验存在于源数据中的单据号")
     verification_note: str = Field(default="", description="证据锚定与金额校准说明")
+    # v2.4：金额由账套按模型声明的口径反算；多次采样投票
+    amount_basis: Optional[Dict[str, Any]] = Field(default=None, description="金额口径声明：{vouchers, account_code, side}")
+    model_reported_amount: Optional[float] = Field(default=None, description="模型原始报出金额（被账套反算金额替换时保留）")
+    vote_support: Optional[str] = Field(default=None, description="多次采样中出现的次数，如 2/3")
 
 
 class WorkpaperColumn(BaseModel):
@@ -218,6 +235,8 @@ class AnalysisReportResult(BaseModel):
     analytics: Dict[str, Any] = Field(default_factory=dict, description="全量分录测试 / 资金闭环识别 / Benford 首位数字检验等确定性程序结果")
     verification: Dict[str, Any] = Field(default_factory=dict, description="模型输出证据锚定校验汇总")
     privacy_audit: Dict[str, Any] = Field(default_factory=dict, description="出境数据脱敏审计（发送给大模型前的掩码统计）")
+    substantive: Dict[str, Any] = Field(default_factory=dict, description="专项实质性程序结果（重要性、银企核对、背靠背、截止与配比、第三方回款与预付）")
+    adjustments: Dict[str, Any] = Field(default_factory=dict, description="拟定审计调整分录（AJE）与审定前后报表冲击")
 
 
 # 4. 字段级与金额级精细化评测指标 (Benchmark Harness Metrics - Issue 4)

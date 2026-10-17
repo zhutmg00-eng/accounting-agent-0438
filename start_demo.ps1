@@ -31,10 +31,10 @@ Write-Host "[自检] 正在验证核心审计算子完整性..." -ForegroundColo
 $testOutput = uv run python -c "from src.benchmark.test_cases import get_benchmark_cases; print(f'已载入 {len(get_benchmark_cases())} 个测试基准案例')" 2>$null
 Write-Host "[OK] $testOutput" -ForegroundColor Green
 
-# 4. 启动前端
+# 4. 启动服务（FastAPI 后端 + React 前端，与 run.bat 一致）
 Write-Host ""
-Write-Host "[启动] 正在拉起 Streamlit 数智交互大屏..." -ForegroundColor Cyan
+Write-Host "[启动] 正在拉起 AuditMind 审计指挥舱..." -ForegroundColor Cyan
 Write-Host "👉 访问地址: http://localhost:8501" -ForegroundColor Yellow
 Write-Host ""
 
-uv run streamlit run src/ui/app.py --server.port 8501
+uv run python main.py

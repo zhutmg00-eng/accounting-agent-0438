@@ -149,7 +149,10 @@ export const ReconciliationVisualizer: React.FC<ReconciliationVisualizerProps> =
           <span className="tabular-nums text-small font-medium text-fg">{inv.invoice_no}</span>
         </Td>
         <Td className="tabular-nums text-fg-muted">{inv.invoice_date}</Td>
-        <Td className="max-w-[32ch] text-fg-muted">{inv.customer_or_vendor}</Td>
+        <Td className="max-w-[32ch] text-fg-muted">
+          <div>{inv.buyer_name || inv.seller_name || '—'}</div>
+          {inv.goods_or_service ? <div className="text-label text-fg-faint">{inv.goods_or_service}</div> : null}
+        </Td>
         <TdNum>¥{Number(inv.total_amount || 0).toLocaleString('zh-CN')}</TdNum>
       </tr>
     ))

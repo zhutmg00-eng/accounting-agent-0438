@@ -7,7 +7,24 @@ domestic OpenAI-compatible endpoints, and offline mock mode.
 import os
 from typing import Any
 from pathlib import Path
-from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validator
+from pydantic import BaseModel, Field
+try:
+    from pydantic import ConfigDict, ValidationInfo, field_validator
+    _PYDANTIC_V2 = True
+except ImportError:  # pragma: no cover - Pydantic v1 compatibility fallback
+    from pydantic import validator as _v1_validator
+    _PYDANTIC_V2 = False
+    ConfigDict = lambda **kw: kw  # type: ignore
+
+    class ValidationInfo:  # type: ignore
+        def __init__(self, field_name: str):
+            self.field_name = field_name
+
+    if not hasattr(BaseModel, "model_dump"):
+        BaseModel.model_dump = lambda self, **kw: self.dict(**kw)  # type: ignore
+        BaseModel.model_dump_json = lambda self, **kw: self.json(ensure_ascii=False, **kw)  # type: ignore
+        BaseModel.model_fields_set = property(lambda self: self.__fields_set__)  # type: ignore
+
 from dotenv import load_dotenv
 
 # Load .env if present
@@ -24,7 +41,11 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 class Settings(BaseModel):
     # Re-validate on attribute assignment so a single bad runtime update
     # (e.g. `settings.api_base = None`) can never poison this shared singleton.
-    model_config = ConfigDict(validate_assignment=True)
+    if _PYDANTIC_V2:
+        model_config = ConfigDict(validate_assignment=True)
+    else:
+        class Config:
+            validate_assignment = True
 
     # LLM Settings
     api_key: str = Field(default_factory=lambda: os.getenv("DEEPSEEK_API_KEY", "mock-key"))
@@ -33,10 +54,12 @@ class Settings(BaseModel):
     reasoner_model_name: str = Field(default_factory=lambda: os.getenv("DEEPSEEK_REASONER_MODEL", "deepseek-v4-pro"))
     temperature: float = Field(default_factory=lambda: float(os.getenv("TEMPERATURE", "0.1")))
     max_tokens: int = Field(default_factory=lambda: int(os.getenv("MAX_TOKENS", "4096")))
+    reflection_rounds: int = Field(default_factory=lambda: int(os.getenv("AUDITMIND_REFLECTION_ROUNDS", "1")))
+    vote_samples: int = Field(default_factory=lambda: int(os.getenv("AUDITMIND_VOTE_SAMPLES", "3")))
     
     # Execution & Harness Settings
     use_mock_llm: bool = Field(default_factory=lambda: os.getenv("USE_MOCK_LLM", "true").lower() in ("true", "1", "yes"))
-    timeout_seconds: int = 60
+    timeout_seconds: int = Field(default_factory=lambda: int(os.getenv("DEEPSEEK_TIMEOUT_SECONDS", "60")))
     max_retries: int = 3
 
     # Upload safety limit (per uploaded file, in MB)
@@ -45,21 +68,28 @@ class Settings(BaseModel):
     # Competition Meta
     competition_name: str = "2026年北京市大学生数智会计创新应用竞赛"
     project_name: str = "DeepSeek-AuditMind: 数智业财融合与舞弊穿透智能体基座"
-    version: str = "1.0.0"
+    version: str = "2.5.0"
 
     # Paths
     base_dir: Path = BASE_DIR
     data_dir: Path = DATA_DIR
     output_dir: Path = OUTPUT_DIR
 
-    @field_validator("api_base", "model_name", mode="before")
-    @classmethod
-    def _blank_llm_setting_falls_back_to_default(cls, value: Any, info: ValidationInfo) -> Any:
-        """Coerce None / empty / whitespace-only LLM settings back to their configured default."""
-        if value is None or (isinstance(value, str) and not value.strip()):
-            field = cls.model_fields[info.field_name]
-            return field.default_factory() if field.default_factory else field.default
-        return value
+    if _PYDANTIC_V2:
+        @field_validator("api_base", "model_name", mode="before")
+        @classmethod
+        def _blank_llm_setting_falls_back_to_default(cls, value: Any, info: ValidationInfo) -> Any:
+            """Coerce None / empty / whitespace-only LLM settings back to their configured default."""
+            if value is None or (isinstance(value, str) and not value.strip()):
+                field = cls.model_fields[info.field_name]
+                return field.default_factory() if field.default_factory else field.default
+            return value
+    else:
+        @_v1_validator("api_base", "model_name", pre=True, allow_reuse=True)
+        def _blank_llm_setting_falls_back_to_default_v1(cls, value: Any, field: Any) -> Any:
+            if value is None or (isinstance(value, str) and not value.strip()):
+                return field.default_factory() if field.default_factory else field.default
+            return value
 
 
 settings = Settings()

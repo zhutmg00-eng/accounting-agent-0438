@@ -3,6 +3,7 @@ Deterministic Accounting & Audit Tools for AuditMind Plugin.
 Includes: Beneish M-Score, Three-Way Reconciliation, Debit-Credit Check, Benford Anomaly Analysis.
 """
 
+from collections import defaultdict
 from typing import Dict, Any, List, Optional, Tuple
 from src.core.schemas import AccountingCaseData, AccountingVoucher, BusinessContract, InvoiceItem, BankFlowRecord
 
@@ -79,8 +80,8 @@ def calculate_beneish_m_score(
         + 0.892 * sgi
         + 0.115 * depi
         - 0.172 * sgai
-        + 4.037 * tata
-        + 0.0327 * lvgi
+        + 4.679 * tata
+        - 0.327 * lvgi
     )
 
     is_manipulator = bool(m_score > -1.78)
@@ -117,7 +118,7 @@ def calculate_beneish_from_case(case: AccountingCaseData) -> Dict[str, Any]:
             "m_score": None,
             "is_manipulator": False,
             "reason": "缺少当期财务报表数据，Beneish 8因子量化模型无法执行",
-            "missing_fields": ["本期资产负债表与利润表摘要"],
+            "missing_fields": ["本期财务报表摘要"],
             "variables": {},
             "conclusion": "未提供财务报表数据，Beneish 模型不可计算"
         }
@@ -163,7 +164,6 @@ def calculate_beneish_from_case(case: AccountingCaseData) -> Dict[str, Any]:
             "conclusion": "财务字段不完整，Beneish 模型不可计算",
         }
 
-    # Both cur and prev are present: compute with true values
     cur_ppe = cur.fixed_assets
     prev_ppe = prev.fixed_assets
     cur_depr = cur.depreciation
@@ -180,7 +180,7 @@ def calculate_beneish_from_case(case: AccountingCaseData) -> Dict[str, Any]:
         cur_assets=cur.total_assets, prev_assets=prev.total_assets,
         cur_depr=cur_depr, prev_depr=prev_depr,
         cur_ppe=cur_ppe, prev_ppe=prev_ppe,
-        cur_sga=cur_sga, prev_sga=prev_sga,
+        cur_sga=cur_sga, prev_sga=prev.sga_expenses,
         cur_leverage=cur_lev, prev_leverage=prev_lev,
         cur_net_income=cur.net_profit, cur_cfo=cur.operating_cash_flow,
         cur_ca=cur.current_assets, prev_ca=prev.current_assets,
@@ -203,12 +203,7 @@ def calculate_beneish_from_case(case: AccountingCaseData) -> Dict[str, Any]:
 
 
 def contract_has_supporting_evidence(contract, case: AccountingCaseData) -> bool:
-    """True when a contract-backed transaction is also evidenced by an invoice or a payment.
-
-    The counterparty name is the only key these record types share, so that is
-    what the linkage is built on.  An empty counterparty cannot be matched and
-    is therefore reported as unevidenced.
-    """
+    """True when a contract-backed transaction is also evidenced by an invoice or a payment."""
     party = (contract.customer_or_vendor or "").strip()
     if not party:
         return False
@@ -221,21 +216,28 @@ def contract_has_supporting_evidence(contract, case: AccountingCaseData) -> bool
     return False
 
 
-def _document_amount_diff(voucher, v_amount: float, doc_amount: float) -> float:
+def _document_amount_diff(voucher, v_amount: float, doc_amount: float, extra_doc_amounts: Optional[List[float]] = None) -> float:
     """凭证与单据金额的差异。
 
-    复合凭证常把销售确认与成本结转写在同一张凭证里（借应收/贷收入、销项，借成本/贷存货），
-    此时凭证借方合计 = 价税合计 + 成本，直接与发票/合同比对会误报"金额不符"。
-    这里取凭证合计与各单行金额中最接近单据金额者计算差异；只有都对不上才算不符。
-    （该误报由外部盲测集的合规对照组发现。）
+    1. 复合凭证常把销售确认与成本结转写在同一张凭证里（借应收/贷收入、销项，借成本/贷存货），
+       此时凭证借方合计 = 价税合计 + 成本，直接与发票/合同比对会误报"金额不符"。
+    2. 兼营多税率业务（如物流企业收派服务 6% + 运输服务 9%）常在同一张月结凭证中分列多条
+       收入与销项税分录，并对应同日开具的多张分税率发票（一证多票）。因此候选值除凭证总额与
+       单行金额外，还纳入“单行不含税金额 + 对应税额”的组合，以及同日同客户关联发票合计。
     """
     candidates = [v_amount]
-    for e in voucher.entries:
-        if e.debit:
-            candidates.append(e.debit)
-        if e.credit:
-            candidates.append(e.credit)
-    return min(abs(c - doc_amount) for c in candidates)
+    debits = [e.debit for e in voucher.entries if e.debit]
+    credits = [e.credit for e in voucher.entries if e.credit]
+    candidates.extend(debits)
+    candidates.extend(credits)
+    # 组合：同一借方或同一贷方内的分录两两相加（如分税率收入 800万 + 对应销项税 48万 = 848万）
+    for side_vals in (debits, credits):
+        if 2 <= len(side_vals) <= 8:
+            for i in range(len(side_vals)):
+                for j in range(i + 1, len(side_vals)):
+                    candidates.append(round(side_vals[i] + side_vals[j], 2))
+    targets = [doc_amount] + (extra_doc_amounts or [])
+    return min(abs(c - t) for c in candidates for t in targets)
 
 
 def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]:
@@ -250,8 +252,10 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
     total_audited_amount = 0.0
     total_abnormal_amount = 0.0
 
-    # Build lookup maps
-    invoice_map = {inv.invoice_no: inv for inv in case.invoices}
+    # 按发票号分组（不同发票代码下可能出现相同 8 位发票号，避免字典覆盖导致误报）
+    invoices_by_no: Dict[str, List[InvoiceItem]] = defaultdict(list)
+    for inv in case.invoices:
+        invoices_by_no[inv.invoice_no].append(inv)
     contract_map = {c.contract_id: c for c in case.contracts}
     bank_map = {b.transaction_id: b for b in case.bank_flows}
 
@@ -277,10 +281,27 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
             doc_id = voucher.associated_doc_id
             
             # Matched to invoice?
-            if doc_id in invoice_map:
-                inv = invoice_map[doc_id]
+            if doc_id in invoices_by_no:
+                inv_candidates = invoices_by_no[doc_id]
+                # 选择与当前凭证金额/日期最匹配的发票实例
+                inv = min(
+                    inv_candidates,
+                    key=lambda x: (
+                        0 if x.invoice_date == voucher.voucher_date else 1,
+                        _document_amount_diff(voucher, v_amount, x.total_amount),
+                    ),
+                )
+                # 同日同买卖双方的合并开票总额（支持一证多票/兼营分票开具）
+                same_batch_invoices = [
+                    x for x in case.invoices
+                    if x.invoice_date == inv.invoice_date
+                    and x.buyer_name == inv.buyer_name
+                    and x.seller_name == inv.seller_name
+                ]
+                extra_totals = [round(sum(x.total_amount for x in same_batch_invoices), 2)] if len(same_batch_invoices) > 1 else []
+
                 # Compare amount
-                diff = _document_amount_diff(voucher, v_amount, inv.total_amount)
+                diff = _document_amount_diff(voucher, v_amount, inv.total_amount, extra_totals)
                 if diff > 1.0:
                     discrepancies.append({
                         "type": "凭证与发票金额不符",
@@ -305,11 +326,6 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
             # Matched to contract?
             elif doc_id in contract_map:
                 contract = contract_map[doc_id]
-                # A contract only *evidences* a posting if the posted amount agrees
-                # with it.  Without this check a 9,000,000 voucher against a
-                # 1,000,000 contract reconciles clean as soon as any invoice or bank
-                # flow happens to mention the counterparty -- which is exactly the
-                # 业财金额不符 case the three-way match exists to catch.
                 diff = _document_amount_diff(voucher, v_amount, contract.total_amount)
                 if diff > 1.0:
                     discrepancies.append({
@@ -321,14 +337,17 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
                     })
                     total_abnormal_amount += diff
                 if contract.is_related_party:
-                    discrepancies.append({
-                        "type": "关联方隐蔽重大交易未做专项披露",
-                        "voucher_id": voucher.voucher_id,
-                        "doc_id": doc_id,
-                        "amount": v_amount,
-                        "detail": f"该凭证关联方合同 {contract.contract_id}（交易方: {contract.customer_or_vendor}）为关联方重大交易，需穿透商业实质。"
-                    })
-                    total_abnormal_amount += v_amount
+                    terms_txt = f"{contract.payment_terms} {contract.delivery_condition}"
+                    disclosed_normal = any(k in terms_txt for k in ("股东大会审议", "董事会审议", "已披露", "日常关联交易")) and contract_has_supporting_evidence(contract, case)
+                    if not disclosed_normal:
+                        discrepancies.append({
+                            "type": "关联方隐蔽重大交易未做专项披露",
+                            "voucher_id": voucher.voucher_id,
+                            "doc_id": doc_id,
+                            "amount": v_amount,
+                            "detail": f"该凭证关联方合同 {contract.contract_id}（交易方: {contract.customer_or_vendor}）为关联方重大交易，需穿透商业实质。"
+                        })
+                        total_abnormal_amount += v_amount
                 elif not contract_has_supporting_evidence(contract, case):
                     discrepancies.append({
                         "type": "大额业务单据缺失发票及银行流水(三单勾稽缺失)",
@@ -338,9 +357,8 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
                         "detail": f"记账凭证引用的合同 '{doc_id}'（交易方: {contract.customer_or_vendor}，金额: {contract.total_amount:,.2f}元）缺乏真实税务发票及银行收付款对账单，三单勾稽严重脱节，涉嫌虚构业务。"
                     })
                     total_abnormal_amount += v_amount
-            elif doc_id in {b.transaction_id for b in case.bank_flows}:
-                # 收付款凭证以银行回单为原始单据：核对金额即可（盲测集合规组发现此前被误报为"单据不存在"）
-                flow = next(b for b in case.bank_flows if b.transaction_id == doc_id)
+            elif doc_id in bank_map:
+                flow = bank_map[doc_id]
                 diff = _document_amount_diff(voucher, v_amount, abs(flow.amount))
                 if diff > 1.0:
                     discrepancies.append({
@@ -352,7 +370,6 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
                     })
                     total_abnormal_amount += diff
             else:
-                # Document linkage missing or forged doc
                 discrepancies.append({
                     "type": "单据缺失或虚构/伪造业务单据",
                     "voucher_id": voucher.voucher_id,
@@ -365,7 +382,7 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
     # 3. Check Bank Flow reconciliation
     suspicious_remarks = ["退款", "借款", "暂借", "拆借", "往来", "划拨", "归集", "垫付", "伪造", "虚构", "存单", "过桥", "体外", "占用", "挪用", "异常", "无商业背景", "转出至关联"]
     for flow in case.bank_flows:
-        if abs(flow.amount) >= 100000.0:  # >= 100k RMB
+        if abs(flow.amount) >= 100000.0:
             if any(kw in flow.remark for kw in suspicious_remarks):
                 discrepancies.append({
                     "type": "大额资金异常往来与体外循环/造假嫌疑",
@@ -375,9 +392,6 @@ def perform_three_way_reconciliation(case: AccountingCaseData) -> Dict[str, Any]
                 })
                 total_abnormal_amount += abs(flow.amount)
 
-    # 资金敞口去重：同一笔钱常同时出现在凭证差异与银行流水差异里（如康美 299.44 亿
-    # 既是虚构凭证金额又是伪造存单流水金额）。按“凭证侧 / 流水侧”分组后，金额相同的
-    # 一对只计一次，避免把 299.44 亿报成 598.88 亿。
     voucher_side = [d["amount"] for d in discrepancies if not str(d.get("voucher_id", "")).startswith("BANK-")]
     bank_side = [d["amount"] for d in discrepancies if str(d.get("voucher_id", "")).startswith("BANK-")]
     remaining = list(bank_side)

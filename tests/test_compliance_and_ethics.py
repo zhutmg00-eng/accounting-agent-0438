@@ -21,8 +21,8 @@ def test_compliance_manifest_endpoint():
 def test_cpa_approval_endpoint():
     payload = {
         "case_id": "REAL_CSRC_001",
-        "auditor_name": "张宇 (执业CPA)",
-        "cert_no": "110000240982",
+        "auditor_name": "测试签署人",
+        "cert_no": "000000000000",
         "audit_firm": "数智会计联合审计项目组",
         "opinion_type": "保留意见",
         "professional_skepticism_notes": "保持职业怀疑态度，复核证据链完毕。",
@@ -43,6 +43,8 @@ def test_sanitize_case_endpoint():
     data = res.json()
     assert data["sanitized"] is True
     assert "[🔒 已启用合规脱敏防护]" in data["data"]["description"]
+    # 脱敏现在会持久化到案例池；测试结束后还原，避免影响其他用例
+    assert client.post("/api/compliance/restore-case/REAL_CSRC_001").status_code == 200
 
 
 def test_data_sanitizer_masks():

@@ -54,4 +54,6 @@ docx_template_extracted.txt
 convert_to_pdf.py
 build_competition_docx.py
 generate_diagrams.py
+build_*docx.py
+generate_*diagrams.py
 

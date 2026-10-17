@@ -40,7 +40,7 @@ const SHOWCASE = [
   { id: 'REAL_CSRC_001', code: '600518', name: '康美药业', tag: '虚增货币 299.44 亿 / 伪造存单' },
   { id: 'REAL_CSRC_002', code: '002450', name: '康得新', tag: '虚增存款 122 亿 / 联动池闭环' },
   { id: 'REAL_CSRC_003', code: '600781', name: '辅仁药业', tag: '非经营性占用 / 违规担保' },
-  { id: 'REAL_CSRC_009', code: '002069', name: '獐子岛', tag: '底播存货核销 / 异常灭失' },
+  { id: 'REAL_CSRC_014', code: '002069', name: '獐子岛', tag: '底播存货核销 / 异常灭失' },
   { id: 'REAL_CLEAN_027', code: '600660', name: '福耀玻璃', tag: '合规基准对照 · 零误报' }
 ]
 
@@ -414,6 +414,15 @@ export const AuditCockpit: React.FC<AuditCockpitProps> = ({
                     {' '}· 证据锚定 {report.verification.grounded}/{report.verification.findings_total}
                     {report.verification.amount_unverified
                       ? ` · 金额待复核 ${report.verification.amount_unverified}`
+                      : ''}
+                    {report.verification.calibration?.recalibrated?.length
+                      ? ` · 定级校准 ${report.verification.calibration.recalibrated.length}`
+                      : ''}
+                    {report.verification.reflection?.triggered
+                      ? ` · 自我修正 ${report.verification.reflection.issues_before ?? '?'}→${report.verification.reflection.issues_after ?? '?'}${report.verification.reflection.adopted ? '（已采纳）' : '（保留初稿）'}`
+                      : ''}
+                    {report.substantive?.materiality
+                      ? ` · 实际执行重要性 ¥${(report.substantive.materiality.performance_materiality / 1e4).toFixed(0)}万`
                       : ''}
                   </>
                 ) : null}

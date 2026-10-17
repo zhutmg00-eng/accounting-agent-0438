@@ -64,8 +64,8 @@ export function calculateBeneishMScore(params: BeneishParams) {
     0.892 * sgi +
     0.115 * depi -
     0.172 * sgai +
-    4.037 * tata +
-    0.0327 * lvgi;
+    4.679 * tata -
+    0.327 * lvgi;
 
   const isManipulator = mScore > -1.78;
 

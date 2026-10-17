@@ -1,0 +1,5386 @@
+[
+  {
+    "case_id": "BLIND2_001",
+    "company_name": "贵州百灵企业集团制药股份有限公司",
+    "stock_code": "002424",
+    "penalty_decision_no": "贵州证监局行政处罚决定书〔2026〕1号",
+    "source_url": "http://www.csrc.gov.cn/guizhou/c104852/c7623198/content.shtml",
+    "case_category": "少计期间费用（销售费用未按权责发生制计提）",
+    "csrc_summary": "贵州百灵未以权责发生制为基础按配比原则计提销售费用：2019年少计销售费用35,012.49万元、2020年少计24,080.95万元、2021年少计6,379.16万元，2023年再多计45,941.10万元平账，相关年报虚假记载。",
+    "industry": "医药制造（中成药）",
+    "audit_period": "2020年度",
+    "description": "中成药生产企业，产品经全国医药商业公司分销，委托第三方推广服务商开展学术推广。下列为2020年度部分凭证及相关合同、发票、银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "BL-2020-03-015",
+        "voucher_date": "2020-03-20",
+        "preparer": "王丽娟",
+        "checker": "陈国强",
+        "attachments_count": 3,
+        "associated_doc_id": "52001234",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 9774500.0,
+            "credit": 0.0,
+            "summary": "销售咳速停糖浆—九州通"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 8650000.0,
+            "summary": "销售咳速停糖浆—九州通"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 1124500.0,
+            "summary": "销售咳速停糖浆—九州通"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 3287000.0,
+            "credit": 0.0,
+            "summary": "结转销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 3287000.0,
+            "summary": "结转销售成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "BL-2020-06-022",
+        "voucher_date": "2020-06-18",
+        "preparer": "王丽娟",
+        "checker": "陈国强",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-BL-0618",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 9774500.0,
+            "credit": 0.0,
+            "summary": "收九州通货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 9774500.0,
+            "summary": "收九州通货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "BL-2020-07-031",
+        "voucher_date": "2020-07-23",
+        "preparer": "刘芳",
+        "checker": "陈国强",
+        "attachments_count": 2,
+        "associated_doc_id": "TXN-BL-0723",
+        "entries": [
+          {
+            "account_code": "530101",
+            "account_name": "研发支出-费用化支出",
+            "debit": 1860000.0,
+            "credit": 0.0,
+            "summary": "支付银杏叶提取物临床研究服务费（附银行回单）"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 1860000.0,
+            "summary": "支付银杏叶提取物临床研究服务费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "BL-2020-12-018",
+        "voucher_date": "2020-12-21",
+        "preparer": "王丽娟",
+        "checker": "陈国强",
+        "attachments_count": 4,
+        "associated_doc_id": "52007781",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 132416820.0,
+            "credit": 0.0,
+            "summary": "支付贵州黔康医药推广有限公司市场推广服务款"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 7945009.2,
+            "credit": 0.0,
+            "summary": "支付贵州黔康医药推广有限公司市场推广服务款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 140361829.2,
+            "summary": "支付贵州黔康医药推广有限公司市场推广服务款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "BL-2020-12-026",
+        "voucher_date": "2020-12-28",
+        "preparer": "王丽娟",
+        "checker": "陈国强",
+        "attachments_count": 4,
+        "associated_doc_id": "53004417",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 108392680.0,
+            "credit": 0.0,
+            "summary": "支付云南滇和医药咨询服务有限公司市场推广服务款"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 6503560.8,
+            "credit": 0.0,
+            "summary": "支付云南滇和医药咨询服务有限公司市场推广服务款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 114896240.8,
+            "summary": "支付云南滇和医药咨询服务有限公司市场推广服务款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "BL-2020-12-031",
+        "voucher_date": "2020-12-31",
+        "preparer": "王丽娟",
+        "checker": "陈国强",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 2146380.52,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 418760.33,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 2565140.85,
+            "summary": "计提12月固定资产折旧"
+          }
+        ]
+      },
+      {
+        "voucher_id": "BL-2020-12-035",
+        "voucher_date": "2020-12-31",
+        "preparer": "王丽娟",
+        "checker": "陈国强",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-职工薪酬",
+            "debit": 3200000.0,
+            "credit": 0.0,
+            "summary": "计提2020年度年终奖"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-职工薪酬",
+            "debit": 1800000.0,
+            "credit": 0.0,
+            "summary": "计提2020年度年终奖"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 5000000.0,
+            "summary": "计提2020年度年终奖"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "BL-XS-2020-011",
+        "customer_or_vendor": "九州通医药集团股份有限公司",
+        "sign_date": "2020-01-08",
+        "total_amount": 9774500.0,
+        "payment_terms": "货到后90天内电汇",
+        "delivery_condition": "送达客户指定仓库签收即视为交付",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "BL-TG-2020-003",
+        "customer_or_vendor": "贵州黔康医药推广有限公司",
+        "sign_date": "2020-01-06",
+        "total_amount": 140361829.2,
+        "payment_terms": "按季度根据推广活动执行报告结算，服务完成经甲方验收后付款",
+        "delivery_condition": "服务期2020年1月1日至2020年12月31日，各季度活动执行报告已经甲方市场部验收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "BL-TG-2020-007",
+        "customer_or_vendor": "云南滇和医药咨询服务有限公司",
+        "sign_date": "2020-01-06",
+        "total_amount": 114896240.8,
+        "payment_terms": "按季度根据推广活动执行报告结算，服务完成经甲方验收后付款",
+        "delivery_condition": "服务期2020年1月1日至2020年12月31日，各季度活动执行报告已经甲方市场部验收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "52001234",
+        "invoice_date": "2020-03-20",
+        "buyer_name": "九州通医药集团股份有限公司",
+        "seller_name": "贵州百灵企业集团制药股份有限公司",
+        "amount_without_tax": 8650000.0,
+        "tax_amount": 1124500.0,
+        "total_amount": 9774500.0,
+        "goods_or_service": "咳速停糖浆等中成药"
+      },
+      {
+        "invoice_no": "52007781",
+        "invoice_date": "2020-12-21",
+        "buyer_name": "贵州百灵企业集团制药股份有限公司",
+        "seller_name": "贵州黔康医药推广有限公司",
+        "amount_without_tax": 132416820.0,
+        "tax_amount": 7945009.2,
+        "total_amount": 140361829.2,
+        "goods_or_service": "市场推广服务费（2020年1-12月学术推广活动）"
+      },
+      {
+        "invoice_no": "53004417",
+        "invoice_date": "2020-12-28",
+        "buyer_name": "贵州百灵企业集团制药股份有限公司",
+        "seller_name": "云南滇和医药咨询服务有限公司",
+        "amount_without_tax": 108392680.0,
+        "tax_amount": 6503560.8,
+        "total_amount": 114896240.8,
+        "goods_or_service": "市场推广服务费（2020年1-12月学术推广活动）"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-BL-0618",
+        "transaction_time": "2020-06-18 10:12",
+        "counterparty_name": "九州通医药集团股份有限公司",
+        "counterparty_account": "4200***318",
+        "amount": 9774500.0,
+        "remark": "货款",
+        "balance_after": 621774500.0
+      },
+      {
+        "transaction_id": "TXN-BL-0723",
+        "transaction_time": "2020-07-23 15:40",
+        "counterparty_name": "贵州医科大学附属医院",
+        "counterparty_account": "2402***776",
+        "amount": -1860000.0,
+        "remark": "临床研究服务费",
+        "balance_after": 619914500.0
+      },
+      {
+        "transaction_id": "TXN-BL-1221",
+        "transaction_time": "2020-12-21 09:31",
+        "counterparty_name": "贵州黔康医药推广有限公司",
+        "counterparty_account": "5220***781",
+        "amount": -140361829.2,
+        "remark": "推广服务费",
+        "balance_after": 479552670.8
+      },
+      {
+        "transaction_id": "TXN-BL-1228",
+        "transaction_time": "2020-12-28 14:05",
+        "counterparty_name": "云南滇和医药咨询服务有限公司",
+        "counterparty_account": "5220***417",
+        "amount": -114896240.8,
+        "remark": "推广服务费",
+        "balance_after": 364656430.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "少计销售费用：已发生并经验收的全年推广服务费挂账预付账款，未按权责发生制计入当期销售费用",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 240809500.0,
+        "amount_basis": "预付账款借方不含税合计（应计入2020年销售费用），=决定书认定2020年少计销售费用24,080.95万元",
+        "expected_vouchers": [
+          "BL-2020-12-018",
+          "BL-2020-12-026"
+        ],
+        "standard_clause": "《企业会计准则——基本准则》第九条（权责发生制）；《证券法》第七十八条第二款、第一百九十七条第二款"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND2_002",
+    "company_name": "上海北特科技股份有限公司",
+    "stock_code": "603009",
+    "penalty_decision_no": "上海证监局行政处罚决定书沪〔2021〕22号",
+    "source_url": "http://www.csrc.gov.cn/shanghai/c103864/c1665917/content.shtml",
+    "case_category": "收入提前确认与费用跨期（截止性错报）",
+    "csrc_summary": "全资子公司上海光裕2018年对三家客户未满足收入确认条件多计收入2,811.98万元、成本2,000.32万元；少计索赔费240.40万元；少计外协加工费225.30万元；合计多计2018年利润总额1,277.36万元。",
+    "industry": "汽车零部件（汽车空调压缩机）",
+    "audit_period": "2018年度",
+    "description": "汽车空调压缩机制造子公司，客户为空调总成厂，按客户上线领用结算。下列为2018年度及期后2019年1月部分凭证、合同、发票和银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "GY-2018-12-071",
+        "voucher_date": "2018-12-27",
+        "preparer": "顾晓燕",
+        "checker": "沈立新",
+        "attachments_count": 1,
+        "associated_doc_id": "GY-XS-HBMB-18",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 13034224.0,
+            "credit": 0.0,
+            "summary": "湖北美标汽车制冷系统有限公司压缩机销售"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 11236400.0,
+            "summary": "湖北美标汽车制冷系统有限公司压缩机销售"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 1797824.0,
+            "summary": "湖北美标汽车制冷系统有限公司压缩机销售"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 7993000.0,
+            "credit": 0.0,
+            "summary": "结转压缩机成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 7993000.0,
+            "summary": "结转压缩机成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GY-2018-12-078",
+        "voucher_date": "2018-12-29",
+        "preparer": "顾晓燕",
+        "checker": "沈立新",
+        "attachments_count": 1,
+        "associated_doc_id": "GY-XS-JHSZ-18",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 11454536.0,
+            "credit": 0.0,
+            "summary": "安徽江淮松芝空调有限公司压缩机销售"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 9874600.0,
+            "summary": "安徽江淮松芝空调有限公司压缩机销售"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 1579936.0,
+            "summary": "安徽江淮松芝空调有限公司压缩机销售"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 7024500.0,
+            "credit": 0.0,
+            "summary": "结转压缩机成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 7024500.0,
+            "summary": "结转压缩机成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GY-2018-12-085",
+        "voucher_date": "2018-12-31",
+        "preparer": "顾晓燕",
+        "checker": "沈立新",
+        "attachments_count": 1,
+        "associated_doc_id": "GY-XS-BJSZ-18",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 8130208.0,
+            "credit": 0.0,
+            "summary": "北京松芝汽车空调有限公司压缩机销售"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 7008800.0,
+            "summary": "北京松芝汽车空调有限公司压缩机销售"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 1121408.0,
+            "summary": "北京松芝汽车空调有限公司压缩机销售"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 4985700.0,
+            "credit": 0.0,
+            "summary": "结转压缩机成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 4985700.0,
+            "summary": "结转压缩机成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GY-2018-10-044",
+        "voucher_date": "2018-10-26",
+        "preparer": "顾晓燕",
+        "checker": "沈立新",
+        "attachments_count": 3,
+        "associated_doc_id": "31007702",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 7360200.0,
+            "credit": 0.0,
+            "summary": "协众9月结算单销售"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 6345000.0,
+            "summary": "协众9月结算单销售"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 1015200.0,
+            "summary": "协众9月结算单销售"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 4826300.0,
+            "credit": 0.0,
+            "summary": "结转成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 4826300.0,
+            "summary": "结转成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GY-2018-11-019",
+        "voucher_date": "2018-11-15",
+        "preparer": "顾晓燕",
+        "checker": "沈立新",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-GY-1115",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 5800000.0,
+            "credit": 0.0,
+            "summary": "收协众货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 5800000.0,
+            "summary": "收协众货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GY-2018-12-090",
+        "voucher_date": "2018-12-31",
+        "preparer": "顾晓燕",
+        "checker": "沈立新",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 1384520.17,
+            "credit": 0.0,
+            "summary": "计提12月折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 96410.55,
+            "credit": 0.0,
+            "summary": "计提12月折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 1480930.72,
+            "summary": "计提12月折旧"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GY-2019-01-012",
+        "voucher_date": "2019-01-18",
+        "preparer": "顾晓燕",
+        "checker": "沈立新",
+        "attachments_count": 2,
+        "associated_doc_id": "11002219",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-索赔费",
+            "debit": 2404000.0,
+            "credit": 0.0,
+            "summary": "松芝四季度三包索赔"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 144240.0,
+            "credit": 0.0,
+            "summary": "松芝四季度三包索赔"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 2548240.0,
+            "summary": "松芝四季度三包索赔抵减货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GY-2019-01-027",
+        "voucher_date": "2019-01-22",
+        "preparer": "顾晓燕",
+        "checker": "沈立新",
+        "attachments_count": 2,
+        "associated_doc_id": "31009046",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本-外协加工费",
+            "debit": 2253000.0,
+            "credit": 0.0,
+            "summary": "精锐12月外协加工费"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 360480.0,
+            "credit": 0.0,
+            "summary": "精锐12月外协加工费"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 2613480.0,
+            "summary": "精锐12月外协加工费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GY-2019-02-008",
+        "voucher_date": "2019-02-20",
+        "preparer": "顾晓燕",
+        "checker": "沈立新",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-GY-0220",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 2613480.0,
+            "credit": 0.0,
+            "summary": "付精锐外协加工费"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 2613480.0,
+            "summary": "付精锐外协加工费"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "GY-XS-HBMB-18",
+        "customer_or_vendor": "湖北美标汽车制冷系统有限公司",
+        "sign_date": "2018-01-05",
+        "total_amount": 52136896.0,
+        "payment_terms": "按月对账开票，票到60天付款",
+        "delivery_condition": "寄售模式：货物发至客户寄售仓，以客户装车上线领用并出具月度结算单作为交付及结算依据",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "GY-XS-JHSZ-18",
+        "customer_or_vendor": "安徽江淮松芝空调有限公司",
+        "sign_date": "2018-01-05",
+        "total_amount": 45818144.0,
+        "payment_terms": "按月对账开票，票到60天付款",
+        "delivery_condition": "寄售模式：货物发至客户寄售仓，以客户装车上线领用并出具月度结算单作为交付及结算依据",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "GY-XS-BJSZ-18",
+        "customer_or_vendor": "北京松芝汽车空调有限公司",
+        "sign_date": "2018-01-05",
+        "total_amount": 32520832.0,
+        "payment_terms": "按月对账开票，票到60天付款",
+        "delivery_condition": "寄售模式：货物发至客户寄售仓，以客户装车上线领用并出具月度结算单作为交付及结算依据",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "GY-XS-NJXZ-18",
+        "customer_or_vendor": "南京协众汽车空调集团有限公司",
+        "sign_date": "2018-01-10",
+        "total_amount": 52000000.0,
+        "payment_terms": "按月结算，票到90天付款",
+        "delivery_condition": "以客户上线领用月度结算单为准",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "GY-WX-2018-02",
+        "customer_or_vendor": "昆山精锐机械加工有限公司",
+        "sign_date": "2018-01-03",
+        "total_amount": 18000000.0,
+        "payment_terms": "月结，票到30天付款",
+        "delivery_condition": "按月出具加工对账单",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "31008821",
+        "invoice_date": "2019-01-25",
+        "buyer_name": "湖北美标汽车制冷系统有限公司",
+        "seller_name": "上海光裕汽车空调压缩机有限公司",
+        "amount_without_tax": 11236400.0,
+        "tax_amount": 1797824.0,
+        "total_amount": 13034224.0,
+        "goods_or_service": "汽车空调压缩机（2019年1月结算单）"
+      },
+      {
+        "invoice_no": "31008835",
+        "invoice_date": "2019-01-28",
+        "buyer_name": "安徽江淮松芝空调有限公司",
+        "seller_name": "上海光裕汽车空调压缩机有限公司",
+        "amount_without_tax": 9874600.0,
+        "tax_amount": 1579936.0,
+        "total_amount": 11454536.0,
+        "goods_or_service": "汽车空调压缩机（2019年1月结算单）"
+      },
+      {
+        "invoice_no": "31007702",
+        "invoice_date": "2018-10-26",
+        "buyer_name": "南京协众汽车空调集团有限公司",
+        "seller_name": "上海光裕汽车空调压缩机有限公司",
+        "amount_without_tax": 6345000.0,
+        "tax_amount": 1015200.0,
+        "total_amount": 7360200.0,
+        "goods_or_service": "电动压缩机（9月结算单）"
+      },
+      {
+        "invoice_no": "11002219",
+        "invoice_date": "2018-12-20",
+        "buyer_name": "上海光裕汽车空调压缩机有限公司",
+        "seller_name": "北京松芝汽车空调有限公司",
+        "amount_without_tax": 2404000.0,
+        "tax_amount": 144240.0,
+        "total_amount": 2548240.0,
+        "goods_or_service": "质量三包索赔费（2018年10-12月）"
+      },
+      {
+        "invoice_no": "31009046",
+        "invoice_date": "2018-12-25",
+        "buyer_name": "上海光裕汽车空调压缩机有限公司",
+        "seller_name": "昆山精锐机械加工有限公司",
+        "amount_without_tax": 2253000.0,
+        "tax_amount": 360480.0,
+        "total_amount": 2613480.0,
+        "goods_or_service": "压缩机缸体外协机加工费（2018年12月）"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-GY-1115",
+        "transaction_time": "2018-11-15 11:20",
+        "counterparty_name": "南京协众汽车空调集团有限公司",
+        "counterparty_account": "3201***552",
+        "amount": 5800000.0,
+        "remark": "货款",
+        "balance_after": 54300000.0
+      },
+      {
+        "transaction_id": "TXN-GY-0220",
+        "transaction_time": "2019-02-20 10:02",
+        "counterparty_name": "昆山精锐机械加工有限公司",
+        "counterparty_account": "3220***190",
+        "amount": -2613480.0,
+        "remark": "加工费",
+        "balance_after": 51686520.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "收入提前确认：寄售模式下客户尚未上线领用、未出具结算单即于年末确认收入（发票期后开具）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 28119800.0,
+        "amount_basis": "主营业务收入贷方不含税合计（三张年末凭证）；对应成本20,003,200元，多计利润811.66万元",
+        "expected_vouchers": [
+          "GY-2018-12-071",
+          "GY-2018-12-078",
+          "GY-2018-12-085"
+        ],
+        "standard_clause": "《企业会计准则第14号——收入》第五条（控制权转移）；2014年《证券法》第六十三条、第一百九十三条第一款"
+      },
+      {
+        "finding_type": "销售费用跨期：2018年第四季度索赔费推迟至2019年入账",
+        "expected_risk_level": "MEDIUM",
+        "expected_amount": 2404000.0,
+        "amount_basis": "销售费用-索赔费借方合计",
+        "expected_vouchers": [
+          "GY-2019-01-012"
+        ],
+        "standard_clause": "《企业会计准则——基本准则》第九条、第十九条（及时性）"
+      },
+      {
+        "finding_type": "成本费用跨期：2018年12月外协加工费推迟至2019年入账",
+        "expected_risk_level": "MEDIUM",
+        "expected_amount": 2253000.0,
+        "amount_basis": "主营业务成本-外协加工费借方合计",
+        "expected_vouchers": [
+          "GY-2019-01-027"
+        ],
+        "standard_clause": "《企业会计准则——基本准则》第九条、第十九条（及时性）"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND2_003",
+    "company_name": "安徽德豪润达电气股份有限公司",
+    "stock_code": "002005",
+    "penalty_decision_no": "安徽证监局行政处罚决定书〔2021〕6号",
+    "source_url": "http://www.csrc.gov.cn/anhui/c103978/c1493876/content.shtml",
+    "case_category": "少计提资产减值/坏账准备、未确认预计负债",
+    "csrc_summary": "2018年少计提LED芯片业务非流动资产减值准备2,910,586,411.77元、少计提其他应收款坏账准备95,000,000元、未计提未决诉讼预计负债452,971,200元，合计虚增2018年利润3,458,557,611.77元；另未披露关停LED芯片工厂重大事件。",
+    "industry": "电气机械/LED芯片",
+    "audit_period": "2018年度",
+    "description": "小家电与LED芯片双主业企业，2018年LED芯片行业价格下滑。下列为2018年度部分凭证、合同、发票及银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "DH-2018-09-033",
+        "voucher_date": "2018-09-14",
+        "preparer": "黄美玲",
+        "checker": "郭志辉",
+        "attachments_count": 3,
+        "associated_doc_id": "44001876",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 27352800.0,
+            "credit": 0.0,
+            "summary": "小家电销售"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 23580000.0,
+            "summary": "小家电销售"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 3772800.0,
+            "summary": "小家电销售"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 19846200.0,
+            "credit": 0.0,
+            "summary": "结转成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 19846200.0,
+            "summary": "结转成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DH-2018-02-011",
+        "voucher_date": "2018-02-08",
+        "preparer": "黄美玲",
+        "checker": "郭志辉",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-DH-0208",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 10000000.0,
+            "credit": 0.0,
+            "summary": "收产业扶持基金"
+          },
+          {
+            "account_code": "1221",
+            "account_name": "其他应收款-政府补助",
+            "debit": 0.0,
+            "credit": 10000000.0,
+            "summary": "收产业扶持基金"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DH-2018-04-019",
+        "voucher_date": "2018-04-26",
+        "preparer": "黄美玲",
+        "checker": "郭志辉",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-DH-0426",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 15000000.0,
+            "credit": 0.0,
+            "summary": "收产业扶持基金"
+          },
+          {
+            "account_code": "1221",
+            "account_name": "其他应收款-政府补助",
+            "debit": 0.0,
+            "credit": 15000000.0,
+            "summary": "收产业扶持基金"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DH-2018-12-088",
+        "voucher_date": "2018-12-31",
+        "preparer": "黄美玲",
+        "checker": "郭志辉",
+        "attachments_count": 2,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "6701",
+            "account_name": "资产减值损失",
+            "debit": 2910586411.77,
+            "credit": 0.0,
+            "summary": "芯片事业部长期资产减值测试计提"
+          },
+          {
+            "account_code": "1603",
+            "account_name": "固定资产减值准备",
+            "debit": 0.0,
+            "credit": 2910586411.77,
+            "summary": "芯片事业部长期资产减值测试计提"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DH-2018-12-090",
+        "voucher_date": "2018-12-31",
+        "preparer": "黄美玲",
+        "checker": "郭志辉",
+        "attachments_count": 0,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "1603",
+            "account_name": "固定资产减值准备",
+            "debit": 2910586411.77,
+            "credit": 0.0,
+            "summary": "按年度经营会议意见调整芯片资产减值"
+          },
+          {
+            "account_code": "6701",
+            "account_name": "资产减值损失",
+            "debit": 0.0,
+            "credit": 2910586411.77,
+            "summary": "按年度经营会议意见调整芯片资产减值"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DH-2018-12-095",
+        "voucher_date": "2018-12-31",
+        "preparer": "黄美玲",
+        "checker": "郭志辉",
+        "attachments_count": 1,
+        "associated_doc_id": "DH-ZC-2017-01",
+        "entries": [
+          {
+            "account_code": "6701",
+            "account_name": "资产减值损失",
+            "debit": 5000000.0,
+            "credit": 0.0,
+            "summary": "其他应收款按账龄计提坏账"
+          },
+          {
+            "account_code": "1231",
+            "account_name": "坏账准备",
+            "debit": 0.0,
+            "credit": 5000000.0,
+            "summary": "其他应收款按账龄计提坏账"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DH-2018-11-052",
+        "voucher_date": "2018-11-20",
+        "preparer": "黄美玲",
+        "checker": "郭志辉",
+        "attachments_count": 2,
+        "associated_doc_id": "TXN-DH-1120",
+        "entries": [
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-诉讼费",
+            "debit": 2620000.0,
+            "credit": 0.0,
+            "summary": "支付美国加州诉讼案律师费（陪审团裁决阶段）"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 2620000.0,
+            "summary": "支付美国加州诉讼案律师费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DH-2018-12-097",
+        "voucher_date": "2018-12-31",
+        "preparer": "黄美玲",
+        "checker": "郭志辉",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 38625410.36,
+            "credit": 0.0,
+            "summary": "计提12月折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 3184207.92,
+            "credit": 0.0,
+            "summary": "计提12月折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 41809618.28,
+            "summary": "计提12月折旧"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "DH-ZC-2017-01",
+        "customer_or_vendor": "蚌埠市高新区管委会",
+        "sign_date": "2017-06-20",
+        "total_amount": 125000000.0,
+        "payment_terms": "分期拨付：2018年2月1,000万元、4月1,500万元已拨；2019年1月管委会函告剩余10,000万元停止拨付",
+        "delivery_condition": "倒装芯片项目产业扶持基金，以项目建设进度为拨付条件",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "DH-FW-2018-07",
+        "customer_or_vendor": "美国Sidley律师事务所（代理）",
+        "sign_date": "2018-03-15",
+        "total_amount": 4800000.0,
+        "payment_terms": "按阶段付费",
+        "delivery_condition": "Lumileds诉讼案件代理",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "44001876",
+        "invoice_date": "2018-09-14",
+        "buyer_name": "SEB Asia Ltd.代理商广州思佰商贸有限公司",
+        "seller_name": "安徽德豪润达电气股份有限公司",
+        "amount_without_tax": 23580000.0,
+        "tax_amount": 3772800.0,
+        "total_amount": 27352800.0,
+        "goods_or_service": "多士炉、咖啡机等小家电"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-DH-0208",
+        "transaction_time": "2018-02-08 10:30",
+        "counterparty_name": "蚌埠高新技术产业开发区财政局",
+        "counterparty_account": "3403***001",
+        "amount": 10000000.0,
+        "remark": "产业扶持资金",
+        "balance_after": 396000000.0
+      },
+      {
+        "transaction_id": "TXN-DH-0426",
+        "transaction_time": "2018-04-26 09:45",
+        "counterparty_name": "蚌埠高新技术产业开发区财政局",
+        "counterparty_account": "3403***001",
+        "amount": 15000000.0,
+        "remark": "产业扶持资金",
+        "balance_after": 411000000.0
+      },
+      {
+        "transaction_id": "TXN-DH-1120",
+        "transaction_time": "2018-11-20 16:10",
+        "counterparty_name": "Sidley Austin LLP",
+        "counterparty_account": "US***4471",
+        "amount": -2620000.0,
+        "remark": "Legal fee",
+        "balance_after": 408380000.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "少计提长期资产减值：芯片资产年末已按测试结果计提减值，又以无附件凭证全额冲回",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 2910586411.77,
+        "amount_basis": "资产减值损失贷方合计（冲回额）=决定书认定少计提数",
+        "expected_vouchers": [
+          "DH-2018-12-090"
+        ],
+        "standard_clause": "《企业会计准则第8号——资产减值》第五条、第六条；2005年《证券法》第六十三条、第一百九十三条第一款"
+      },
+      {
+        "finding_type": "少计提坏账准备：已告知停止拨付的政府补助其他应收款1亿元仅按账龄计提500万元",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 95000000.0,
+        "amount_basis": "应计提100,000,000元减已计提5,000,000元（凭证金额5,000,000元）",
+        "expected_vouchers": [
+          "DH-2018-12-095"
+        ],
+        "standard_clause": "《企业会计准则第22号——金融工具确认和计量》（2006）第四十条、第四十一条"
+      },
+      {
+        "finding_type": "未确认预计负债：美国诉讼陪审团裁决须赔偿6,600万美元，年末未计提",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 452971200.0,
+        "amount_basis": "6,600万美元×6.8632（2018-12-31汇率）；账套中仅见律师费凭证，无预计负债分录",
+        "expected_vouchers": [
+          "DH-2018-11-052"
+        ],
+        "standard_clause": "《企业会计准则第13号——或有事项》第四条"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND2_004",
+    "company_name": "山东如意毛纺服装集团股份有限公司",
+    "stock_code": "002193",
+    "penalty_decision_no": "山东证监局行政处罚决定书〔2026〕21号",
+    "source_url": "http://www.csrc.gov.cn/shandong/c104216/c7635223/content.shtml",
+    "case_category": "无依据终止确认负债虚增营业外收入",
+    "csrc_summary": "2015-2021年形成对第三方应付款10,427.38万元，2024年8月30日在无充分债务豁免证据情况下终止确认并计入2024年上半年营业外收入，虚增2024年半年度利润总额10,427.38万元（占195.74%）；另2022年未对佛山莱卡长期股权投资计提减值67,695.58万元。",
+    "industry": "纺织服装（精纺呢绒）",
+    "audit_period": "2024年1-6月",
+    "description": "精纺毛料与服装生产企业。下列为2024年上半年部分凭证、合同、发票和银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "RY-2024-03-021",
+        "voucher_date": "2024-03-12",
+        "preparer": "孔德芳",
+        "checker": "李春华",
+        "attachments_count": 3,
+        "associated_doc_id": "37004512",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 7665920.0,
+            "credit": 0.0,
+            "summary": "销售精纺面料"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 6784000.0,
+            "summary": "销售精纺面料"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 881920.0,
+            "summary": "销售精纺面料"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 5912300.0,
+            "credit": 0.0,
+            "summary": "结转成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 5912300.0,
+            "summary": "结转成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RY-2024-04-009",
+        "voucher_date": "2024-04-16",
+        "preparer": "孔德芳",
+        "checker": "李春华",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-RY-0416",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 7665920.0,
+            "credit": 0.0,
+            "summary": "收阳光集团货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 7665920.0,
+            "summary": "收阳光集团货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RY-2024-06-030",
+        "voucher_date": "2024-06-30",
+        "preparer": "孔德芳",
+        "checker": "李春华",
+        "attachments_count": 0,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 61358200.0,
+            "credit": 0.0,
+            "summary": "转销鲁信长期未付货款"
+          },
+          {
+            "account_code": "6301",
+            "account_name": "营业外收入",
+            "debit": 0.0,
+            "credit": 61358200.0,
+            "summary": "转销鲁信长期未付货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RY-2024-06-031",
+        "voucher_date": "2024-06-30",
+        "preparer": "孔德芳",
+        "checker": "李春华",
+        "attachments_count": 0,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 42915600.0,
+            "credit": 0.0,
+            "summary": "转销恒泰长期未付货款"
+          },
+          {
+            "account_code": "6301",
+            "account_name": "营业外收入",
+            "debit": 0.0,
+            "credit": 42915600.0,
+            "summary": "转销恒泰长期未付货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RY-2024-06-033",
+        "voucher_date": "2024-06-30",
+        "preparer": "孔德芳",
+        "checker": "李春华",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 5368221.4,
+            "credit": 0.0,
+            "summary": "计提6月折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 712904.66,
+            "credit": 0.0,
+            "summary": "计提6月折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 6081126.06,
+            "summary": "计提6月折旧"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RY-2024-05-014",
+        "voucher_date": "2024-05-10",
+        "preparer": "孔德芳",
+        "checker": "李春华",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-RY-0510",
+        "entries": [
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 8460000.0,
+            "credit": 0.0,
+            "summary": "发放4月工资"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 8460000.0,
+            "summary": "发放4月工资"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "RY-XS-2024-008",
+        "customer_or_vendor": "江苏阳光集团进出口有限公司",
+        "sign_date": "2024-01-15",
+        "total_amount": 15000000.0,
+        "payment_terms": "款到发货30%，余款60天",
+        "delivery_condition": "送货至买方仓库签收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "RY-CG-2016-031",
+        "customer_or_vendor": "济宁鲁信纺织原料有限公司",
+        "sign_date": "2016-04-10",
+        "total_amount": 61358200.0,
+        "payment_terms": "货到验收后付款",
+        "delivery_condition": "已到货，2016-2019年分批到货，尚欠款项未付",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "RY-CG-2018-114",
+        "customer_or_vendor": "淄博恒泰毛条贸易有限公司",
+        "sign_date": "2018-09-03",
+        "total_amount": 42915600.0,
+        "payment_terms": "货到验收后付款",
+        "delivery_condition": "已到货，尚欠款项未付",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "37004512",
+        "invoice_date": "2024-03-12",
+        "buyer_name": "江苏阳光集团进出口有限公司",
+        "seller_name": "山东如意毛纺服装集团股份有限公司",
+        "amount_without_tax": 6784000.0,
+        "tax_amount": 881920.0,
+        "total_amount": 7665920.0,
+        "goods_or_service": "精纺呢绒面料"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-RY-0416",
+        "transaction_time": "2024-04-16 14:22",
+        "counterparty_name": "江苏阳光集团进出口有限公司",
+        "counterparty_account": "3202***615",
+        "amount": 7665920.0,
+        "remark": "货款",
+        "balance_after": 60865920.0
+      },
+      {
+        "transaction_id": "TXN-RY-0510",
+        "transaction_time": "2024-05-10 16:00",
+        "counterparty_name": "代发工资专户",
+        "counterparty_account": "3708***020",
+        "amount": -8460000.0,
+        "remark": "代发工资",
+        "balance_after": 52405920.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "无依据终止确认应付账款并确认营业外收入：长期挂账应付款无债务豁免协议或债权人确认即转销",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 104273800.0,
+        "amount_basis": "营业外收入贷方合计（两张凭证），=决定书认定10,427.38万元",
+        "expected_vouchers": [
+          "RY-2024-06-030",
+          "RY-2024-06-031"
+        ],
+        "standard_clause": "《企业会计准则第22号——金融工具确认和计量》第十二条（金融负债终止确认）；《证券法》第七十八条第二款、第一百九十七条第二款"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND2_005",
+    "company_name": "江苏凯伦建材股份有限公司",
+    "stock_code": "300715",
+    "penalty_decision_no": "江苏证监局行政处罚决定书〔2023〕14号",
+    "source_url": "http://www.csrc.gov.cn/jiangsu/c103902/c7453389/content.shtml",
+    "case_category": "控股股东以预付款名义非经营性资金占用（未披露）",
+    "csrc_summary": "2021年6月至2023年2月，公司及子公司以预付款名义向苏州蓝航建材、江阴市江海非织造布、南京旭泰建材等供应商转出资金，经苏州四海汇商贸中间方账户最终流入控股股东凯伦控股，占用合计35,937.70万元；2021年全年发生额24,875.95万元，未在定期报告披露。",
+    "industry": "建材（防水卷材）",
+    "audit_period": "2021年度",
+    "description": "防水材料生产企业，主要原材料为沥青、聚酯胎基布、无纺布。下列为2021年度部分凭证、采购合同、发票及银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "KL-2021-06-041",
+        "voucher_date": "2021-06-17",
+        "preparer": "钱晓梅",
+        "checker": "季明",
+        "attachments_count": 1,
+        "associated_doc_id": "KL-CG-2021-015",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 10000000.0,
+            "credit": 0.0,
+            "summary": "预付苏州蓝航建材有限公司材料款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 10000000.0,
+            "summary": "预付苏州蓝航建材有限公司材料款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "KL-2021-06-058",
+        "voucher_date": "2021-06-28",
+        "preparer": "钱晓梅",
+        "checker": "季明",
+        "attachments_count": 1,
+        "associated_doc_id": "KL-CG-2021-022",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 93759500.0,
+            "credit": 0.0,
+            "summary": "预付江阴市江海非织造布有限公司材料款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 93759500.0,
+            "summary": "预付江阴市江海非织造布有限公司材料款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "KL-2021-09-033",
+        "voucher_date": "2021-09-23",
+        "preparer": "钱晓梅",
+        "checker": "季明",
+        "attachments_count": 1,
+        "associated_doc_id": "KL-CG-2021-037",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 82000000.0,
+            "credit": 0.0,
+            "summary": "预付南京旭泰建材有限公司材料款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 82000000.0,
+            "summary": "预付南京旭泰建材有限公司材料款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "KL-2021-11-027",
+        "voucher_date": "2021-11-19",
+        "preparer": "钱晓梅",
+        "checker": "季明",
+        "attachments_count": 1,
+        "associated_doc_id": "KL-CG-2021-015",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 63000000.0,
+            "credit": 0.0,
+            "summary": "预付苏州蓝航建材有限公司材料款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 63000000.0,
+            "summary": "预付苏州蓝航建材有限公司材料款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "KL-2021-08-019",
+        "voucher_date": "2021-08-10",
+        "preparer": "钱晓梅",
+        "checker": "季明",
+        "attachments_count": 3,
+        "associated_doc_id": "32005521",
+        "entries": [
+          {
+            "account_code": "1403",
+            "account_name": "原材料",
+            "debit": 2150000.0,
+            "credit": 0.0,
+            "summary": "蓝航沥青到货入库"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 279500.0,
+            "credit": 0.0,
+            "summary": "蓝航沥青到货入库"
+          },
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 0.0,
+            "credit": 2429500.0,
+            "summary": "冲预付款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "KL-2021-10-026",
+        "voucher_date": "2021-10-15",
+        "preparer": "钱晓梅",
+        "checker": "季明",
+        "attachments_count": 4,
+        "associated_doc_id": "32007780",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 20975060.0,
+            "credit": 0.0,
+            "summary": "中建三局防水卷材销售"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 18562000.0,
+            "summary": "中建三局防水卷材销售"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 2413060.0,
+            "summary": "中建三局防水卷材销售"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 13140600.0,
+            "credit": 0.0,
+            "summary": "结转成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 13140600.0,
+            "summary": "结转成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "KL-2021-12-061",
+        "voucher_date": "2021-12-31",
+        "preparer": "钱晓梅",
+        "checker": "季明",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 2785140.2,
+            "credit": 0.0,
+            "summary": "计提12月折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 341207.65,
+            "credit": 0.0,
+            "summary": "计提12月折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 3126347.85,
+            "summary": "计提12月折旧"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "KL-CG-2021-015",
+        "customer_or_vendor": "苏州蓝航建材有限公司",
+        "sign_date": "2021-03-02",
+        "total_amount": 12000000.0,
+        "payment_terms": "货到验收后60天付款",
+        "delivery_condition": "供方送货至七都工厂，验收入库后结算",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "KL-CG-2021-022",
+        "customer_or_vendor": "江阴市江海非织造布有限公司",
+        "sign_date": "2021-04-12",
+        "total_amount": 8600000.0,
+        "payment_terms": "月结30天",
+        "delivery_condition": "供方送货至七都工厂，验收入库后结算",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "KL-CG-2021-037",
+        "customer_or_vendor": "南京旭泰建材有限公司",
+        "sign_date": "2021-07-20",
+        "total_amount": 5000000.0,
+        "payment_terms": "货到付款",
+        "delivery_condition": "供方送货至七都工厂，验收入库后结算",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "KL-XS-2021-102",
+        "customer_or_vendor": "中建三局集团有限公司",
+        "sign_date": "2021-02-25",
+        "total_amount": 60000000.0,
+        "payment_terms": "按月对量，票到90天付款，可用商票",
+        "delivery_condition": "送货至施工现场签收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "32005521",
+        "invoice_date": "2021-08-10",
+        "buyer_name": "江苏凯伦建材股份有限公司",
+        "seller_name": "苏州蓝航建材有限公司",
+        "amount_without_tax": 2150000.0,
+        "tax_amount": 279500.0,
+        "total_amount": 2429500.0,
+        "goods_or_service": "SBS改性沥青"
+      },
+      {
+        "invoice_no": "32007780",
+        "invoice_date": "2021-10-15",
+        "buyer_name": "中建三局集团有限公司",
+        "seller_name": "江苏凯伦建材股份有限公司",
+        "amount_without_tax": 18562000.0,
+        "tax_amount": 2413060.0,
+        "total_amount": 20975060.0,
+        "goods_or_service": "高分子防水卷材"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-KL-0617",
+        "transaction_time": "2021-06-17 10:15",
+        "counterparty_name": "苏州蓝航建材有限公司",
+        "counterparty_account": "6228***301",
+        "amount": -10000000.0,
+        "remark": "预付货款",
+        "balance_after": 410000000.0
+      },
+      {
+        "transaction_id": "TXN-KL-0628",
+        "transaction_time": "2021-06-28 15:48",
+        "counterparty_name": "江阴市江海非织造布有限公司",
+        "counterparty_account": "6217***882",
+        "amount": -93759500.0,
+        "remark": "预付货款",
+        "balance_after": 316240500.0
+      },
+      {
+        "transaction_id": "TXN-KL-0923",
+        "transaction_time": "2021-09-23 11:06",
+        "counterparty_name": "南京旭泰建材有限公司",
+        "counterparty_account": "6222***705",
+        "amount": -82000000.0,
+        "remark": "预付货款",
+        "balance_after": 234240500.0
+      },
+      {
+        "transaction_id": "TXN-KL-1119",
+        "transaction_time": "2021-11-19 16:31",
+        "counterparty_name": "苏州蓝航建材有限公司",
+        "counterparty_account": "6228***301",
+        "amount": -63000000.0,
+        "remark": "预付货款",
+        "balance_after": 171240500.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "控股股东非经营性资金占用：以预付材料款名义向供应商大额转款（远超合同总额、无对应到货），资金经中间方流向控股股东",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 248759500.0,
+        "amount_basis": "预付账款借方合计（四笔），=决定书认定2021年全年占用发生额24,875.95万元",
+        "expected_vouchers": [
+          "KL-2021-06-041",
+          "KL-2021-06-058",
+          "KL-2021-09-033",
+          "KL-2021-11-027"
+        ],
+        "standard_clause": "《上市公司信息披露管理办法》（证监会令第182号）第三条；《公开发行证券的公司信息披露内容与格式准则第2号》第四十五条；《证券法》第七十八条、第一百九十七条"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND2_006",
+    "company_name": "林州重机集团股份有限公司",
+    "stock_code": "002535",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2020〕49号",
+    "source_url": "http://epaper.zqrb.cn/html/2020-08/21/content_653600.htm?div=-1",
+    "case_category": "虚增在建工程及利息资本化虚减财务费用",
+    "csrc_summary": "子公司朗坤科技在未收到兰州中煤设备实物、物流单据和发票的情况下将1.95亿元转入在建工程，并按313天、年利率7.03%计提资本化利息11,918,779.16元；母公司以该利息抵减财务费用并确认销项税，合并时未抵销。2017年虚增在建工程2.07亿元、虚减预付账款1.95亿元、虚减财务费用11,244,131.28元（占利润总额48.72%）。",
+    "industry": "专用设备制造（煤矿机械）",
+    "audit_period": "2017年度",
+    "description": "煤矿综采设备制造集团，子公司林州朗坤科技有限公司建设新产线。下列为2017年度母子公司部分凭证（合并口径）、合同、发票及银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "LZ-2017-02-037",
+        "voucher_date": "2017-02-21",
+        "preparer": "曹丽",
+        "checker": "崔明亮",
+        "attachments_count": 2,
+        "associated_doc_id": "LZ-CG-2017-006",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款-兰州中煤",
+            "debit": 195000000.0,
+            "credit": 0.0,
+            "summary": "预付产线设备款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 195000000.0,
+            "summary": "预付产线设备款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LZ-2017-12-061",
+        "voucher_date": "2017-12-28",
+        "preparer": "曹丽",
+        "checker": "崔明亮",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "1221",
+            "account_name": "其他应收款-朗坤科技",
+            "debit": 195000000.0,
+            "credit": 0.0,
+            "summary": "设备预付款划转朗坤科技"
+          },
+          {
+            "account_code": "1123",
+            "account_name": "预付账款-兰州中煤",
+            "debit": 0.0,
+            "credit": 195000000.0,
+            "summary": "设备预付款划转朗坤科技"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LK-2017-12-021",
+        "voucher_date": "2017-12-28",
+        "preparer": "赵敏",
+        "checker": "崔明亮",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "1604",
+            "account_name": "在建工程-智能产线",
+            "debit": 195000000.0,
+            "credit": 0.0,
+            "summary": "母公司代付产线设备款转在建工程"
+          },
+          {
+            "account_code": "2241",
+            "account_name": "其他应付款-林州重机",
+            "debit": 0.0,
+            "credit": 195000000.0,
+            "summary": "母公司代付产线设备款转在建工程"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LK-2017-12-022",
+        "voucher_date": "2017-12-31",
+        "preparer": "赵敏",
+        "checker": "崔明亮",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "1604",
+            "account_name": "在建工程-智能产线",
+            "debit": 11918779.16,
+            "credit": 0.0,
+            "summary": "计提母公司资金使用费（313天×7.03%）资本化"
+          },
+          {
+            "account_code": "2241",
+            "account_name": "其他应付款-林州重机",
+            "debit": 0.0,
+            "credit": 11918779.16,
+            "summary": "计提母公司资金使用费资本化"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LZ-2017-12-063",
+        "voucher_date": "2017-12-31",
+        "preparer": "曹丽",
+        "checker": "崔明亮",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "1221",
+            "account_name": "其他应收款-朗坤科技",
+            "debit": 11918779.16,
+            "credit": 0.0,
+            "summary": "应收朗坤科技资金使用费"
+          },
+          {
+            "account_code": "6603",
+            "account_name": "财务费用-利息收入",
+            "debit": 0.0,
+            "credit": 11244131.28,
+            "summary": "应收朗坤科技资金使用费"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 674647.88,
+            "summary": "应收朗坤科技资金使用费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LZ-2017-11-019",
+        "voucher_date": "2017-11-08",
+        "preparer": "曹丽",
+        "checker": "崔明亮",
+        "attachments_count": 4,
+        "associated_doc_id": "41006612",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 30946500.0,
+            "credit": 0.0,
+            "summary": "黄陵矿业液压支架销售"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 26450000.0,
+            "summary": "黄陵矿业液压支架销售"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 4496500.0,
+            "summary": "黄陵矿业液压支架销售"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 21530800.0,
+            "credit": 0.0,
+            "summary": "结转成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 21530800.0,
+            "summary": "结转成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LZ-2017-12-070",
+        "voucher_date": "2017-12-31",
+        "preparer": "曹丽",
+        "checker": "崔明亮",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 9216405.83,
+            "credit": 0.0,
+            "summary": "计提12月折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 1132760.04,
+            "credit": 0.0,
+            "summary": "计提12月折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 10349165.87,
+            "summary": "计提12月折旧"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LZ-2017-12-045",
+        "voucher_date": "2017-12-21",
+        "preparer": "曹丽",
+        "checker": "崔明亮",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-LZ-1221",
+        "entries": [
+          {
+            "account_code": "6603",
+            "account_name": "财务费用-利息支出",
+            "debit": 8735416.67,
+            "credit": 0.0,
+            "summary": "支付银行借款四季度利息"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 8735416.67,
+            "summary": "支付银行借款四季度利息"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "LZ-CG-2017-006",
+        "customer_or_vendor": "兰州中煤机电设备有限公司",
+        "sign_date": "2017-02-15",
+        "total_amount": 195000000.0,
+        "payment_terms": "合同签订后预付100%",
+        "delivery_condition": "设备交付须附物流单据、到货验收单及增值税专用发票，验收合格后转固",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "LZ-XS-2017-088",
+        "customer_or_vendor": "陕西陕煤黄陵矿业有限公司",
+        "sign_date": "2017-06-12",
+        "total_amount": 30946500.0,
+        "payment_terms": "到货验收付60%，质保金10%",
+        "delivery_condition": "运至矿方指定地点验收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "41006612",
+        "invoice_date": "2017-11-08",
+        "buyer_name": "陕西陕煤黄陵矿业有限公司",
+        "seller_name": "林州重机集团股份有限公司",
+        "amount_without_tax": 26450000.0,
+        "tax_amount": 4496500.0,
+        "total_amount": 30946500.0,
+        "goods_or_service": "ZY液压支架"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-LZ-0221",
+        "transaction_time": "2017-02-21 10:40",
+        "counterparty_name": "兰州中煤机电设备有限公司",
+        "counterparty_account": "6205***337",
+        "amount": -195000000.0,
+        "remark": "设备款",
+        "balance_after": 115000000.0
+      },
+      {
+        "transaction_id": "TXN-LZ-1221",
+        "transaction_time": "2017-12-21 09:00",
+        "counterparty_name": "中原银行林州支行",
+        "counterparty_account": "4105***009",
+        "amount": -8735416.67,
+        "remark": "贷款利息",
+        "balance_after": 106264583.33
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "虚增在建工程：设备未到货、无物流单据和发票即将预付设备款转入在建工程，并将内部资金使用费资本化",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 206918779.16,
+        "amount_basis": "在建工程借方合计（195,000,000+11,918,779.16），=决定书认定虚增在建工程2.07亿元",
+        "expected_vouchers": [
+          "LK-2017-12-021",
+          "LK-2017-12-022"
+        ],
+        "standard_clause": "《企业会计准则第4号——固定资产》第四条；《企业会计准则第17号——借款费用》；2005年《证券法》第六十三条、第一百九十三条第一款"
+      },
+      {
+        "finding_type": "虚减财务费用：母公司对子公司内部资金使用费冲减财务费用，合并时未与子公司资本化利息抵销",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 11244131.28,
+        "amount_basis": "财务费用贷方合计（母公司凭证）",
+        "expected_vouchers": [
+          "LZ-2017-12-063"
+        ],
+        "standard_clause": "《企业会计准则第33号——合并财务报表》（内部交易抵销）"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND2_007",
+    "company_name": "江苏德威新材料股份有限公司",
+    "stock_code": "300325",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2021〕85号",
+    "source_url": "http://www.csrc.gov.cn/csrc/c101928/c1560142/content.shtml",
+    "case_category": "票据类：以虚假银行承兑汇票掩盖关联方资金占用",
+    "csrc_summary": "为掩盖关联方菲尔普斯资金占用，2018年年报虚增银行承兑汇票651,524,191.19元，2019年年报虚增商业承兑汇票1,103,940,148.67元；关联方菲尔普斯2018年末占用余额7.95亿元未披露；另有关联采购2.38亿元及关联担保、诉讼未披露。",
+    "industry": "化学原料（电线电缆用高分子材料）",
+    "audit_period": "2018年度",
+    "description": "电缆料生产企业，主要客户为线缆厂，主要原材料PVC、PE树脂。下列为2018年度部分凭证、合同、发票、票据关联记录及银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "DW-2018-03-012",
+        "voucher_date": "2018-03-16",
+        "preparer": "陆晓红",
+        "checker": "周文",
+        "attachments_count": 1,
+        "associated_doc_id": "DW-CG-2018-001",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款-菲尔普斯",
+            "debit": 215000000.0,
+            "credit": 0.0,
+            "summary": "预付菲尔普斯进口树脂款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 215000000.0,
+            "summary": "预付菲尔普斯进口树脂款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DW-2018-07-026",
+        "voucher_date": "2018-07-19",
+        "preparer": "陆晓红",
+        "checker": "周文",
+        "attachments_count": 1,
+        "associated_doc_id": "DW-CG-2018-001",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款-菲尔普斯",
+            "debit": 300000000.0,
+            "credit": 0.0,
+            "summary": "预付菲尔普斯进口树脂款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 300000000.0,
+            "summary": "预付菲尔普斯进口树脂款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DW-2018-10-019",
+        "voucher_date": "2018-10-25",
+        "preparer": "陆晓红",
+        "checker": "周文",
+        "attachments_count": 1,
+        "associated_doc_id": "DW-CG-2018-001",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款-菲尔普斯",
+            "debit": 280000000.0,
+            "credit": 0.0,
+            "summary": "预付菲尔普斯进口树脂款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 280000000.0,
+            "summary": "预付菲尔普斯进口树脂款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DW-2018-12-071",
+        "voucher_date": "2018-12-27",
+        "preparer": "陆晓红",
+        "checker": "周文",
+        "attachments_count": 1,
+        "associated_doc_id": "BA-2018-1227-01~12",
+        "entries": [
+          {
+            "account_code": "1121",
+            "account_name": "应收票据-银行承兑汇票",
+            "debit": 381524191.19,
+            "credit": 0.0,
+            "summary": "菲尔普斯退回预付款（收银行承兑汇票12张）"
+          },
+          {
+            "account_code": "1123",
+            "account_name": "预付账款-菲尔普斯",
+            "debit": 0.0,
+            "credit": 381524191.19,
+            "summary": "菲尔普斯退回预付款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DW-2018-12-079",
+        "voucher_date": "2018-12-29",
+        "preparer": "陆晓红",
+        "checker": "周文",
+        "attachments_count": 1,
+        "associated_doc_id": "BA-2018-1229-01~08",
+        "entries": [
+          {
+            "account_code": "1121",
+            "account_name": "应收票据-银行承兑汇票",
+            "debit": 270000000.0,
+            "credit": 0.0,
+            "summary": "菲尔普斯退回预付款（收银行承兑汇票8张）"
+          },
+          {
+            "account_code": "1123",
+            "account_name": "预付账款-菲尔普斯",
+            "debit": 0.0,
+            "credit": 270000000.0,
+            "summary": "菲尔普斯退回预付款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DW-2018-08-044",
+        "voucher_date": "2018-08-22",
+        "preparer": "陆晓红",
+        "checker": "周文",
+        "attachments_count": 3,
+        "associated_doc_id": "32004410",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 18358160.0,
+            "credit": 0.0,
+            "summary": "亨通电缆料销售"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 15826000.0,
+            "summary": "亨通电缆料销售"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 2532160.0,
+            "summary": "亨通电缆料销售"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 13310400.0,
+            "credit": 0.0,
+            "summary": "结转成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 13310400.0,
+            "summary": "结转成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DW-2018-10-031",
+        "voucher_date": "2018-10-22",
+        "preparer": "陆晓红",
+        "checker": "周文",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-DW-1022",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 18358160.0,
+            "credit": 0.0,
+            "summary": "收亨通货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 18358160.0,
+            "summary": "收亨通货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "DW-2018-12-085",
+        "voucher_date": "2018-12-31",
+        "preparer": "陆晓红",
+        "checker": "周文",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 3618402.77,
+            "credit": 0.0,
+            "summary": "计提12月折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 402118.36,
+            "credit": 0.0,
+            "summary": "计提12月折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 4020521.13,
+            "summary": "计提12月折旧"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "DW-CG-2018-001",
+        "customer_or_vendor": "苏州菲尔普斯国际贸易有限公司",
+        "sign_date": "2018-01-05",
+        "total_amount": 120000000.0,
+        "payment_terms": "预付30%，货到验收后付余款",
+        "delivery_condition": "进口树脂到港后转运至太仓工厂验收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "DW-XS-2018-055",
+        "customer_or_vendor": "江苏亨通线缆科技有限公司",
+        "sign_date": "2018-03-01",
+        "total_amount": 60000000.0,
+        "payment_terms": "月结60天，可背书银票",
+        "delivery_condition": "送货至客户仓库签收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "32004410",
+        "invoice_date": "2018-08-22",
+        "buyer_name": "江苏亨通线缆科技有限公司",
+        "seller_name": "江苏德威新材料股份有限公司",
+        "amount_without_tax": 15826000.0,
+        "tax_amount": 2532160.0,
+        "total_amount": 18358160.0,
+        "goods_or_service": "低烟无卤电缆料"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-DW-0316",
+        "transaction_time": "2018-03-16 10:22",
+        "counterparty_name": "苏州菲尔普斯国际贸易有限公司",
+        "counterparty_account": "3205***668",
+        "amount": -215000000.0,
+        "remark": "货款",
+        "balance_after": 645000000.0
+      },
+      {
+        "transaction_id": "TXN-DW-0719",
+        "transaction_time": "2018-07-19 14:37",
+        "counterparty_name": "苏州菲尔普斯国际贸易有限公司",
+        "counterparty_account": "3205***668",
+        "amount": -300000000.0,
+        "remark": "货款",
+        "balance_after": 345000000.0
+      },
+      {
+        "transaction_id": "TXN-DW-1022",
+        "transaction_time": "2018-10-22 11:12",
+        "counterparty_name": "江苏亨通线缆科技有限公司",
+        "counterparty_account": "3205***120",
+        "amount": 18358160.0,
+        "remark": "货款",
+        "balance_after": 363358160.0
+      },
+      {
+        "transaction_id": "TXN-DW-1025",
+        "transaction_time": "2018-10-25 09:58",
+        "counterparty_name": "苏州菲尔普斯国际贸易有限公司",
+        "counterparty_account": "3205***668",
+        "amount": -280000000.0,
+        "remark": "货款",
+        "balance_after": 83358160.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "票据类异常：年末以对方'退回预付款'名义确认大额银行承兑汇票，票据无出票行/前手背书信息、无对应银行托收或贴现流水",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 651524191.19,
+        "amount_basis": "应收票据借方合计（两张年末凭证），=决定书认定2018年虚增银行承兑汇票651,524,191.19元",
+        "expected_vouchers": [
+          "DW-2018-12-071",
+          "DW-2018-12-079"
+        ],
+        "standard_clause": "《企业会计准则——基本准则》第十二条（真实性）；2005年《证券法》第六十三条、第一百九十三条第一款"
+      },
+      {
+        "finding_type": "关联方非经营性资金占用：以预付树脂款名义向控股股东控制的资金平台划转资金，金额远超合同且无到货",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 795000000.0,
+        "amount_basis": "预付账款-菲尔普斯借方合计（三笔），=决定书认定2018年末占用余额7.95亿元",
+        "expected_vouchers": [
+          "DW-2018-03-012",
+          "DW-2018-07-026",
+          "DW-2018-10-019"
+        ],
+        "standard_clause": "《公开发行证券的公司信息披露内容与格式准则第2号》第三十一条；《上市公司信息披露管理办法》（证监会令第40号）第七十一条"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND2_008",
+    "company_name": "上海华铭智能终端设备股份有限公司",
+    "stock_code": "300462",
+    "penalty_decision_no": "上海证监局行政处罚决定书沪〔2026〕13号",
+    "source_url": "https://www.csrc.gov.cn/shanghai/c103864/c7637388/content.shtml",
+    "case_category": "费用错误分类（销售居间费记研发费用）及销售费用未按权责发生制计提",
+    "csrc_summary": "子公司聚利科技将第三方居间、代理等销售推广服务费用部分确认为研发费用，且未按权责发生制准确计提销售费用，导致华铭智能2020年虚增利润总额2,531.54万元（占18.76%）、2021年虚减利润总额3,570.37万元。",
+    "industry": "专用设备（ETC电子不停车收费设备）",
+    "audit_period": "2020年度",
+    "description": "子公司北京聚利科技有限公司生产ETC车载单元与路侧单元，通过区域代理及居间服务商拓展发行方客户。下列为2020年度及期后部分凭证、合同、发票和银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "JL-2020-09-021",
+        "voucher_date": "2020-09-18",
+        "preparer": "范丽",
+        "checker": "孙伟",
+        "attachments_count": 2,
+        "associated_doc_id": "11007345",
+        "entries": [
+          {
+            "account_code": "530101",
+            "account_name": "研发支出-费用化支出(技术服务费)",
+            "debit": 3860000.0,
+            "credit": 0.0,
+            "summary": "通衢技术服务费"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 231600.0,
+            "credit": 0.0,
+            "summary": "通衢技术服务费"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 4091600.0,
+            "summary": "通衢技术服务费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "JL-2021-01-008",
+        "voucher_date": "2021-01-14",
+        "preparer": "范丽",
+        "checker": "孙伟",
+        "attachments_count": 3,
+        "associated_doc_id": "44002871",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-代理服务费",
+            "debit": 14215400.0,
+            "credit": 0.0,
+            "summary": "广东粤通智联科技服务有限公司代理推广服务费"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 852924.0,
+            "credit": 0.0,
+            "summary": "广东粤通智联科技服务有限公司代理推广服务费"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 15068324.0,
+            "summary": "广东粤通智联科技服务有限公司代理推广服务费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "JL-2021-01-015",
+        "voucher_date": "2021-01-26",
+        "preparer": "范丽",
+        "checker": "孙伟",
+        "attachments_count": 3,
+        "associated_doc_id": "32008853",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-代理服务费",
+            "debit": 11100000.0,
+            "credit": 0.0,
+            "summary": "江苏苏畅交通信息咨询有限公司代理推广服务费"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 666000.0,
+            "credit": 0.0,
+            "summary": "江苏苏畅交通信息咨询有限公司代理推广服务费"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 11766000.0,
+            "summary": "江苏苏畅交通信息咨询有限公司代理推广服务费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "JL-2020-11-012",
+        "voucher_date": "2020-11-06",
+        "preparer": "范丽",
+        "checker": "孙伟",
+        "attachments_count": 4,
+        "associated_doc_id": "11006620",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 36883200.0,
+            "credit": 0.0,
+            "summary": "粤通卡OBU销售"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 32640000.0,
+            "summary": "粤通卡OBU销售"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 4243200.0,
+            "summary": "粤通卡OBU销售"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 22015300.0,
+            "credit": 0.0,
+            "summary": "结转成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 22015300.0,
+            "summary": "结转成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "JL-2020-08-030",
+        "voucher_date": "2020-08-27",
+        "preparer": "范丽",
+        "checker": "孙伟",
+        "attachments_count": 2,
+        "associated_doc_id": "TXN-JL-0827",
+        "entries": [
+          {
+            "account_code": "530101",
+            "account_name": "研发支出-费用化支出(材料)",
+            "debit": 1286450.3,
+            "credit": 0.0,
+            "summary": "新一代双片式OBU研发领料及测试费（附银行回单）"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 1286450.3,
+            "summary": "研发测试费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "JL-2020-12-066",
+        "voucher_date": "2020-12-31",
+        "preparer": "范丽",
+        "checker": "孙伟",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-职工薪酬",
+            "debit": 2600000.0,
+            "credit": 0.0,
+            "summary": "计提2020年度销售人员年终奖"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-职工薪酬",
+            "debit": 1400000.0,
+            "credit": 0.0,
+            "summary": "计提年终奖"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 4000000.0,
+            "summary": "计提年终奖"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "JL-JJ-2020-004",
+        "customer_or_vendor": "北京通衢商务咨询有限公司",
+        "sign_date": "2020-02-10",
+        "total_amount": 4091600.0,
+        "payment_terms": "按促成订单金额的2.5%于订单回款后支付",
+        "delivery_condition": "乙方负责省级ETC发行方客户的商务沟通与订单促成，以客户签约为服务成果",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "JL-DL-2020-011",
+        "customer_or_vendor": "广东粤通智联科技服务有限公司",
+        "sign_date": "2020-03-01",
+        "total_amount": 15068324.0,
+        "payment_terms": "按季度结算，2020年度服务费于2020年12月确认",
+        "delivery_condition": "乙方为甲方ETC OBU产品在区域内发行提供代理推广服务，服务期2020年3月1日至12月31日",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "JL-DL-2020-016",
+        "customer_or_vendor": "江苏苏畅交通信息咨询有限公司",
+        "sign_date": "2020-03-01",
+        "total_amount": 11766000.0,
+        "payment_terms": "按季度结算，2020年度服务费于2020年12月确认",
+        "delivery_condition": "乙方为甲方ETC OBU产品在区域内发行提供代理推广服务，服务期2020年3月1日至12月31日",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "JL-XS-2020-031",
+        "customer_or_vendor": "广东联合电子服务股份有限公司",
+        "sign_date": "2020-06-15",
+        "total_amount": 45000000.0,
+        "payment_terms": "到货验收后支付90%",
+        "delivery_condition": "送货至客户仓库验收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "11007345",
+        "invoice_date": "2020-09-18",
+        "buyer_name": "北京聚利科技有限公司",
+        "seller_name": "北京通衢商务咨询有限公司",
+        "amount_without_tax": 3860000.0,
+        "tax_amount": 231600.0,
+        "total_amount": 4091600.0,
+        "goods_or_service": "技术咨询服务费"
+      },
+      {
+        "invoice_no": "44002871",
+        "invoice_date": "2020-12-18",
+        "buyer_name": "北京聚利科技有限公司",
+        "seller_name": "广东粤通智联科技服务有限公司",
+        "amount_without_tax": 14215400.0,
+        "tax_amount": 852924.0,
+        "total_amount": 15068324.0,
+        "goods_or_service": "ETC产品代理推广服务费（2020年度）"
+      },
+      {
+        "invoice_no": "32008853",
+        "invoice_date": "2020-12-25",
+        "buyer_name": "北京聚利科技有限公司",
+        "seller_name": "江苏苏畅交通信息咨询有限公司",
+        "amount_without_tax": 11100000.0,
+        "tax_amount": 666000.0,
+        "total_amount": 11766000.0,
+        "goods_or_service": "ETC产品代理推广服务费（2020年度）"
+      },
+      {
+        "invoice_no": "11006620",
+        "invoice_date": "2020-11-06",
+        "buyer_name": "广东联合电子服务股份有限公司",
+        "seller_name": "北京聚利科技有限公司",
+        "amount_without_tax": 32640000.0,
+        "tax_amount": 4243200.0,
+        "total_amount": 36883200.0,
+        "goods_or_service": "ETC车载单元OBU"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-JL-0827",
+        "transaction_time": "2020-08-27 10:05",
+        "counterparty_name": "国家无线电监测中心检测中心",
+        "counterparty_account": "1100***612",
+        "amount": -1286450.3,
+        "remark": "检测费",
+        "balance_after": 93713549.7
+      },
+      {
+        "transaction_id": "TXN-JL-0918",
+        "transaction_time": "2020-09-18 13:50",
+        "counterparty_name": "北京通衢商务咨询有限公司",
+        "counterparty_account": "1109***045",
+        "amount": -4091600.0,
+        "remark": "服务费",
+        "balance_after": 89621949.7
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "销售费用未按权责发生制计提：2020年度代理推广服务已完成并于2020年12月开票，推迟至2021年1月入账",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 25315400.0,
+        "amount_basis": "销售费用借方合计（两张期后凭证），=决定书认定2020年虚增利润总额2,531.54万元",
+        "expected_vouchers": [
+          "JL-2021-01-008",
+          "JL-2021-01-015"
+        ],
+        "standard_clause": "《企业会计准则——基本准则》第九条、第十九条；《证券法》第七十八条第二款、第一百九十七条第二款"
+      },
+      {
+        "finding_type": "费用错误分类：合同约定为订单促成的居间服务费记入研发支出（技术服务费）",
+        "expected_risk_level": "MEDIUM",
+        "expected_amount": 3860000.0,
+        "amount_basis": "研发支出借方合计（决定书未单列该类金额，按账套金额）",
+        "expected_vouchers": [
+          "JL-2020-09-021"
+        ],
+        "standard_clause": "《企业会计准则——基本准则》第十六条（实质重于形式）、第十八条"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND2_009",
+    "company_name": "江苏吴中医药发展股份有限公司",
+    "stock_code": "600200",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2025〕145号",
+    "source_url": "https://www.csrc.gov.cn/csrc/c101928/c7598059/content.shtml",
+    "case_category": "关联方无商业实质贸易虚增收入成本+以采购款名义资金占用",
+    "csrc_summary": "子公司与浙江优诺德贸易等关联公司开展无商业实质贸易，2021年虚增营业收入46,850.82万元、营业成本44,823.70万元、利润总额2,027.12万元；以支付贸易采购款形式向关联方提供资金，2021年末非经营性占用余额139,262.91万元未披露；隐瞒实际控制人。",
+    "industry": "医药+贸易（大宗商品贸易子公司）",
+    "audit_period": "2021年度",
+    "description": "医药工业企业，下属进出口及贸易子公司从事化工原料、有色金属贸易。下列为2021年度贸易板块部分凭证、合同、发票和银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "SW-2021-06-018",
+        "voucher_date": "2021-06-25",
+        "preparer": "骆佳",
+        "checker": "孙晓峰",
+        "attachments_count": 2,
+        "associated_doc_id": "33006101",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 224215232.8,
+            "credit": 0.0,
+            "summary": "浙江优诺德贸易有限公司电解铜销售"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 198420560.0,
+            "summary": "浙江优诺德贸易有限公司电解铜销售"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 25794672.8,
+            "summary": "浙江优诺德贸易有限公司电解铜销售"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 189836300.0,
+            "credit": 0.0,
+            "summary": "结转电解铜成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 189836300.0,
+            "summary": "结转电解铜成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SW-2021-12-021",
+        "voucher_date": "2021-12-24",
+        "preparer": "骆佳",
+        "checker": "孙晓峰",
+        "attachments_count": 2,
+        "associated_doc_id": "33009452",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 305199033.2,
+            "credit": 0.0,
+            "summary": "杭州恒聚供应链管理有限公司电解铜销售"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 270087640.0,
+            "summary": "杭州恒聚供应链管理有限公司电解铜销售"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 35111393.2,
+            "summary": "杭州恒聚供应链管理有限公司电解铜销售"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 258400700.0,
+            "credit": 0.0,
+            "summary": "结转电解铜成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 258400700.0,
+            "summary": "结转电解铜成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SW-2021-03-031",
+        "voucher_date": "2021-03-31",
+        "preparer": "骆佳",
+        "checker": "孙晓峰",
+        "attachments_count": 1,
+        "associated_doc_id": "SW-CG-2021-002",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款-上海锦瑞",
+            "debit": 412000000.0,
+            "credit": 0.0,
+            "summary": "预付电解铜采购款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 412000000.0,
+            "summary": "预付电解铜采购款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SW-2021-06-029",
+        "voucher_date": "2021-06-30",
+        "preparer": "骆佳",
+        "checker": "孙晓峰",
+        "attachments_count": 1,
+        "associated_doc_id": "SW-CG-2021-002",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款-上海锦瑞",
+            "debit": 503629100.0,
+            "credit": 0.0,
+            "summary": "预付电解铜采购款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 503629100.0,
+            "summary": "预付电解铜采购款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SW-2021-12-030",
+        "voucher_date": "2021-12-31",
+        "preparer": "骆佳",
+        "checker": "孙晓峰",
+        "attachments_count": 1,
+        "associated_doc_id": "SW-CG-2021-002",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款-上海锦瑞",
+            "debit": 477000000.0,
+            "credit": 0.0,
+            "summary": "预付电解铜采购款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 477000000.0,
+            "summary": "预付电解铜采购款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SW-2021-09-015",
+        "voucher_date": "2021-09-14",
+        "preparer": "王蕾",
+        "checker": "孙晓峰",
+        "attachments_count": 2,
+        "associated_doc_id": "TXN-SW-0914",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-广告宣传费",
+            "debit": 1350000.0,
+            "credit": 0.0,
+            "summary": "支付吴中医药品牌推广费（附银行回单）"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 1350000.0,
+            "summary": "品牌推广费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SW-2021-12-040",
+        "voucher_date": "2021-12-31",
+        "preparer": "王蕾",
+        "checker": "孙晓峰",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 2214380.06,
+            "credit": 0.0,
+            "summary": "计提12月折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 486201.39,
+            "credit": 0.0,
+            "summary": "计提12月折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 2700581.45,
+            "summary": "计提12月折旧"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "SW-XS-6101",
+        "customer_or_vendor": "浙江优诺德贸易有限公司",
+        "sign_date": "2021-06-01",
+        "total_amount": 224215232.8,
+        "payment_terms": "货权转移后季末前付清",
+        "delivery_condition": "仓单货权转移，不发生实物运输",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "SW-XS-9452",
+        "customer_or_vendor": "杭州恒聚供应链管理有限公司",
+        "sign_date": "2021-12-01",
+        "total_amount": 305199033.2,
+        "payment_terms": "货权转移后季末前付清",
+        "delivery_condition": "仓单货权转移，不发生实物运输",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "SW-CG-2021-002",
+        "customer_or_vendor": "上海锦瑞金属材料有限公司",
+        "sign_date": "2021-01-10",
+        "total_amount": 300000000.0,
+        "payment_terms": "预付100%，次季度交付仓单",
+        "delivery_condition": "仓单交付，不发生实物运输",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "33006101",
+        "invoice_date": "2021-06-25",
+        "buyer_name": "浙江优诺德贸易有限公司",
+        "seller_name": "中吴贸易发展(杭州)有限公司",
+        "amount_without_tax": 198420560.0,
+        "tax_amount": 25794672.8,
+        "total_amount": 224215232.8,
+        "goods_or_service": "电解铜（货权转移）"
+      },
+      {
+        "invoice_no": "33009452",
+        "invoice_date": "2021-12-24",
+        "buyer_name": "杭州恒聚供应链管理有限公司",
+        "seller_name": "中吴贸易发展(杭州)有限公司",
+        "amount_without_tax": 270087640.0,
+        "tax_amount": 35111393.2,
+        "total_amount": 305199033.2,
+        "goods_or_service": "电解铜（货权转移）"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-SW-0330",
+        "transaction_time": "2021-03-30 16:42",
+        "counterparty_name": "浙江优诺德贸易有限公司",
+        "counterparty_account": "3301***218",
+        "amount": 405000000.0,
+        "remark": "货款",
+        "balance_after": 620000000.0
+      },
+      {
+        "transaction_id": "TXN-SW-0331",
+        "transaction_time": "2021-03-31 09:05",
+        "counterparty_name": "上海锦瑞金属材料有限公司",
+        "counterparty_account": "3100***557",
+        "amount": -412000000.0,
+        "remark": "采购款",
+        "balance_after": 208000000.0
+      },
+      {
+        "transaction_id": "TXN-SW-0629",
+        "transaction_time": "2021-06-29 17:05",
+        "counterparty_name": "浙江优诺德贸易有限公司",
+        "counterparty_account": "3301***218",
+        "amount": 498000000.0,
+        "remark": "货款",
+        "balance_after": 706000000.0
+      },
+      {
+        "transaction_id": "TXN-SW-0630B",
+        "transaction_time": "2021-06-30 09:12",
+        "counterparty_name": "上海锦瑞金属材料有限公司",
+        "counterparty_account": "3100***557",
+        "amount": -503629100.0,
+        "remark": "采购款",
+        "balance_after": 202370900.0
+      },
+      {
+        "transaction_id": "TXN-SW-0914",
+        "transaction_time": "2021-09-14 10:30",
+        "counterparty_name": "苏州广电传媒集团有限公司",
+        "counterparty_account": "3205***700",
+        "amount": -1350000.0,
+        "remark": "广告费",
+        "balance_after": 201020900.0
+      },
+      {
+        "transaction_id": "TXN-SW-1230",
+        "transaction_time": "2021-12-30 16:58",
+        "counterparty_name": "杭州恒聚供应链管理有限公司",
+        "counterparty_account": "3301***964",
+        "amount": 470000000.0,
+        "remark": "货款",
+        "balance_after": 671020900.0
+      },
+      {
+        "transaction_id": "TXN-SW-1231B",
+        "transaction_time": "2021-12-31 09:20",
+        "counterparty_name": "上海锦瑞金属材料有限公司",
+        "counterparty_account": "3100***557",
+        "amount": -477000000.0,
+        "remark": "采购款",
+        "balance_after": 194020900.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "无商业实质的循环贸易虚增收入：仓单货权转移、无实物流转，客户与供应商受同一方控制，季末回款次日即等额预付",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 468508200.0,
+        "amount_basis": "主营业务收入贷方不含税合计（两张凭证），=决定书认定2021年虚增营业收入46,850.82万元；对应成本448,237,000元=44,823.70万元",
+        "expected_vouchers": [
+          "SW-2021-06-018",
+          "SW-2021-12-021"
+        ],
+        "standard_clause": "《企业会计准则第14号——收入》第五条（商业实质）；《证券法》第七十八条第二款、第一百九十七条第二款"
+      },
+      {
+        "finding_type": "关联方非经营性资金占用：以预付贸易采购款形式在季末向关联供应商划款",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 1392629100.0,
+        "amount_basis": "预付账款-上海锦瑞借方合计（三笔），=决定书认定2021年末占用余额139,262.91万元（账套设计口径）",
+        "expected_vouchers": [
+          "SW-2021-03-031",
+          "SW-2021-06-029",
+          "SW-2021-12-030"
+        ],
+        "standard_clause": "《公开发行证券的公司信息披露内容与格式准则第2号》；《证券法》第七十八条第二款、第一百九十七条第二款"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND2_010",
+    "company_name": "北京弘高创意建筑设计股份有限公司",
+    "stock_code": "002504",
+    "penalty_decision_no": "北京证监局行政处罚决定书〔2023〕12号",
+    "source_url": "http://www.csrc.gov.cn/beijing/c105546/c7453463/content.shtml",
+    "case_category": "工程收入未如实核算（合同解除/结算未调整）",
+    "csrc_summary": "子公司弘高装饰通过虚构工程合同、挂靠项目按总额确认、合同解除年度未核算、已结算项目未按结算金额调整等方式虚增收入利润；2020年因合同解除未核算虚增收入6,048.19万元、利润103.06万元，因已结算未调整虚增收入231.47万元、利润1,324.87万元，合计虚增收入6,279.66万元、利润1,427.93万元。",
+    "industry": "建筑装饰",
+    "audit_period": "2020年度",
+    "description": "公共建筑装饰工程企业，按履约进度确认工程收入。下列为2020年度部分凭证、工程合同、发票和银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "HG-2020-06-018",
+        "voucher_date": "2020-06-30",
+        "preparer": "杨倩",
+        "checker": "张宇",
+        "attachments_count": 1,
+        "associated_doc_id": "HG-GC-2019-021",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 36913286.0,
+            "credit": 0.0,
+            "summary": "曲江项目按履约进度确认收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 33865400.0,
+            "summary": "曲江项目按履约进度确认收入"
+          },
+          {
+            "account_code": "22210106",
+            "account_name": "应交税费-待转销项税额",
+            "debit": 0.0,
+            "credit": 3047886.0,
+            "summary": "曲江项目按履约进度确认收入"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 33264900.0,
+            "credit": 0.0,
+            "summary": "曲江项目结转合同履约成本"
+          },
+          {
+            "account_code": "5401",
+            "account_name": "合同履约成本",
+            "debit": 0.0,
+            "credit": 33264900.0,
+            "summary": "曲江项目结转合同履约成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HG-2020-12-044",
+        "voucher_date": "2020-12-31",
+        "preparer": "杨倩",
+        "checker": "张宇",
+        "attachments_count": 1,
+        "associated_doc_id": "HG-GC-2019-021",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 29011985.0,
+            "credit": 0.0,
+            "summary": "曲江项目按履约进度确认收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 26616500.0,
+            "summary": "曲江项目按履约进度确认收入"
+          },
+          {
+            "account_code": "22210106",
+            "account_name": "应交税费-待转销项税额",
+            "debit": 0.0,
+            "credit": 2395485.0,
+            "summary": "曲江项目按履约进度确认收入"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 26186400.0,
+            "credit": 0.0,
+            "summary": "曲江项目结转合同履约成本"
+          },
+          {
+            "account_code": "5401",
+            "account_name": "合同履约成本",
+            "debit": 0.0,
+            "credit": 26186400.0,
+            "summary": "曲江项目结转合同履约成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HG-2020-12-051",
+        "voucher_date": "2020-12-31",
+        "preparer": "杨倩",
+        "checker": "张宇",
+        "attachments_count": 1,
+        "associated_doc_id": "HG-GC-2017-008",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 2523023.0,
+            "credit": 0.0,
+            "summary": "滨海文化中心项目确认剩余收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 2314700.0,
+            "summary": "滨海文化中心项目确认剩余收入"
+          },
+          {
+            "account_code": "22210106",
+            "account_name": "应交税费-待转销项税额",
+            "debit": 0.0,
+            "credit": 208323.0,
+            "summary": "滨海文化中心项目确认剩余收入"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HG-2020-10-027",
+        "voucher_date": "2020-10-20",
+        "preparer": "杨倩",
+        "checker": "张宇",
+        "attachments_count": 3,
+        "associated_doc_id": "11004478",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 8999040.0,
+            "credit": 0.0,
+            "summary": "机场商业区项目进度结算"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 8256000.0,
+            "summary": "机场商业区项目进度结算"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 743040.0,
+            "summary": "机场商业区项目进度结算"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 7148500.0,
+            "credit": 0.0,
+            "summary": "结转合同履约成本"
+          },
+          {
+            "account_code": "5401",
+            "account_name": "合同履约成本",
+            "debit": 0.0,
+            "credit": 7148500.0,
+            "summary": "结转合同履约成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HG-2020-11-009",
+        "voucher_date": "2020-11-24",
+        "preparer": "杨倩",
+        "checker": "张宇",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-HG-1124",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 7200000.0,
+            "credit": 0.0,
+            "summary": "收机场商业区进度款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 7200000.0,
+            "summary": "收机场商业区进度款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HG-2020-12-060",
+        "voucher_date": "2020-12-31",
+        "preparer": "杨倩",
+        "checker": "张宇",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 215480.36,
+            "credit": 0.0,
+            "summary": "计提12月折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 215480.36,
+            "summary": "计提12月折旧"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "HG-GC-2019-021",
+        "customer_or_vendor": "西安曲江文化商业运营有限公司",
+        "sign_date": "2019-05-10",
+        "total_amount": 152000000.0,
+        "payment_terms": "按月进度付款70%，竣工结算付至95%",
+        "delivery_condition": "2020年3月18日双方签署合同解除协议，现场停工撤场，已完工程量待双方核对",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "HG-GC-2017-008",
+        "customer_or_vendor": "天津滨海文化中心管理有限公司",
+        "sign_date": "2017-08-01",
+        "total_amount": 98500000.0,
+        "payment_terms": "竣工后按审定结算价付至97%",
+        "delivery_condition": "已于2020年9月取得审计结算报告，审定结算价86,280,000元，较合同价核减",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "HG-GC-2020-003",
+        "customer_or_vendor": "北京首都机场商贸有限公司",
+        "sign_date": "2020-01-16",
+        "total_amount": 36000000.0,
+        "payment_terms": "按月进度付款80%",
+        "delivery_condition": "按监理确认进度",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "11004478",
+        "invoice_date": "2020-10-20",
+        "buyer_name": "北京首都机场商贸有限公司",
+        "seller_name": "北京弘高建筑装饰设计工程有限公司",
+        "amount_without_tax": 8256000.0,
+        "tax_amount": 743040.0,
+        "total_amount": 8999040.0,
+        "goods_or_service": "装饰工程进度款（T3航站楼商业区）"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-HG-1124",
+        "transaction_time": "2020-11-24 14:00",
+        "counterparty_name": "北京首都机场商贸有限公司",
+        "counterparty_account": "1100***231",
+        "amount": 7200000.0,
+        "remark": "工程款",
+        "balance_after": 45800000.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "合同解除后仍按履约进度确认工程收入",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 60481900.0,
+        "amount_basis": "主营业务收入贷方合计（两张凭证），=决定书认定2020年该事项虚增收入6,048.19万元；对应成本59,451,300元，利润103.06万元",
+        "expected_vouchers": [
+          "HG-2020-06-018",
+          "HG-2020-12-044"
+        ],
+        "standard_clause": "《企业会计准则第14号——收入》第十一条、第十二条；《证券法》第七十八条第二款、第一百九十七条第二款"
+      },
+      {
+        "finding_type": "已取得审定结算价的项目未按结算金额调整，仍确认剩余合同收入并保留应收账款",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 2314700.0,
+        "amount_basis": "主营业务收入贷方合计；决定书认定该事项2020年虚增利润1,324.87万元（含应收账款未调整影响）",
+        "expected_vouchers": [
+          "HG-2020-12-051"
+        ],
+        "standard_clause": "《企业会计准则第14号——收入》第十六条（交易价格变动）；《证券法》第七十八条第二款、第一百九十七条第二款"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND2_011",
+    "company_name": "宁德时代新能源科技股份有限公司",
+    "stock_code": "300750",
+    "penalty_decision_no": "无（合规对照）",
+    "source_url": "https://www.cninfo.com.cn/new/fulltextSearch?notautosubmit=&keyWord=宁德时代2024年年度报告",
+    "case_category": "合规对照",
+    "csrc_summary": "无行政处罚记录（合规对照组）",
+    "industry": "电池制造（动力电池）",
+    "audit_period": "2024年度",
+    "description": "动力电池与储能系统制造企业，客户为整车厂与储能集成商。下列为2024年度部分凭证、合同、发票及银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "CATL-2024-03-011",
+        "voucher_date": "2024-03-18",
+        "preparer": "林雅琪",
+        "checker": "吴志明",
+        "attachments_count": 3,
+        "associated_doc_id": "35001102",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 210688500.0,
+            "credit": 0.0,
+            "summary": "理想汽车（北京）销售有限公司销售三元锂电池包"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 186450000.0,
+            "summary": "理想汽车（北京）销售有限公司销售三元锂电池包"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 24238500.0,
+            "summary": "理想汽车（北京）销售有限公司销售三元锂电池包"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 143562700.0,
+            "credit": 0.0,
+            "summary": "同步结转销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 143562700.0,
+            "summary": "同步结转销售成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "CATL-2024-05-004",
+        "voucher_date": "2024-05-15",
+        "preparer": "林雅琪",
+        "checker": "吴志明",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-CATL-R1",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 210688500.0,
+            "credit": 0.0,
+            "summary": "收理想汽车（北京）销售有限公司货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 210688500.0,
+            "summary": "收理想汽车（北京）销售有限公司货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "CATL-2024-06-022",
+        "voucher_date": "2024-06-21",
+        "preparer": "林雅琪",
+        "checker": "吴志明",
+        "attachments_count": 3,
+        "associated_doc_id": "TXN-CATL-RD",
+        "entries": [
+          {
+            "account_code": "530101",
+            "account_name": "研发支出-费用化支出",
+            "debit": 12600000.0,
+            "credit": 0.0,
+            "summary": "支付固态电解质联合研究服务费（附银行回单、验收报告）"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 756000.0,
+            "credit": 0.0,
+            "summary": "支付固态电解质联合研究服务费"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 13356000.0,
+            "summary": "支付固态电解质联合研究服务费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "CATL-2024-08-035",
+        "voucher_date": "2024-08-12",
+        "preparer": "林雅琪",
+        "checker": "吴志明",
+        "attachments_count": 4,
+        "associated_doc_id": "TXN-CATL-AD",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-广告费",
+            "debit": 30000000.0,
+            "credit": 0.0,
+            "summary": "北京字跳网络技术有限公司品牌广告投放（附监播报告、银行回单）"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 1800000.0,
+            "credit": 0.0,
+            "summary": "北京字跳网络技术有限公司品牌广告投放"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 31800000.0,
+            "summary": "北京字跳网络技术有限公司品牌广告投放"
+          }
+        ]
+      },
+      {
+        "voucher_id": "CATL-2024-09-041",
+        "voucher_date": "2024-09-14",
+        "preparer": "林雅琪",
+        "checker": "吴志明",
+        "attachments_count": 6,
+        "associated_doc_id": "TXN-CATL-TR",
+        "entries": [
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-差旅费",
+            "debit": 48620.5,
+            "credit": 0.0,
+            "summary": "报销市场调研差旅费（调休上班日处理）"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 48620.5,
+            "summary": "报销差旅费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "CATL-2024-12-088",
+        "voucher_date": "2024-12-31",
+        "preparer": "林雅琪",
+        "checker": "吴志明",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 86452318.44,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 7261540.12,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 93713858.56,
+            "summary": "计提12月固定资产折旧"
+          }
+        ]
+      },
+      {
+        "voucher_id": "CATL-2024-12-092",
+        "voucher_date": "2024-12-31",
+        "preparer": "林雅琪",
+        "checker": "吴志明",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-职工薪酬",
+            "debit": 52000000.0,
+            "credit": 0.0,
+            "summary": "计提2024年度年终奖"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-职工薪酬",
+            "debit": 38000000.0,
+            "credit": 0.0,
+            "summary": "计提2024年度年终奖"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 90000000.0,
+            "summary": "计提2024年度年终奖"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "CATL-XS-2024-01",
+        "customer_or_vendor": "理想汽车（北京）销售有限公司",
+        "sign_date": "2024-01-08",
+        "total_amount": 1264131000.0,
+        "payment_terms": "月结60天电汇",
+        "delivery_condition": "送货至客户指定地点签收，签收即转移控制权",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "CATL-YF-2024-03",
+        "customer_or_vendor": "清华大学深圳国际研究生院",
+        "sign_date": "2024-03-01",
+        "total_amount": 13356000.0,
+        "payment_terms": "按里程碑验收付款",
+        "delivery_condition": "提交阶段研究报告并经甲方研发中心验收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "CATL-GG-2024-02",
+        "customer_or_vendor": "北京字跳网络技术有限公司",
+        "sign_date": "2024-02-20",
+        "total_amount": 31800000.0,
+        "payment_terms": "投放完成并提供监播报告后30日内付款",
+        "delivery_condition": "按排期投放，第三方监播确认",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "35001102",
+        "invoice_date": "2024-03-18",
+        "buyer_name": "理想汽车（北京）销售有限公司",
+        "seller_name": "宁德时代新能源科技股份有限公司",
+        "amount_without_tax": 186450000.0,
+        "tax_amount": 24238500.0,
+        "total_amount": 210688500.0,
+        "goods_or_service": "三元锂电池包"
+      },
+      {
+        "invoice_no": "35007702",
+        "invoice_date": "2024-06-21",
+        "buyer_name": "宁德时代新能源科技股份有限公司",
+        "seller_name": "清华大学深圳国际研究生院",
+        "amount_without_tax": 12600000.0,
+        "tax_amount": 756000.0,
+        "total_amount": 13356000.0,
+        "goods_or_service": "固态电解质联合研究服务费"
+      },
+      {
+        "invoice_no": "35008802",
+        "invoice_date": "2024-08-12",
+        "buyer_name": "宁德时代新能源科技股份有限公司",
+        "seller_name": "北京字跳网络技术有限公司",
+        "amount_without_tax": 30000000.0,
+        "tax_amount": 1800000.0,
+        "total_amount": 31800000.0,
+        "goods_or_service": "品牌广告投放服务"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-CATL-R1",
+        "transaction_time": "2024-05-15 10:20",
+        "counterparty_name": "理想汽车（北京）销售有限公司",
+        "counterparty_account": "1100***102",
+        "amount": 210688500.0,
+        "remark": "货款",
+        "balance_after": 10010688500.0
+      },
+      {
+        "transaction_id": "TXN-CATL-RD",
+        "transaction_time": "2024-06-21 15:10",
+        "counterparty_name": "清华大学深圳国际研究生院",
+        "counterparty_account": "3100***000",
+        "amount": -13356000.0,
+        "remark": "研发服务费",
+        "balance_after": 9997332500.0
+      },
+      {
+        "transaction_id": "TXN-CATL-AD",
+        "transaction_time": "2024-08-12 11:45",
+        "counterparty_name": "北京字跳网络技术有限公司",
+        "counterparty_account": "1101***000",
+        "amount": -31800000.0,
+        "remark": "广告款",
+        "balance_after": 9965532500.0
+      },
+      {
+        "transaction_id": "TXN-CATL-TR",
+        "transaction_time": "2024-09-14 16:30",
+        "counterparty_name": "员工报销户",
+        "counterparty_account": "6222***118",
+        "amount": -48620.5,
+        "remark": "差旅报销",
+        "balance_after": 9965483879.5
+      }
+    ],
+    "ground_truth_findings": []
+  },
+  {
+    "case_id": "BLIND2_012",
+    "company_name": "中国神华能源股份有限公司",
+    "stock_code": "601088",
+    "penalty_decision_no": "无（合规对照）",
+    "source_url": "https://www.cninfo.com.cn/new/fulltextSearch?notautosubmit=&keyWord=中国神华2024年年度报告",
+    "case_category": "合规对照",
+    "csrc_summary": "无行政处罚记录（合规对照组）",
+    "industry": "煤炭开采与电力",
+    "audit_period": "2024年度",
+    "description": "煤炭、电力、铁路一体化能源企业。下列为2024年度部分凭证、合同、发票及银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "SH-2024-05-011",
+        "voucher_date": "2024-05-20",
+        "preparer": "白云霞",
+        "checker": "刘振国",
+        "attachments_count": 3,
+        "associated_doc_id": "15002233",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 353441400.0,
+            "credit": 0.0,
+            "summary": "国家能源集团国际贸易有限公司（华东分公司）销售动力煤"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 312780000.0,
+            "summary": "国家能源集团国际贸易有限公司（华东分公司）销售动力煤"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 40661400.0,
+            "summary": "国家能源集团国际贸易有限公司（华东分公司）销售动力煤"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 214366100.0,
+            "credit": 0.0,
+            "summary": "同步结转销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 214366100.0,
+            "summary": "同步结转销售成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-2024-07-004",
+        "voucher_date": "2024-07-15",
+        "preparer": "白云霞",
+        "checker": "刘振国",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-SH-R1",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 353441400.0,
+            "credit": 0.0,
+            "summary": "收国家能源集团国际贸易有限公司（华东分公司）货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 353441400.0,
+            "summary": "收国家能源集团国际贸易有限公司（华东分公司）货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-2024-07-022",
+        "voucher_date": "2024-07-09",
+        "preparer": "白云霞",
+        "checker": "刘振国",
+        "attachments_count": 3,
+        "associated_doc_id": "TXN-SH-RD",
+        "entries": [
+          {
+            "account_code": "530101",
+            "account_name": "研发支出-费用化支出",
+            "debit": 8350000.0,
+            "credit": 0.0,
+            "summary": "支付智能化综采工作面技术研究服务费（附银行回单、验收报告）"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 501000.0,
+            "credit": 0.0,
+            "summary": "支付智能化综采工作面技术研究服务费"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 8851000.0,
+            "summary": "支付智能化综采工作面技术研究服务费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-2024-03-035",
+        "voucher_date": "2024-03-25",
+        "preparer": "白云霞",
+        "checker": "刘振国",
+        "attachments_count": 4,
+        "associated_doc_id": "TXN-SH-AD",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-广告费",
+            "debit": 6000000.0,
+            "credit": 0.0,
+            "summary": "中央广播电视总台广告经营管理中心品牌广告投放（附监播报告、银行回单）"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 360000.0,
+            "credit": 0.0,
+            "summary": "中央广播电视总台广告经营管理中心品牌广告投放"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 6360000.0,
+            "summary": "中央广播电视总台广告经营管理中心品牌广告投放"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-2024-10-041",
+        "voucher_date": "2024-10-12",
+        "preparer": "白云霞",
+        "checker": "刘振国",
+        "attachments_count": 6,
+        "associated_doc_id": "TXN-SH-TR",
+        "entries": [
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-差旅费",
+            "debit": 21380.0,
+            "credit": 0.0,
+            "summary": "报销市场调研差旅费（调休上班日处理）"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 21380.0,
+            "summary": "报销差旅费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-2024-12-088",
+        "voucher_date": "2024-12-31",
+        "preparer": "白云霞",
+        "checker": "刘振国",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 412538770.21,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 15226430.08,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 427765200.29,
+            "summary": "计提12月固定资产折旧"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-2024-12-092",
+        "voucher_date": "2024-12-31",
+        "preparer": "白云霞",
+        "checker": "刘振国",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-职工薪酬",
+            "debit": 60000000.0,
+            "credit": 0.0,
+            "summary": "计提2024年度年终奖"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-职工薪酬",
+            "debit": 45000000.0,
+            "credit": 0.0,
+            "summary": "计提2024年度年终奖"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 105000000.0,
+            "summary": "计提2024年度年终奖"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "SH-XS-2024-01",
+        "customer_or_vendor": "国家能源集团国际贸易有限公司（华东分公司）",
+        "sign_date": "2024-01-08",
+        "total_amount": 2120648400.0,
+        "payment_terms": "月结60天电汇",
+        "delivery_condition": "送货至客户指定地点签收，签收即转移控制权",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "SH-YF-2024-03",
+        "customer_or_vendor": "中国矿业大学（北京）",
+        "sign_date": "2024-03-01",
+        "total_amount": 8851000.0,
+        "payment_terms": "按里程碑验收付款",
+        "delivery_condition": "提交阶段研究报告并经甲方研发中心验收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "SH-GG-2024-02",
+        "customer_or_vendor": "中央广播电视总台广告经营管理中心",
+        "sign_date": "2024-02-20",
+        "total_amount": 6360000.0,
+        "payment_terms": "投放完成并提供监播报告后30日内付款",
+        "delivery_condition": "按排期投放，第三方监播确认",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "15002233",
+        "invoice_date": "2024-05-20",
+        "buyer_name": "国家能源集团国际贸易有限公司（华东分公司）",
+        "seller_name": "中国神华能源股份有限公司",
+        "amount_without_tax": 312780000.0,
+        "tax_amount": 40661400.0,
+        "total_amount": 353441400.0,
+        "goods_or_service": "动力煤"
+      },
+      {
+        "invoice_no": "15007733",
+        "invoice_date": "2024-07-09",
+        "buyer_name": "中国神华能源股份有限公司",
+        "seller_name": "中国矿业大学（北京）",
+        "amount_without_tax": 8350000.0,
+        "tax_amount": 501000.0,
+        "total_amount": 8851000.0,
+        "goods_or_service": "智能化综采工作面技术研究服务费"
+      },
+      {
+        "invoice_no": "15008833",
+        "invoice_date": "2024-03-25",
+        "buyer_name": "中国神华能源股份有限公司",
+        "seller_name": "中央广播电视总台广告经营管理中心",
+        "amount_without_tax": 6000000.0,
+        "tax_amount": 360000.0,
+        "total_amount": 6360000.0,
+        "goods_or_service": "品牌广告投放服务"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-SH-AD",
+        "transaction_time": "2024-03-25 11:45",
+        "counterparty_name": "中央广播电视总台广告经营管理中心",
+        "counterparty_account": "1101***000",
+        "amount": -6360000.0,
+        "remark": "广告款",
+        "balance_after": 3193640000.0
+      },
+      {
+        "transaction_id": "TXN-SH-RD",
+        "transaction_time": "2024-07-09 15:10",
+        "counterparty_name": "中国矿业大学（北京）",
+        "counterparty_account": "3100***000",
+        "amount": -8851000.0,
+        "remark": "研发服务费",
+        "balance_after": 3184789000.0
+      },
+      {
+        "transaction_id": "TXN-SH-R1",
+        "transaction_time": "2024-07-15 10:20",
+        "counterparty_name": "国家能源集团国际贸易有限公司（华东分公司）",
+        "counterparty_account": "1100***233",
+        "amount": 353441400.0,
+        "remark": "货款",
+        "balance_after": 3538230400.0
+      },
+      {
+        "transaction_id": "TXN-SH-TR",
+        "transaction_time": "2024-10-12 16:30",
+        "counterparty_name": "员工报销户",
+        "counterparty_account": "6222***118",
+        "amount": -21380.0,
+        "remark": "差旅报销",
+        "balance_after": 3538209020.0
+      }
+    ],
+    "ground_truth_findings": []
+  },
+  {
+    "case_id": "BLIND2_013",
+    "company_name": "江苏恒瑞医药股份有限公司",
+    "stock_code": "600276",
+    "penalty_decision_no": "无（合规对照）",
+    "source_url": "https://www.cninfo.com.cn/new/fulltextSearch?notautosubmit=&keyWord=恒瑞医药2024年年度报告",
+    "case_category": "合规对照",
+    "csrc_summary": "无行政处罚记录（合规对照组）",
+    "industry": "医药制造（创新药）",
+    "audit_period": "2024年度",
+    "description": "创新药研发与制造企业，产品经医药商业公司配送至医院。下列为2024年度部分凭证、合同、发票及银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "HR-2024-04-011",
+        "voucher_date": "2024-04-16",
+        "preparer": "周敏",
+        "checker": "蒋海涛",
+        "attachments_count": 3,
+        "associated_doc_id": "32003310",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 108841600.0,
+            "credit": 0.0,
+            "summary": "国药控股股份有限公司销售注射用卡瑞利珠单抗"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 96320000.0,
+            "summary": "国药控股股份有限公司销售注射用卡瑞利珠单抗"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 12521600.0,
+            "summary": "国药控股股份有限公司销售注射用卡瑞利珠单抗"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 12846300.0,
+            "credit": 0.0,
+            "summary": "同步结转销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 12846300.0,
+            "summary": "同步结转销售成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-2024-06-004",
+        "voucher_date": "2024-06-15",
+        "preparer": "周敏",
+        "checker": "蒋海涛",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-HR-R1",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 108841600.0,
+            "credit": 0.0,
+            "summary": "收国药控股股份有限公司货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 108841600.0,
+            "summary": "收国药控股股份有限公司货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-2024-05-022",
+        "voucher_date": "2024-05-30",
+        "preparer": "周敏",
+        "checker": "蒋海涛",
+        "attachments_count": 3,
+        "associated_doc_id": "TXN-HR-RD",
+        "entries": [
+          {
+            "account_code": "530101",
+            "account_name": "研发支出-费用化支出",
+            "debit": 45800000.0,
+            "credit": 0.0,
+            "summary": "支付临床前药效学研究服务费（附银行回单、验收报告）"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 2748000.0,
+            "credit": 0.0,
+            "summary": "支付临床前药效学研究服务费"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 48548000.0,
+            "summary": "支付临床前药效学研究服务费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-2024-09-035",
+        "voucher_date": "2024-09-03",
+        "preparer": "周敏",
+        "checker": "蒋海涛",
+        "attachments_count": 4,
+        "associated_doc_id": "TXN-HR-AD",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-广告费",
+            "debit": 5000000.0,
+            "credit": 0.0,
+            "summary": "上海东方明珠新媒体股份有限公司品牌广告投放（附监播报告、银行回单）"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 300000.0,
+            "credit": 0.0,
+            "summary": "上海东方明珠新媒体股份有限公司品牌广告投放"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 5300000.0,
+            "summary": "上海东方明珠新媒体股份有限公司品牌广告投放"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-2024-04-041",
+        "voucher_date": "2024-04-28",
+        "preparer": "周敏",
+        "checker": "蒋海涛",
+        "attachments_count": 6,
+        "associated_doc_id": "TXN-HR-TR",
+        "entries": [
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-差旅费",
+            "debit": 36750.8,
+            "credit": 0.0,
+            "summary": "报销市场调研差旅费（调休上班日处理）"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 36750.8,
+            "summary": "报销差旅费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-2024-12-088",
+        "voucher_date": "2024-12-31",
+        "preparer": "周敏",
+        "checker": "蒋海涛",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 38641205.37,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 6218840.55,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 44860045.92,
+            "summary": "计提12月固定资产折旧"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-2024-12-092",
+        "voucher_date": "2024-12-31",
+        "preparer": "周敏",
+        "checker": "蒋海涛",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-职工薪酬",
+            "debit": 120000000.0,
+            "credit": 0.0,
+            "summary": "计提2024年度年终奖"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-职工薪酬",
+            "debit": 80000000.0,
+            "credit": 0.0,
+            "summary": "计提2024年度年终奖"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 200000000.0,
+            "summary": "计提2024年度年终奖"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "HR-XS-2024-01",
+        "customer_or_vendor": "国药控股股份有限公司",
+        "sign_date": "2024-01-08",
+        "total_amount": 653049600.0,
+        "payment_terms": "月结60天电汇",
+        "delivery_condition": "送货至客户指定地点签收，签收即转移控制权",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "HR-YF-2024-03",
+        "customer_or_vendor": "上海药明康德新药开发有限公司",
+        "sign_date": "2024-03-01",
+        "total_amount": 48548000.0,
+        "payment_terms": "按里程碑验收付款",
+        "delivery_condition": "提交阶段研究报告并经甲方研发中心验收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "HR-GG-2024-02",
+        "customer_or_vendor": "上海东方明珠新媒体股份有限公司",
+        "sign_date": "2024-02-20",
+        "total_amount": 5300000.0,
+        "payment_terms": "投放完成并提供监播报告后30日内付款",
+        "delivery_condition": "按排期投放，第三方监播确认",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "32003310",
+        "invoice_date": "2024-04-16",
+        "buyer_name": "国药控股股份有限公司",
+        "seller_name": "江苏恒瑞医药股份有限公司",
+        "amount_without_tax": 96320000.0,
+        "tax_amount": 12521600.0,
+        "total_amount": 108841600.0,
+        "goods_or_service": "注射用卡瑞利珠单抗"
+      },
+      {
+        "invoice_no": "32007710",
+        "invoice_date": "2024-05-30",
+        "buyer_name": "江苏恒瑞医药股份有限公司",
+        "seller_name": "上海药明康德新药开发有限公司",
+        "amount_without_tax": 45800000.0,
+        "tax_amount": 2748000.0,
+        "total_amount": 48548000.0,
+        "goods_or_service": "临床前药效学研究服务费"
+      },
+      {
+        "invoice_no": "32008810",
+        "invoice_date": "2024-09-03",
+        "buyer_name": "江苏恒瑞医药股份有限公司",
+        "seller_name": "上海东方明珠新媒体股份有限公司",
+        "amount_without_tax": 5000000.0,
+        "tax_amount": 300000.0,
+        "total_amount": 5300000.0,
+        "goods_or_service": "品牌广告投放服务"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-HR-TR",
+        "transaction_time": "2024-04-28 16:30",
+        "counterparty_name": "员工报销户",
+        "counterparty_account": "6222***118",
+        "amount": -36750.8,
+        "remark": "差旅报销",
+        "balance_after": 2099963249.2
+      },
+      {
+        "transaction_id": "TXN-HR-RD",
+        "transaction_time": "2024-05-30 15:10",
+        "counterparty_name": "上海药明康德新药开发有限公司",
+        "counterparty_account": "3100***000",
+        "amount": -48548000.0,
+        "remark": "研发服务费",
+        "balance_after": 2051415249.2
+      },
+      {
+        "transaction_id": "TXN-HR-R1",
+        "transaction_time": "2024-06-15 10:20",
+        "counterparty_name": "国药控股股份有限公司",
+        "counterparty_account": "1100***310",
+        "amount": 108841600.0,
+        "remark": "货款",
+        "balance_after": 2160256849.2
+      },
+      {
+        "transaction_id": "TXN-HR-AD",
+        "transaction_time": "2024-09-03 11:45",
+        "counterparty_name": "上海东方明珠新媒体股份有限公司",
+        "counterparty_account": "1101***000",
+        "amount": -5300000.0,
+        "remark": "广告款",
+        "balance_after": 2154956849.2
+      }
+    ],
+    "ground_truth_findings": []
+  },
+  {
+    "case_id": "BLIND2_014",
+    "company_name": "杭州海康威视数字技术股份有限公司",
+    "stock_code": "002415",
+    "penalty_decision_no": "无（合规对照）",
+    "source_url": "https://www.cninfo.com.cn/new/fulltextSearch?notautosubmit=&keyWord=海康威视2024年年度报告",
+    "case_category": "合规对照",
+    "csrc_summary": "无行政处罚记录（合规对照组）",
+    "industry": "电子设备（安防视频）",
+    "audit_period": "2024年度",
+    "description": "智能物联与视频产品制造企业。下列为2024年度部分凭证、合同、发票及银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "HK-2024-06-011",
+        "voucher_date": "2024-06-12",
+        "preparer": "沈佳怡",
+        "checker": "徐建华",
+        "attachments_count": 3,
+        "associated_doc_id": "33005519",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 66240600.0,
+            "credit": 0.0,
+            "summary": "中国电信股份有限公司浙江分公司销售网络摄像机及NVR"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 58620000.0,
+            "summary": "中国电信股份有限公司浙江分公司销售网络摄像机及NVR"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 7620600.0,
+            "summary": "中国电信股份有限公司浙江分公司销售网络摄像机及NVR"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 31245800.0,
+            "credit": 0.0,
+            "summary": "同步结转销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 31245800.0,
+            "summary": "同步结转销售成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HK-2024-08-004",
+        "voucher_date": "2024-08-15",
+        "preparer": "沈佳怡",
+        "checker": "徐建华",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-HK-R1",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 66240600.0,
+            "credit": 0.0,
+            "summary": "收中国电信股份有限公司浙江分公司货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 66240600.0,
+            "summary": "收中国电信股份有限公司浙江分公司货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HK-2024-08-022",
+        "voucher_date": "2024-08-20",
+        "preparer": "沈佳怡",
+        "checker": "徐建华",
+        "attachments_count": 3,
+        "associated_doc_id": "TXN-HK-RD",
+        "entries": [
+          {
+            "account_code": "530101",
+            "account_name": "研发支出-费用化支出",
+            "debit": 9900000.0,
+            "credit": 0.0,
+            "summary": "支付视觉大模型联合研发服务费（附银行回单、验收报告）"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 594000.0,
+            "credit": 0.0,
+            "summary": "支付视觉大模型联合研发服务费"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 10494000.0,
+            "summary": "支付视觉大模型联合研发服务费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HK-2024-04-035",
+        "voucher_date": "2024-04-10",
+        "preparer": "沈佳怡",
+        "checker": "徐建华",
+        "attachments_count": 4,
+        "associated_doc_id": "TXN-HK-AD",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-广告费",
+            "debit": 8000000.0,
+            "credit": 0.0,
+            "summary": "浙江广播电视集团品牌广告投放（附监播报告、银行回单）"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 480000.0,
+            "credit": 0.0,
+            "summary": "浙江广播电视集团品牌广告投放"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 8480000.0,
+            "summary": "浙江广播电视集团品牌广告投放"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HK-2024-02-041",
+        "voucher_date": "2024-02-04",
+        "preparer": "沈佳怡",
+        "checker": "徐建华",
+        "attachments_count": 6,
+        "associated_doc_id": "TXN-HK-TR",
+        "entries": [
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-差旅费",
+            "debit": 15460.0,
+            "credit": 0.0,
+            "summary": "报销市场调研差旅费（调休上班日处理）"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 15460.0,
+            "summary": "报销差旅费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HK-2024-12-088",
+        "voucher_date": "2024-12-31",
+        "preparer": "沈佳怡",
+        "checker": "徐建华",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 65218430.62,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 9840127.33,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 75058557.95,
+            "summary": "计提12月固定资产折旧"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HK-2024-12-092",
+        "voucher_date": "2024-12-31",
+        "preparer": "沈佳怡",
+        "checker": "徐建华",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-职工薪酬",
+            "debit": 90000000.0,
+            "credit": 0.0,
+            "summary": "计提2024年度年终奖"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-职工薪酬",
+            "debit": 70000000.0,
+            "credit": 0.0,
+            "summary": "计提2024年度年终奖"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 160000000.0,
+            "summary": "计提2024年度年终奖"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "HK-XS-2024-01",
+        "customer_or_vendor": "中国电信股份有限公司浙江分公司",
+        "sign_date": "2024-01-08",
+        "total_amount": 397443600.0,
+        "payment_terms": "月结60天电汇",
+        "delivery_condition": "送货至客户指定地点签收，签收即转移控制权",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "HK-YF-2024-03",
+        "customer_or_vendor": "浙江大学",
+        "sign_date": "2024-03-01",
+        "total_amount": 10494000.0,
+        "payment_terms": "按里程碑验收付款",
+        "delivery_condition": "提交阶段研究报告并经甲方研发中心验收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "HK-GG-2024-02",
+        "customer_or_vendor": "浙江广播电视集团",
+        "sign_date": "2024-02-20",
+        "total_amount": 8480000.0,
+        "payment_terms": "投放完成并提供监播报告后30日内付款",
+        "delivery_condition": "按排期投放，第三方监播确认",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "33005519",
+        "invoice_date": "2024-06-12",
+        "buyer_name": "中国电信股份有限公司浙江分公司",
+        "seller_name": "杭州海康威视数字技术股份有限公司",
+        "amount_without_tax": 58620000.0,
+        "tax_amount": 7620600.0,
+        "total_amount": 66240600.0,
+        "goods_or_service": "网络摄像机及NVR"
+      },
+      {
+        "invoice_no": "33007719",
+        "invoice_date": "2024-08-20",
+        "buyer_name": "杭州海康威视数字技术股份有限公司",
+        "seller_name": "浙江大学",
+        "amount_without_tax": 9900000.0,
+        "tax_amount": 594000.0,
+        "total_amount": 10494000.0,
+        "goods_or_service": "视觉大模型联合研发服务费"
+      },
+      {
+        "invoice_no": "33008819",
+        "invoice_date": "2024-04-10",
+        "buyer_name": "杭州海康威视数字技术股份有限公司",
+        "seller_name": "浙江广播电视集团",
+        "amount_without_tax": 8000000.0,
+        "tax_amount": 480000.0,
+        "total_amount": 8480000.0,
+        "goods_or_service": "品牌广告投放服务"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-HK-TR",
+        "transaction_time": "2024-02-04 16:30",
+        "counterparty_name": "员工报销户",
+        "counterparty_account": "6222***118",
+        "amount": -15460.0,
+        "remark": "差旅报销",
+        "balance_after": 1499984540.0
+      },
+      {
+        "transaction_id": "TXN-HK-AD",
+        "transaction_time": "2024-04-10 11:45",
+        "counterparty_name": "浙江广播电视集团",
+        "counterparty_account": "1101***000",
+        "amount": -8480000.0,
+        "remark": "广告款",
+        "balance_after": 1491504540.0
+      },
+      {
+        "transaction_id": "TXN-HK-R1",
+        "transaction_time": "2024-08-15 10:20",
+        "counterparty_name": "中国电信股份有限公司浙江分公司",
+        "counterparty_account": "1100***519",
+        "amount": 66240600.0,
+        "remark": "货款",
+        "balance_after": 1557745140.0
+      },
+      {
+        "transaction_id": "TXN-HK-RD",
+        "transaction_time": "2024-08-20 15:10",
+        "counterparty_name": "浙江大学",
+        "counterparty_account": "3100***000",
+        "amount": -10494000.0,
+        "remark": "研发服务费",
+        "balance_after": 1547251140.0
+      }
+    ],
+    "ground_truth_findings": []
+  },
+  {
+    "case_id": "BLIND2_015",
+    "company_name": "万华化学集团股份有限公司",
+    "stock_code": "600309",
+    "penalty_decision_no": "无（合规对照）",
+    "source_url": "https://www.cninfo.com.cn/new/fulltextSearch?notautosubmit=&keyWord=万华化学2024年年度报告",
+    "case_category": "合规对照",
+    "csrc_summary": "无行政处罚记录（合规对照组）",
+    "industry": "化学原料（聚氨酯MDI）",
+    "audit_period": "2024年度",
+    "description": "聚氨酯、石化与精细化学品生产企业。下列为2024年度部分凭证、合同、发票及银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "WH-2024-07-011",
+        "voucher_date": "2024-07-08",
+        "preparer": "孙丽萍",
+        "checker": "姜伟",
+        "attachments_count": 3,
+        "associated_doc_id": "37008820",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 160855500.0,
+            "credit": 0.0,
+            "summary": "浙江华峰新材料有限公司销售纯MDI"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 142350000.0,
+            "summary": "浙江华峰新材料有限公司销售纯MDI"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 18505500.0,
+            "summary": "浙江华峰新材料有限公司销售纯MDI"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 108216700.0,
+            "credit": 0.0,
+            "summary": "同步结转销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 108216700.0,
+            "summary": "同步结转销售成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "WH-2024-09-004",
+        "voucher_date": "2024-09-15",
+        "preparer": "孙丽萍",
+        "checker": "姜伟",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-WH-R1",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 160855500.0,
+            "credit": 0.0,
+            "summary": "收浙江华峰新材料有限公司货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 160855500.0,
+            "summary": "收浙江华峰新材料有限公司货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "WH-2024-09-022",
+        "voucher_date": "2024-09-26",
+        "preparer": "孙丽萍",
+        "checker": "姜伟",
+        "attachments_count": 3,
+        "associated_doc_id": "TXN-WH-RD",
+        "entries": [
+          {
+            "account_code": "530101",
+            "account_name": "研发支出-费用化支出",
+            "debit": 15200000.0,
+            "credit": 0.0,
+            "summary": "支付催化剂中试研究服务费（附银行回单、验收报告）"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 912000.0,
+            "credit": 0.0,
+            "summary": "支付催化剂中试研究服务费"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 16112000.0,
+            "summary": "支付催化剂中试研究服务费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "WH-2024-05-035",
+        "voucher_date": "2024-05-15",
+        "preparer": "孙丽萍",
+        "checker": "姜伟",
+        "attachments_count": 4,
+        "associated_doc_id": "TXN-WH-AD",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-广告费",
+            "debit": 3000000.0,
+            "credit": 0.0,
+            "summary": "山东广播电视台品牌广告投放（附监播报告、银行回单）"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 180000.0,
+            "credit": 0.0,
+            "summary": "山东广播电视台品牌广告投放"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 3180000.0,
+            "summary": "山东广播电视台品牌广告投放"
+          }
+        ]
+      },
+      {
+        "voucher_id": "WH-2024-05-041",
+        "voucher_date": "2024-05-11",
+        "preparer": "孙丽萍",
+        "checker": "姜伟",
+        "attachments_count": 6,
+        "associated_doc_id": "TXN-WH-TR",
+        "entries": [
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-差旅费",
+            "debit": 27840.2,
+            "credit": 0.0,
+            "summary": "报销市场调研差旅费（调休上班日处理）"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 27840.2,
+            "summary": "报销差旅费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "WH-2024-12-088",
+        "voucher_date": "2024-12-31",
+        "preparer": "孙丽萍",
+        "checker": "姜伟",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 298745110.36,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 18322604.91,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 317067715.27,
+            "summary": "计提12月固定资产折旧"
+          }
+        ]
+      },
+      {
+        "voucher_id": "WH-2024-12-092",
+        "voucher_date": "2024-12-31",
+        "preparer": "孙丽萍",
+        "checker": "姜伟",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-职工薪酬",
+            "debit": 75000000.0,
+            "credit": 0.0,
+            "summary": "计提2024年度年终奖"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-职工薪酬",
+            "debit": 55000000.0,
+            "credit": 0.0,
+            "summary": "计提2024年度年终奖"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 130000000.0,
+            "summary": "计提2024年度年终奖"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "WH-XS-2024-01",
+        "customer_or_vendor": "浙江华峰新材料有限公司",
+        "sign_date": "2024-01-08",
+        "total_amount": 965133000.0,
+        "payment_terms": "月结60天电汇",
+        "delivery_condition": "送货至客户指定地点签收，签收即转移控制权",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "WH-YF-2024-03",
+        "customer_or_vendor": "中国科学院大连化学物理研究所",
+        "sign_date": "2024-03-01",
+        "total_amount": 16112000.0,
+        "payment_terms": "按里程碑验收付款",
+        "delivery_condition": "提交阶段研究报告并经甲方研发中心验收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "WH-GG-2024-02",
+        "customer_or_vendor": "山东广播电视台",
+        "sign_date": "2024-02-20",
+        "total_amount": 3180000.0,
+        "payment_terms": "投放完成并提供监播报告后30日内付款",
+        "delivery_condition": "按排期投放，第三方监播确认",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "37008820",
+        "invoice_date": "2024-07-08",
+        "buyer_name": "浙江华峰新材料有限公司",
+        "seller_name": "万华化学集团股份有限公司",
+        "amount_without_tax": 142350000.0,
+        "tax_amount": 18505500.0,
+        "total_amount": 160855500.0,
+        "goods_or_service": "纯MDI"
+      },
+      {
+        "invoice_no": "37007720",
+        "invoice_date": "2024-09-26",
+        "buyer_name": "万华化学集团股份有限公司",
+        "seller_name": "中国科学院大连化学物理研究所",
+        "amount_without_tax": 15200000.0,
+        "tax_amount": 912000.0,
+        "total_amount": 16112000.0,
+        "goods_or_service": "催化剂中试研究服务费"
+      },
+      {
+        "invoice_no": "37008820",
+        "invoice_date": "2024-05-15",
+        "buyer_name": "万华化学集团股份有限公司",
+        "seller_name": "山东广播电视台",
+        "amount_without_tax": 3000000.0,
+        "tax_amount": 180000.0,
+        "total_amount": 3180000.0,
+        "goods_or_service": "品牌广告投放服务"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-WH-TR",
+        "transaction_time": "2024-05-11 16:30",
+        "counterparty_name": "员工报销户",
+        "counterparty_account": "6222***118",
+        "amount": -27840.2,
+        "remark": "差旅报销",
+        "balance_after": 2599972159.8
+      },
+      {
+        "transaction_id": "TXN-WH-AD",
+        "transaction_time": "2024-05-15 11:45",
+        "counterparty_name": "山东广播电视台",
+        "counterparty_account": "1101***000",
+        "amount": -3180000.0,
+        "remark": "广告款",
+        "balance_after": 2596792159.8
+      },
+      {
+        "transaction_id": "TXN-WH-R1",
+        "transaction_time": "2024-09-15 10:20",
+        "counterparty_name": "浙江华峰新材料有限公司",
+        "counterparty_account": "1100***820",
+        "amount": 160855500.0,
+        "remark": "货款",
+        "balance_after": 2757647659.8
+      },
+      {
+        "transaction_id": "TXN-WH-RD",
+        "transaction_time": "2024-09-26 15:10",
+        "counterparty_name": "中国科学院大连化学物理研究所",
+        "counterparty_account": "3100***000",
+        "amount": -16112000.0,
+        "remark": "研发服务费",
+        "balance_after": 2741535659.8
+      }
+    ],
+    "ground_truth_findings": []
+  },
+  {
+    "case_id": "BLIND2_016",
+    "company_name": "珠海格力电器股份有限公司",
+    "stock_code": "000651",
+    "penalty_decision_no": "无（合规对照）",
+    "source_url": "https://www.cninfo.com.cn/new/fulltextSearch?notautosubmit=&keyWord=格力电器2024年年度报告",
+    "case_category": "合规对照",
+    "csrc_summary": "无行政处罚记录（合规对照组）",
+    "industry": "家用电器（空调）",
+    "audit_period": "2024年度",
+    "description": "空调及生活电器制造企业，经销商与电商渠道销售。下列为2024年度部分凭证、合同、发票及银行流水。",
+    "vouchers": [
+      {
+        "voucher_id": "GL-2024-05-011",
+        "voucher_date": "2024-05-28",
+        "preparer": "梁晓婷",
+        "checker": "何志强",
+        "attachments_count": 3,
+        "associated_doc_id": "44006671",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 258363200.0,
+            "credit": 0.0,
+            "summary": "京东五星电器集团有限公司销售家用变频空调"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 228640000.0,
+            "summary": "京东五星电器集团有限公司销售家用变频空调"
+          },
+          {
+            "account_code": "22210102",
+            "account_name": "应交税费-应交增值税(销项税额)",
+            "debit": 0.0,
+            "credit": 29723200.0,
+            "summary": "京东五星电器集团有限公司销售家用变频空调"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 159312500.0,
+            "credit": 0.0,
+            "summary": "同步结转销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 159312500.0,
+            "summary": "同步结转销售成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GL-2024-07-004",
+        "voucher_date": "2024-07-15",
+        "preparer": "梁晓婷",
+        "checker": "何志强",
+        "attachments_count": 1,
+        "associated_doc_id": "TXN-GL-R1",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 258363200.0,
+            "credit": 0.0,
+            "summary": "收京东五星电器集团有限公司货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 258363200.0,
+            "summary": "收京东五星电器集团有限公司货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GL-2024-10-022",
+        "voucher_date": "2024-10-17",
+        "preparer": "梁晓婷",
+        "checker": "何志强",
+        "attachments_count": 3,
+        "associated_doc_id": "TXN-GL-RD",
+        "entries": [
+          {
+            "account_code": "530101",
+            "account_name": "研发支出-费用化支出",
+            "debit": 6800000.0,
+            "credit": 0.0,
+            "summary": "支付压缩机降噪技术研究服务费（附银行回单、验收报告）"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 408000.0,
+            "credit": 0.0,
+            "summary": "支付压缩机降噪技术研究服务费"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 7208000.0,
+            "summary": "支付压缩机降噪技术研究服务费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GL-2024-06-035",
+        "voucher_date": "2024-06-03",
+        "preparer": "梁晓婷",
+        "checker": "何志强",
+        "attachments_count": 4,
+        "associated_doc_id": "TXN-GL-AD",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-广告费",
+            "debit": 50000000.0,
+            "credit": 0.0,
+            "summary": "广东广播电视台品牌广告投放（附监播报告、银行回单）"
+          },
+          {
+            "account_code": "22210101",
+            "account_name": "应交税费-应交增值税(进项税额)",
+            "debit": 3000000.0,
+            "credit": 0.0,
+            "summary": "广东广播电视台品牌广告投放"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 53000000.0,
+            "summary": "广东广播电视台品牌广告投放"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GL-2024-09-041",
+        "voucher_date": "2024-09-29",
+        "preparer": "梁晓婷",
+        "checker": "何志强",
+        "attachments_count": 6,
+        "associated_doc_id": "TXN-GL-TR",
+        "entries": [
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-差旅费",
+            "debit": 19325.6,
+            "credit": 0.0,
+            "summary": "报销市场调研差旅费（调休上班日处理）"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 19325.6,
+            "summary": "报销差旅费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GL-2024-12-088",
+        "voucher_date": "2024-12-31",
+        "preparer": "梁晓婷",
+        "checker": "何志强",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用-折旧费",
+            "debit": 156230845.17,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-折旧费",
+            "debit": 12408763.29,
+            "credit": 0.0,
+            "summary": "计提12月固定资产折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 168639608.46,
+            "summary": "计提12月固定资产折旧"
+          }
+        ]
+      },
+      {
+        "voucher_id": "GL-2024-12-092",
+        "voucher_date": "2024-12-31",
+        "preparer": "梁晓婷",
+        "checker": "何志强",
+        "attachments_count": 1,
+        "associated_doc_id": null,
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用-职工薪酬",
+            "debit": 100000000.0,
+            "credit": 0.0,
+            "summary": "计提2024年度年终奖"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用-职工薪酬",
+            "debit": 60000000.0,
+            "credit": 0.0,
+            "summary": "计提2024年度年终奖"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 160000000.0,
+            "summary": "计提2024年度年终奖"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "GL-XS-2024-01",
+        "customer_or_vendor": "京东五星电器集团有限公司",
+        "sign_date": "2024-01-08",
+        "total_amount": 1550179200.0,
+        "payment_terms": "月结60天电汇",
+        "delivery_condition": "送货至客户指定地点签收，签收即转移控制权",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "GL-YF-2024-03",
+        "customer_or_vendor": "华南理工大学",
+        "sign_date": "2024-03-01",
+        "total_amount": 7208000.0,
+        "payment_terms": "按里程碑验收付款",
+        "delivery_condition": "提交阶段研究报告并经甲方研发中心验收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "GL-GG-2024-02",
+        "customer_or_vendor": "广东广播电视台",
+        "sign_date": "2024-02-20",
+        "total_amount": 53000000.0,
+        "payment_terms": "投放完成并提供监播报告后30日内付款",
+        "delivery_condition": "按排期投放，第三方监播确认",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "44006671",
+        "invoice_date": "2024-05-28",
+        "buyer_name": "京东五星电器集团有限公司",
+        "seller_name": "珠海格力电器股份有限公司",
+        "amount_without_tax": 228640000.0,
+        "tax_amount": 29723200.0,
+        "total_amount": 258363200.0,
+        "goods_or_service": "家用变频空调"
+      },
+      {
+        "invoice_no": "44007771",
+        "invoice_date": "2024-10-17",
+        "buyer_name": "珠海格力电器股份有限公司",
+        "seller_name": "华南理工大学",
+        "amount_without_tax": 6800000.0,
+        "tax_amount": 408000.0,
+        "total_amount": 7208000.0,
+        "goods_or_service": "压缩机降噪技术研究服务费"
+      },
+      {
+        "invoice_no": "44008871",
+        "invoice_date": "2024-06-03",
+        "buyer_name": "珠海格力电器股份有限公司",
+        "seller_name": "广东广播电视台",
+        "amount_without_tax": 50000000.0,
+        "tax_amount": 3000000.0,
+        "total_amount": 53000000.0,
+        "goods_or_service": "品牌广告投放服务"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "TXN-GL-AD",
+        "transaction_time": "2024-06-03 11:45",
+        "counterparty_name": "广东广播电视台",
+        "counterparty_account": "1101***000",
+        "amount": -53000000.0,
+        "remark": "广告款",
+        "balance_after": 4147000000.0
+      },
+      {
+        "transaction_id": "TXN-GL-R1",
+        "transaction_time": "2024-07-15 10:20",
+        "counterparty_name": "京东五星电器集团有限公司",
+        "counterparty_account": "1100***671",
+        "amount": 258363200.0,
+        "remark": "货款",
+        "balance_after": 4405363200.0
+      },
+      {
+        "transaction_id": "TXN-GL-TR",
+        "transaction_time": "2024-09-29 16:30",
+        "counterparty_name": "员工报销户",
+        "counterparty_account": "6222***118",
+        "amount": -19325.6,
+        "remark": "差旅报销",
+        "balance_after": 4405343874.4
+      },
+      {
+        "transaction_id": "TXN-GL-RD",
+        "transaction_time": "2024-10-17 15:10",
+        "counterparty_name": "华南理工大学",
+        "counterparty_account": "3100***000",
+        "amount": -7208000.0,
+        "remark": "研发服务费",
+        "balance_after": 4398135874.4
+      }
+    ],
+    "ground_truth_findings": []
+  }
+]

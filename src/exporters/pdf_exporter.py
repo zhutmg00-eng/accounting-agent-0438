@@ -17,13 +17,7 @@ from src.core.schemas import AnalysisReportResult, ExecutionMode
 
 
 def _esc(value: object) -> str:
-    """Escape data interpolated into reportlab's mini-XML Paragraph dialect.
-
-    Only the interpolated *data* is escaped; the literal markup written by this
-    module (``<b>``, ``<br/>``, ``<i>``) is left intact.  Escaping is lossless
-    for plain text, and ``str()`` keeps non-string values (None/number) rendering
-    exactly as the previous f-string interpolation did.
-    """
+    """Escape data interpolated into reportlab's mini-XML Paragraph dialect."""
     return escape(str(value))
 
 
@@ -39,13 +33,14 @@ def export_report_to_pdf(report: AnalysisReportResult, output_path: Path, cpa_si
         bottomMargin=36
     )
 
-    # Try registering Chinese font from Windows Fonts directory
     font_name = "Helvetica"
     win_fonts = [
         "C:\\Windows\\Fonts\\msyh.ttc",
         "C:\\Windows\\Fonts\\msyh.ttf",
         "C:\\Windows\\Fonts\\simhei.ttf",
-        "C:\\Windows\\Fonts\\simsun.ttc"
+        "C:\\Windows\\Fonts\\simsun.ttc",
+        "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+        "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
     ]
     for wf in win_fonts:
         if os.path.exists(wf):
@@ -63,7 +58,7 @@ def export_report_to_pdf(report: AnalysisReportResult, output_path: Path, cpa_si
         fontSize=17,
         leading=21,
         textColor=colors.HexColor("#1F497D"),
-        alignment=1, # Center
+        alignment=1,
         spaceAfter=12
     )
     h2_style = ParagraphStyle(
@@ -90,24 +85,21 @@ def export_report_to_pdf(report: AnalysisReportResult, output_path: Path, cpa_si
         leading=12,
         textColor=colors.HexColor("#1F497D")
     )
-    badge_style = ParagraphStyle(
-        name="BadgeStyle",
-        fontName=font_name,
-        fontSize=8,
-        leading=11,
-        textColor=colors.HexColor("#B91C1C")
-    )
 
     story = []
 
     # Title
     story.append(Paragraph(f"数智审计与舞弊穿透报告 - {_esc(report.company_name)}", title_style))
     
-    # Mode badge
-    mode_str = "🟢 实时在线推理 (DeepSeek-V3)" if report.execution_mode in (ExecutionMode.ONLINE, ExecutionMode.STRICT_ONLINE) and not report.fallback_occurred else "🟡 离线确定性模拟演示 (Demo Mode)"
+    # Mode badge (use dynamic report.model_name instead of hardcoded DeepSeek-V3)
+    mode_str = (
+        f"🟢 实时在线推理 ({report.model_name})"
+        if report.execution_mode in (ExecutionMode.ONLINE, ExecutionMode.STRICT_ONLINE) and not report.fallback_occurred
+        else "🟡 离线确定性模拟演示 (Demo Mode)"
+    )
     story.append(Paragraph(
         f"<b>综合风险评级:</b> {_esc(report.overall_risk_rating.value)} | "
-        f"<b>Beneish M-Score:</b> {_esc(report.beneish_m_score or 'N/A')} | "
+        f"<b>Beneish M-Score:</b> {_esc(report.beneish_m_score if report.beneish_m_score is not None else 'N/A')} | "
         f"<b>执行模式:</b> {_esc(mode_str)}", 
         body_style
     ))
@@ -173,20 +165,24 @@ def export_report_to_pdf(report: AnalysisReportResult, output_path: Path, cpa_si
         story.append(Paragraph(f"<b>综合意见:</b> {_esc(wp.audit_opinion_summary)}", body_style))
         story.append(Spacer(1, 4))
 
-    # CPA Ethics & Sign-off Section
+    # CPA Ethics & Sign-off Section (Aligned with excel_exporter.py & CpaApprovalReceipt schema)
     story.append(Spacer(1, 8))
     story.append(Paragraph("四、注册会计师终审签章与独立性声明 (CPA Lead Partner Sign-off)", h2_style))
+    signed = bool(cpa_signoff)
     signoff = cpa_signoff or {
-        "auditor_name": "张宇 (执业CPA)",
-        "cert_no": "110000240982",
-        "verification_hash": "A7F93E41B20894CD01FE4421",
-        "opinion": "保留意见/拟实施追加外部银行函证",
-        "declaration": "签字注册会计师恪守《中国注册会计师职业道德守则》。AI 智能体仅作为实质性程序辅助初筛，最终审计结论与法律责任由签字注会全权负责。"
+        "auditor_name": "未签署",
+        "cert_no": "—",
+        "verification_hash": "—",
+        "opinion_type": "待注册会计师复核后确定",
+        "ethical_declaration": "本报告尚未经注册会计师签署。AI 智能体仅作为实质性程序辅助初筛，最终审计结论与法律责任由签字注册会计师及审计项目组承担。"
     }
+    opinion_val = signoff.get("opinion_type") or signoff.get("opinion") or "待注册会计师复核后确定"
+    decl_val = signoff.get("ethical_declaration") or signoff.get("declaration") or ""
+    status_str = "[已复核签章生效]" if signed else "[待注册会计师复核签署]"
     sign_table_data = [
-        [Paragraph(f"<b>签字CPA:</b> {_esc(signoff.get('auditor_name'))}", body_style), Paragraph(f"<b>证书编号:</b> {_esc(signoff.get('cert_no'))}", body_style)],
-        [Paragraph(f"<b>复核意见:</b> {_esc(signoff.get('opinion'))}", body_style), Paragraph(f"<b>防伪核验码:</b> {_esc(signoff.get('verification_hash'))}", body_style)],
-        [Paragraph(f"<b>伦理声明:</b> {_esc(signoff.get('declaration'))}", body_style), Paragraph("<b>状态:</b> [已复核签章生效]", body_bold)]
+        [Paragraph(f"<b>签字CPA:</b> {_esc(signoff.get('auditor_name', '未签署'))}", body_style), Paragraph(f"<b>证书编号:</b> {_esc(signoff.get('cert_no', '—'))}", body_style)],
+        [Paragraph(f"<b>复核意见:</b> {_esc(opinion_val)}", body_style), Paragraph(f"<b>防伪核验码:</b> {_esc(signoff.get('verification_hash', '—'))}", body_style)],
+        [Paragraph(f"<b>伦理声明:</b> {_esc(decl_val)}", body_style), Paragraph(f"<b>状态:</b> {status_str}", body_bold)]
     ]
     t_sign = Table(sign_table_data, colWidths=[260, 260])
     t_sign.setStyle(TableStyle([

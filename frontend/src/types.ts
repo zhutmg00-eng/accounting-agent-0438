@@ -32,14 +32,17 @@ export interface AccountingVoucher {
   source_file?: string
 }
 
+// Mirrors src/core/schemas.py InvoiceItem.
 export interface InvoiceItem {
   invoice_no: string
   invoice_date: string
-  customer_or_vendor: string
-  amount: number
+  buyer_name: string
+  seller_name: string
+  amount_without_tax: number
   tax_amount: number
   total_amount: number
-  item_name: string
+  goods_or_service: string
+  source_file?: string
 }
 
 export interface BankFlowRecord {
@@ -53,12 +56,14 @@ export interface BankFlowRecord {
   source_file?: string
 }
 
+// Mirrors src/core/schemas.py BusinessContract.
 export interface BusinessContract {
   contract_id: string
-  contract_name: string
   customer_or_vendor: string
   sign_date: string
-  contract_amount: number
+  total_amount: number
+  payment_terms: string
+  delivery_condition: string
   is_related_party: boolean
 }
 
@@ -133,7 +138,24 @@ export interface AnalysisReportResult {
   workpapers: WorkpaperData[]
   tool_outputs: Record<string, any>
   analytics?: Record<string, any>
-  verification?: { findings_total: number; grounded: number; ungrounded: number; amount_unverified: number; rule?: string }
+  verification?: {
+    findings_total: number
+    grounded: number
+    ungrounded: number
+    amount_unverified: number
+    rule?: string
+    calibration?: { performance_materiality: number; recalibrated: { finding_id: string; title: string; from: string; to: string; reason: string }[]; rule: string }
+    reflection?: { triggered: boolean; issues_before?: number; issues_after?: number; adopted: boolean; error?: string }
+  }
+  substantive?: Record<string, any>
+  adjustments?: {
+    entries: { aje_id: string; finding_id: string; description: string; lines: { account_code: string; account_name: string; debit: number; credit: number; note?: string }[] }[]
+    revenue_adjustment: number
+    cost_adjustment: number
+    profit_adjustment: number
+    impact?: { comparable?: boolean; revenue_before: number; revenue_after: number; cost_before: number; cost_after: number; profit_before: number; profit_after: number; profit_delta: number; turns_to_loss: boolean; caveat: string; basis: string } | null
+    materiality?: Record<string, any>
+  }
   privacy_audit?: Record<string, any>
   reasoning_content: string
   execution_mode: string

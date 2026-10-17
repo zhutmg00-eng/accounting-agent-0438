@@ -59,6 +59,11 @@ export interface FinancialStatementsSummary {
   inventory: number;
   totalAssets: number;
   operatingCashFlow: number;
+  fixedAssets?: number;
+  depreciation?: number;
+  sgaExpenses?: number;
+  leverageRatio?: number;
+  currentAssets?: number;
 }
 
 export interface AccountingCaseData {
@@ -68,6 +73,7 @@ export interface AccountingCaseData {
   auditPeriod: string;
   description: string;
   financialSummary?: FinancialStatementsSummary;
+  priorFinancialSummary?: FinancialStatementsSummary;
   vouchers: AccountingVoucher[];
   contracts: BusinessContract[];
   invoices: InvoiceItem[];

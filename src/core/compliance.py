@@ -10,7 +10,13 @@ import re
 import hashlib
 import datetime
 from typing import Dict, Any, List, Optional
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
+try:
+    from pydantic import model_validator
+    _PYDANTIC_V2 = True
+except ImportError:  # pragma: no cover
+    from pydantic import root_validator as _v1_root_validator
+    _PYDANTIC_V2 = False
 
 from src.core.schemas import AccountingCaseData, BankFlowRecord, AccountingVoucher, InvoiceItem, BusinessContract
 
@@ -105,18 +111,19 @@ class CpaApprovalRequest(BaseModel):
     )
     compliance_confirmed: bool = Field(default=True, description="是否确认符合审计独立性准则")
 
-    @model_validator(mode="after")
-    def _require_independence_confirmation(self) -> "CpaApprovalRequest":
-        """Refuse a sign-off request that declares non-compliance.
-
-        The receipt below is a non-repudiation artefact whose body asserts
-        strict independence compliance, so issuing one for a caller who has
-        explicitly answered "no" would make the declaration false.  Rejecting
-        the request here turns it into an automatic 422 at the API boundary.
-        """
-        if not self.compliance_confirmed:
-            raise ValueError("未确认审计独立性，禁止签发 CPA 终审签章")
-        return self
+    if _PYDANTIC_V2:
+        @model_validator(mode="after")
+        def _require_independence_confirmation(self) -> "CpaApprovalRequest":
+            """Refuse a sign-off request that declares non-compliance."""
+            if not self.compliance_confirmed:
+                raise ValueError("未确认审计独立性，禁止签发 CPA 终审签章")
+            return self
+    else:
+        @_v1_root_validator(allow_reuse=True)
+        def _require_independence_confirmation_v1(cls, values: Dict[str, Any]) -> Dict[str, Any]:
+            if not values.get("compliance_confirmed", True):
+                raise ValueError("未确认审计独立性，禁止签发 CPA 终审签章")
+            return values
 
 
 class CpaApprovalReceipt(BaseModel):
@@ -134,8 +141,6 @@ class CpaApprovalReceipt(BaseModel):
 
 def generate_cpa_signoff(req: CpaApprovalRequest) -> CpaApprovalReceipt:
     """Generate tamper-evident digital sign-off receipt for audit workpapers."""
-    # Defence in depth: the model validator above rejects this at the API
-    # boundary, but this function is also reachable from the CLI and tests.
     if not req.compliance_confirmed:
         raise ValueError("未确认审计独立性，禁止签发 CPA 终审签章")
 

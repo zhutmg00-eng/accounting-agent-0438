@@ -39,7 +39,7 @@ from src.exporters.excel_exporter import export_workpaper_to_excel
 from src.exporters.pdf_exporter import export_report_to_pdf
 from src.exporters.json_exporter import export_report_to_json
 from src.data_loader.file_importer import (
-    parse_vouchers_file, parse_invoices_file, parse_bank_flows_file
+    parse_vouchers_file, parse_invoices_file, parse_bank_flows_file, parse_contracts_file
 )
 from src.config import settings
 from src.benchmark.test_cases import _load_custom_cases_from_disk
@@ -57,7 +57,7 @@ _logging.basicConfig(level=_logging.INFO, format="%(levelname)s:     %(name)s - 
 app = FastAPI(
     title="DeepSeek-AuditMind Agent API",
     description="Intelligent Accounting & Audit Fraud Detection Harness API",
-    version="2.0.0"
+    version="2.5.0"
 )
 
 # Compliant CORS configuration for modern frontend development (Vite port 5173, etc.)
@@ -170,7 +170,7 @@ def get_health():
     return {
         "status": "online",
         "service": "DeepSeek-AuditMind Agent",
-        "version": "2.0.0",
+        "version": "2.5.0",
         "mode": "MOCK" if settings.use_mock_llm else "ONLINE",
         "cases_count": len(get_all_cases()),
         "categories_count": len(get_case_categories()),
@@ -538,7 +538,9 @@ async def stream_audit(case_id: str = Query(...), mode: str = Query("MOCK")):
                     pause += base * 3
                 await asyncio.sleep(pause)
 
-        yield f"data: {json.dumps({'stage': 4, 'title': 'DeepSeek 大模型准则深度研判', 'status': 'completed', 'detail': (f'研判完成，总体风险等级: {report.overall_risk_rating.value}' + (f' · {report.model_name} 输出 {report.token_usage.get("completion_tokens", 0)} tokens' if streamed_live else ' · 离线规则推理'))})}\n\n"
+        comp_tokens = report.token_usage.get("completion_tokens", 0)
+        stage4_detail = f"研判完成，总体风险等级: {report.overall_risk_rating.value}" + (f" · {report.model_name} 输出 {comp_tokens} tokens" if streamed_live else " · 离线规则推理")
+        yield f"data: {json.dumps({'stage': 4, 'title': 'DeepSeek 大模型准则深度研判', 'status': 'completed', 'detail': stage4_detail})}\n\n"
 
         # Stage 5: Workpaper synthesis
         yield f"data: {json.dumps({'stage': 5, 'title': '审计工作底稿与结论合成', 'status': 'running', 'detail': '正在编排标准化三层证据审计底稿与监管合规建议'})}\n\n"
@@ -581,12 +583,49 @@ def run_benchmark():
     return summary.model_dump()
 
 
+@app.post("/api/benchmark/blind")
+def run_blind_benchmark(layer: str = Query("v2")):
+    """三层评测体系中的外部盲测：v2（冻结后首次运行的严格盲测）、v1（已用于开发的验证集）、synthetic（合成随机账套）。
+
+    离线模式现场重跑；若存在在线模式的历史运行结果，一并返回（标注运行时间，不冒充实时结果）。
+    """
+    import json as _json
+    from src.benchmark.blind_real import evaluate_blind_cases, beneish_on_reported_financials
+    from src.benchmark.blind_synthetic import evaluate as synthetic_evaluate
+    out: Dict[str, Any] = {"layer": layer}
+    if layer == "synthetic":
+        out["synthetic"] = synthetic_evaluate(list(range(7001, 7011)), size=150)
+        return out
+    if layer not in ("v1", "v2", "v3"):
+        raise HTTPException(status_code=400, detail="layer 仅支持 v1 / v2 / v3 / synthetic")
+    out["offline"] = evaluate_blind_cases("mock", layer)
+    out["beneish_reported"] = {k: v for k, v in beneish_on_reported_financials().items() if k != "rows"}
+    snaps = []
+    for d in (Path("output"), Path("data") / "results"):
+        snaps += sorted(d.glob(f"blind_{layer}_online*.json"))
+    if not snaps and layer == "v1":
+        snaps = [Path("output") / "blind_real_online.json"]
+    snaps = [p for p in snaps if p.exists()]
+    if snaps:
+        snap = max(snaps, key=lambda p: p.stat().st_mtime)
+        try:
+            full = _json.loads(snap.read_text(encoding="utf-8"))
+            data = full.get("blind_cases", {})
+            data["algorithm_version"] = full.get("algorithm_version", "v2.3")
+            data["snapshot_time"] = time.strftime("%Y-%m-%d %H:%M", time.localtime(snap.stat().st_mtime))
+            out["online_snapshot"] = data
+        except Exception:
+            pass
+    return out
+
+
 @app.post("/api/upload")
 async def upload_files(
     request: Request,
     vouchers_file: Optional[UploadFile] = File(None),
     invoices_file: Optional[UploadFile] = File(None),
     bank_flows_file: Optional[UploadFile] = File(None),
+    contracts_file: Optional[UploadFile] = File(None),
     company_name: str = Form("自定义导入企业"),
     stock_code: str = Form("CUSTOM-001"),
     industry: str = Form("综合制造")
@@ -602,12 +641,13 @@ async def upload_files(
     # Reject oversized payloads before reading any body (per-file cap x 3 optional files)
     limit_bytes = max(1, settings.max_upload_mb) * 1024 * 1024
     declared_length = request.headers.get("content-length", "")
-    if declared_length.isdigit() and int(declared_length) > limit_bytes * 3 + _UPLOAD_OVERHEAD_SLACK:
+    if declared_length.isdigit() and int(declared_length) > limit_bytes * 4 + _UPLOAD_OVERHEAD_SLACK:
         raise HTTPException(status_code=413, detail="上传文件超过大小限制")
 
     vouchers = []
     invoices = []
     bank_flows = []
+    contracts = []
     validation_errors = []
 
     if vouchers_file:
@@ -643,6 +683,17 @@ async def upload_files(
             else:
                 bank_flows = parsed_b
 
+    if contracts_file:
+        c_bytes = await _read_upload_capped(contracts_file, limit_bytes)
+        if len(c_bytes) == 0:
+            validation_errors.append(f"合同文件 '{contracts_file.filename}' 为空文件（0字节）")
+        else:
+            parsed_c, c_val = parse_contracts_file(io.BytesIO(c_bytes), filename=contracts_file.filename or "")
+            if not c_val.is_valid:
+                validation_errors.extend([f"[合同台账校验未通过] {err}" for err in c_val.errors])
+            else:
+                contracts = parsed_c
+
     if validation_errors:
         raise HTTPException(
             status_code=400,
@@ -663,11 +714,11 @@ async def upload_files(
         industry=industry,
         case_category="自定义导入案例",
         audit_period="2025年度",
-        description=f"用户自定义上传导入的业财与凭证账套数据（包含凭证 {len(vouchers)} 笔、发票 {len(invoices)} 张、流水 {len(bank_flows)} 笔）",
+        description=f"用户自定义上传导入的业财与凭证账套数据（包含凭证 {len(vouchers)} 笔、发票 {len(invoices)} 张、流水 {len(bank_flows)} 笔、合同 {len(contracts)} 份）",
         vouchers=vouchers,
         invoices=invoices,
         bank_flows=bank_flows,
-        contracts=[],
+        contracts=contracts,
         financial_summary=None,
         prior_financial_summary=None
     )
@@ -693,7 +744,8 @@ async def upload_files(
         "counts": {
             "vouchers": len(vouchers),
             "invoices": len(invoices),
-            "bank_flows": len(bank_flows)
+            "bank_flows": len(bank_flows),
+            "contracts": len(contracts),
         }
     }
 
@@ -753,6 +805,16 @@ def population_analytics_endpoint(case_id: str):
     return run_population_analytics(case)
 
 
+@app.get("/api/topology/{case_id}")
+def topology_endpoint(case_id: str):
+    """资金拓扑与业财单据链（确定性计算，不读取真值、不调用模型）。"""
+    from src.plugins.audit_fraud_plugin.topology import build_topology
+    case = get_case_by_id(case_id)
+    if not case:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found")
+    return build_topology(case)
+
+
 @app.get("/api/templates/download/{template_type}")
 def download_template_endpoint(template_type: str):
     """Download standard Excel / CSV templates for offline preparation."""
@@ -765,6 +827,10 @@ def download_template_endpoint(template_type: str):
         file_path = templates_dir / "增值税发票清单模板.csv"
         media_type = "text/csv; charset=utf-8"
         filename = "增值税发票清单模板.csv"
+    elif template_type == "contracts":
+        file_path = templates_dir / "业务合同台账模板.csv"
+        media_type = "text/csv; charset=utf-8"
+        filename = "业务合同台账模板.csv"
     elif template_type == "bank_flows":
         file_path = templates_dir / "银行对账单明细模板.csv"
         media_type = "text/csv; charset=utf-8"
@@ -810,12 +876,13 @@ def _export_path(out_dir: Path, filename: str) -> Path:
 @app.post("/api/export/excel")
 def export_excel_endpoint(report_data: Dict[str, Any] = Body(...)):
     """Export workpaper to Excel and return file download."""
+    cpa_signoff = report_data.pop("cpa_signoff", None) if isinstance(report_data, dict) else None
     report = AnalysisReportResult(**report_data)
     case_id = _checked_export_case_id(report.case_id)
     out_dir = Path("output/excel")
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = _export_path(out_dir, f"AuditWorkpaper_{case_id}_{int(time.time())}.xlsx")
-    export_workpaper_to_excel(report, out_path)
+    export_workpaper_to_excel(report, out_path, cpa_signoff=cpa_signoff)
     return FileResponse(
         str(out_path),
         filename=out_path.name,
@@ -826,12 +893,13 @@ def export_excel_endpoint(report_data: Dict[str, Any] = Body(...)):
 @app.post("/api/export/pdf")
 def export_pdf_endpoint(report_data: Dict[str, Any] = Body(...)):
     """Export audit report to PDF and return file download."""
+    cpa_signoff = report_data.pop("cpa_signoff", None) if isinstance(report_data, dict) else None
     report = AnalysisReportResult(**report_data)
     case_id = _checked_export_case_id(report.case_id)
     out_dir = Path("output/pdf")
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = _export_path(out_dir, f"AuditReport_{case_id}_{int(time.time())}.pdf")
-    export_report_to_pdf(report, out_path)
+    export_report_to_pdf(report, out_path, cpa_signoff=cpa_signoff)
     return FileResponse(
         str(out_path),
         filename=out_path.name,
@@ -870,6 +938,20 @@ def cpa_approval_endpoint(req: CpaApprovalRequest):
     return generate_cpa_signoff(req)
 
 
+_SANITIZE_BACKUP: Dict[str, AccountingCaseData] = {}
+
+
+@app.post("/api/compliance/restore-case/{case_id}")
+def restore_case_endpoint(case_id: str):
+    """撤销脱敏，恢复原始案例数据。"""
+    from src.benchmark import test_cases as _tc
+    original = _SANITIZE_BACKUP.pop(case_id, None)
+    if original is None:
+        raise HTTPException(status_code=404, detail="该案例未处于脱敏状态")
+    _tc._SANITIZED_OVERRIDES.pop(case_id, None)
+    return {"status": "success", "case_id": case_id, "sanitized": False, "data": original.model_dump()}
+
+
 @app.post("/api/compliance/sanitize-case/{case_id}")
 def sanitize_case_endpoint(case_id: str):
     """Sanitize bank accounts, counterparty names, and sensitive IDs for a case."""
@@ -877,6 +959,10 @@ def sanitize_case_endpoint(case_id: str):
     if not case:
         raise HTTPException(status_code=404, detail=f"案例 {case_id} 未找到")
     sanitized = DataSanitizer.sanitize_case_data(case)
+    # 写回案例池，刷新后仍为脱敏态；保留原文备份以便还原
+    from src.benchmark import test_cases as _tc
+    _SANITIZE_BACKUP.setdefault(case_id, case)
+    _tc._SANITIZED_OVERRIDES[case_id] = sanitized
     return {
         "status": "success",
         "case_id": case_id,

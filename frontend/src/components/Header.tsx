@@ -22,9 +22,9 @@ const TABS = [
   { id: 'cockpit', label: '审计指挥舱' },
   { id: 'agent', label: '智能体工作台' },
   { id: 'reconcile', label: '三单勾稽穿透' },
-  { id: 'topology', label: '资金体外拓扑' },
+  { id: 'topology', label: '资金拓扑与单据链' },
   { id: 'cot', label: '思维链推演台' },
-  { id: 'benchmark', label: '28案例竞技场' },
+  { id: 'benchmark', label: '三层评测' },
   { id: 'workpapers', label: '底稿与成果导出' }
 ]
 

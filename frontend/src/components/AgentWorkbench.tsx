@@ -272,13 +272,19 @@ export const AgentWorkbench: React.FC<AgentWorkbenchProps> = ({
       prompt: '请立即调用 perform_three_way_reconciliation 算子执行业财三单穿透勾稽核对'
     },
     {
-      name: 'search_accounting_vouchers',
+      name: 'run_judgment_procedures',
+      label: '五大职业判断实质性程序',
+      detail: '费用完整性 / 减值计提 / 预计负债 / 应付核销 / 关联重分类',
+      prompt: '请立即调用 run_judgment_procedures 算子对当前案例执行五大职业判断实质性程序（费用完整性、资产减值、预计负债、负债核销、关联交易重分类）'
+    },
+    {
+      name: 'search_vouchers',
       label: '记账凭证多维检索',
       detail: '快速排查异常分录与无原始凭据单据',
       prompt: '请检索本案例所有大额记账凭证并分析分录科目借贷平衡情况'
     },
     {
-      name: 'trace_bank_flow_counterparties',
+      name: 'search_bank_flows',
       label: '银行流水穿透排查',
       detail: '识别关联方资金占用与闭环空转',
       prompt: '请检索分析本案例银行对账单大额流水与交易对手方关联性'
@@ -312,8 +318,10 @@ export const AgentWorkbench: React.FC<AgentWorkbenchProps> = ({
     if (name === 'journal_entry_testing') return '全量分录测试'
     if (name === 'detect_fund_round_trips') return '资金往返识别'
     if (name === 'benford_first_digit_test') return 'Benford 检验'
-    if (name === 'search_vouchers') return '凭证检索'
-    if (name === 'search_bank_flows') return '流水检索'
+    if (name === 'run_judgment_procedures') return '职业判断程序'
+    if (name === 'verify_cutoff_and_cost') return '收入截止与成本配比'
+    if (name === 'search_vouchers' || name === 'search_accounting_vouchers') return '凭证检索'
+    if (name === 'search_bank_flows' || name === 'trace_bank_flow_counterparties') return '流水检索'
     return name
   }
 

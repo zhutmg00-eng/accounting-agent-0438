@@ -1,0 +1,6045 @@
+[
+  {
+    "case_id": "BLIND3_001",
+    "company_name": "乐视网信息技术（北京）股份有限公司",
+    "stock_code": "300104",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2021〕16号",
+    "source_url": "https://www.csrc.gov.cn/csrc/c101928/c490192772b7748f58f089887c76bb662/content.shtml",
+    "case_category": "虚增收入（未执行框架合同/互换合同确认收入）；少计成本（互换业务只计收入不计成本）",
+    "csrc_summary": "决定书认定乐视网2007-2016年财务造假；上市后通过未实际执行的广告互换框架合同确认收入（如2015年与北京鼎诚文众虚增收入2,547.17万元、与北京博思百川虚增收入2,641.51万元），并利用广告互换合同只计收入不计成本（如2015年与上海高钧虚减成本943.40万元）。另认定未披露关联交易及对外担保。",
+    "industry": "互联网视频及广告服务",
+    "audit_period": "2015年度",
+    "description": "公司主营网络视频会员、广告投放及版权分销。2015年度广告业务中较多采用资源互换及框架合同形式，凭证涉及会员收入结算、广告投放、带宽采购、版权摊销及期末成本调整。",
+    "vouchers": [
+      {
+        "voucher_id": "LS-V01",
+        "voucher_date": "2015-01-20",
+        "preparer": "刘佳",
+        "checker": "杨丽",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 21200000.0,
+            "credit": 0.0,
+            "summary": "会员服务收入结算款到账"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 20000000.0,
+            "summary": "会员服务收入结算款到账"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 1200000.0,
+            "summary": "会员服务收入-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LS-V02",
+        "voucher_date": "2015-03-31",
+        "preparer": "刘佳",
+        "checker": "杨丽",
+        "attachments_count": 3,
+        "associated_doc_id": "11002815",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 9000000.0,
+            "credit": 0.0,
+            "summary": "确认一季度品牌广告投放收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 8490566.04,
+            "summary": "确认一季度品牌广告投放收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 509433.96,
+            "summary": "确认一季度品牌广告投放收入-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LS-V03",
+        "voucher_date": "2015-05-15",
+        "preparer": "刘佳",
+        "checker": "杨丽",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 9000000.0,
+            "credit": 0.0,
+            "summary": "收到上海鑫驰广告投放款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 9000000.0,
+            "summary": "收到上海鑫驰广告投放款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LS-V04",
+        "voucher_date": "2015-06-30",
+        "preparer": "刘佳",
+        "checker": "杨丽",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 3850000.0,
+            "credit": 0.0,
+            "summary": "计提6月销售人员工资"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 2120000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员工资"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 5970000.0,
+            "summary": "计提6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LS-V05",
+        "voucher_date": "2015-07-10",
+        "preparer": "刘佳",
+        "checker": "杨丽",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 5970000.0,
+            "credit": 0.0,
+            "summary": "发放6月工资"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 5970000.0,
+            "summary": "发放6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LS-V06",
+        "voucher_date": "2015-09-30",
+        "preparer": "刘佳",
+        "checker": "杨丽",
+        "attachments_count": 2,
+        "associated_doc_id": "11003391",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 27000000.0,
+            "credit": 0.0,
+            "summary": "确认鼎诚文众广告互换框架合同收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 25471698.11,
+            "summary": "确认鼎诚文众广告互换框架合同收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 1528301.89,
+            "summary": "确认鼎诚文众广告互换框架合同收入-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LS-V09",
+        "voucher_date": "2015-10-17",
+        "preparer": "刘佳",
+        "checker": "杨丽",
+        "attachments_count": 3,
+        "associated_doc_id": "11004120",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 4716981.13,
+            "credit": 0.0,
+            "summary": "支付三季度CDN带宽服务费"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 283018.87,
+            "credit": 0.0,
+            "summary": "支付三季度CDN带宽服务费-进项税额"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 5000000.0,
+            "summary": "支付三季度CDN带宽服务费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LS-V07",
+        "voucher_date": "2015-11-30",
+        "preparer": "刘佳",
+        "checker": "杨丽",
+        "attachments_count": 2,
+        "associated_doc_id": "11004587",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 28000000.0,
+            "credit": 0.0,
+            "summary": "确认博思百川广告互换框架合同收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 26415094.34,
+            "summary": "确认博思百川广告互换框架合同收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 1584905.66,
+            "summary": "确认博思百川广告互换框架合同收入-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LS-V08",
+        "voucher_date": "2015-12-31",
+        "preparer": "刘佳",
+        "checker": "杨丽",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 9433962.26,
+            "credit": 0.0,
+            "summary": "冲回上海高钧互换广告资源暂估成本"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 0.0,
+            "credit": 9433962.26,
+            "summary": "冲回上海高钧互换广告资源暂估成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "LS-V10",
+        "voucher_date": "2015-12-31",
+        "preparer": "刘佳",
+        "checker": "杨丽",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 12500000.0,
+            "credit": 0.0,
+            "summary": "影视版权本年摊销"
+          },
+          {
+            "account_code": "1702",
+            "account_name": "累计摊销",
+            "debit": 0.0,
+            "credit": 12500000.0,
+            "summary": "影视版权本年摊销"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "LS-C01",
+        "customer_or_vendor": "北京鼎诚文众广告有限公司",
+        "sign_date": "2015-03-02",
+        "total_amount": 27000000.0,
+        "payment_terms": "按实际执行排期逐月结算，以互换资源抵偿",
+        "delivery_condition": "以双方签署的广告排期确认单为准",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "LS-C02",
+        "customer_or_vendor": "北京博思百川国际广告传媒有限公司",
+        "sign_date": "2015-05-18",
+        "total_amount": 28000000.0,
+        "payment_terms": "按实际执行排期逐月结算，以互换资源抵偿",
+        "delivery_condition": "以双方签署的广告排期确认单为准",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "LS-C03",
+        "customer_or_vendor": "上海高钧广告有限公司",
+        "sign_date": "2015-02-10",
+        "total_amount": 10000000.0,
+        "payment_terms": "双方互换等值广告资源，差额现金结算",
+        "delivery_condition": "双方分别提供广告位，按播出监测报告确认",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "LS-C04",
+        "customer_or_vendor": "上海鑫驰汽车销售服务有限公司",
+        "sign_date": "2015-01-08",
+        "total_amount": 9000000.0,
+        "payment_terms": "投放完成后60日内付款",
+        "delivery_condition": "按第三方监测报告确认投放完成",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "11002815",
+        "invoice_date": "2015-03-31",
+        "buyer_name": "上海鑫驰汽车销售服务有限公司",
+        "seller_name": "乐视网信息技术（北京）股份有限公司",
+        "amount_without_tax": 8490566.04,
+        "tax_amount": 509433.96,
+        "total_amount": 9000000.0,
+        "goods_or_service": "品牌视频广告投放"
+      },
+      {
+        "invoice_no": "11003391",
+        "invoice_date": "2015-09-30",
+        "buyer_name": "北京鼎诚文众广告有限公司",
+        "seller_name": "乐视网信息技术（北京）股份有限公司",
+        "amount_without_tax": 25471698.11,
+        "tax_amount": 1528301.89,
+        "total_amount": 27000000.0,
+        "goods_or_service": "广告资源互换投放服务"
+      },
+      {
+        "invoice_no": "11004120",
+        "invoice_date": "2015-10-17",
+        "buyer_name": "乐视网信息技术（北京）股份有限公司",
+        "seller_name": "北京云帆网络科技有限公司",
+        "amount_without_tax": 4716981.13,
+        "tax_amount": 283018.87,
+        "total_amount": 5000000.0,
+        "goods_or_service": "CDN带宽服务"
+      },
+      {
+        "invoice_no": "11004587",
+        "invoice_date": "2015-11-30",
+        "buyer_name": "北京博思百川国际广告传媒有限公司",
+        "seller_name": "乐视网信息技术（北京）股份有限公司",
+        "amount_without_tax": 26415094.34,
+        "tax_amount": 1584905.66,
+        "total_amount": 28000000.0,
+        "goods_or_service": "广告资源互换投放服务"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "001-BF001",
+        "transaction_time": "2015-01-20 10:12",
+        "counterparty_name": "支付宝（中国）网络技术有限公司",
+        "counterparty_account": "3310***905",
+        "amount": 21200000.0,
+        "remark": "会员服务收入结算款到账",
+        "balance_after": 141200000.0
+      },
+      {
+        "transaction_id": "001-BF002",
+        "transaction_time": "2015-05-15 14:30",
+        "counterparty_name": "上海鑫驰汽车销售服务有限公司",
+        "counterparty_account": "3100***662",
+        "amount": 9000000.0,
+        "remark": "收到上海鑫驰广告投放款",
+        "balance_after": 150200000.0
+      },
+      {
+        "transaction_id": "001-BF003",
+        "transaction_time": "2015-07-10 09:05",
+        "counterparty_name": "乐视网工资代发专户",
+        "counterparty_account": "0110***880",
+        "amount": -5970000.0,
+        "remark": "发放6月工资",
+        "balance_after": 144230000.0
+      },
+      {
+        "transaction_id": "001-BF004",
+        "transaction_time": "2015-10-17 11:20",
+        "counterparty_name": "北京云帆网络科技有限公司",
+        "counterparty_account": "1109***231",
+        "amount": -5000000.0,
+        "remark": "支付三季度CDN带宽服务费",
+        "balance_after": 139230000.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "未实际执行的广告互换框架合同确认收入（虚增营业收入）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 51886792.45,
+        "amount_basis": "由凭证LS-V06、LS-V07中科目6001（主营业务收入）贷方金额合计得出，不含税；两份合同无排期确认单、无回款，应收账款挂账",
+        "expected_vouchers": [
+          "LS-V06",
+          "LS-V07"
+        ],
+        "standard_clause": "《企业会计准则第14号——收入》第五条；《证券法》第一百九十七条"
+      },
+      {
+        "finding_type": "广告互换业务冲回成本，只计收入不计成本（少计营业成本）",
+        "expected_risk_level": "MEDIUM",
+        "expected_amount": 9433962.26,
+        "amount_basis": "由凭证LS-V08中科目6401（主营业务成本）贷方金额合计得出，不含税；冲回金额即少计成本",
+        "expected_vouchers": [
+          "LS-V08"
+        ],
+        "standard_clause": "《企业会计准则——基本准则》第九条、第十八条（权责发生制、谨慎性）；《企业会计准则第14号——收入》"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND3_002",
+    "company_name": "华锐风电科技（集团）股份有限公司",
+    "stock_code": "601558",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2015〕66号",
+    "source_url": "http://www.csrc.gov.cn/csrc/c101928/c1042913/content.shtml",
+    "case_category": "提前确认收入",
+    "csrc_summary": "决定书认定华锐风电通过伪造吊装单等方式在2011年度提前确认风电机组收入413台，虚增营业收入2,431,739,125.66元、营业成本2,003,916,651.46元，虚增利润总额277,861,363.60元，占当年利润总额37.58%。公司收入确认政策要求签订合同、货到现场验收并完成吊装。",
+    "industry": "风力发电设备制造",
+    "audit_period": "2011年度",
+    "description": "公司主要从事大型风电机组的研发、生产与销售，收入按“签订合同、货到现场验收、完成吊装并经双方认可”确认。年末集中确认多个风电场项目机组收入，另有采购、预收、质保金及坏账计提凭证。",
+    "vouchers": [
+      {
+        "voucher_id": "HR-V01",
+        "voucher_date": "2011-03-15",
+        "preparer": "孙雪",
+        "checker": "陶敏",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 60000000.0,
+            "credit": 0.0,
+            "summary": "收到辉腾风电项目合同预付款"
+          },
+          {
+            "account_code": "2203",
+            "account_name": "预收账款",
+            "debit": 0.0,
+            "credit": 60000000.0,
+            "summary": "收到辉腾风电项目合同预付款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-V02",
+        "voucher_date": "2011-05-20",
+        "preparer": "孙雪",
+        "checker": "陶敏",
+        "attachments_count": 3,
+        "associated_doc_id": "32001567",
+        "entries": [
+          {
+            "account_code": "1403",
+            "account_name": "原材料",
+            "debit": 42000000.0,
+            "credit": 0.0,
+            "summary": "采购1.5MW机组叶片"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 7140000.0,
+            "credit": 0.0,
+            "summary": "采购1.5MW机组叶片-进项税额"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 49140000.0,
+            "summary": "采购1.5MW机组叶片"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-V03",
+        "voucher_date": "2011-06-30",
+        "preparer": "孙雪",
+        "checker": "陶敏",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用",
+            "debit": 5200000.0,
+            "credit": 0.0,
+            "summary": "计提6月生产人员工资"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 3100000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员工资"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 8300000.0,
+            "summary": "计提6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-V04",
+        "voucher_date": "2011-09-30",
+        "preparer": "孙雪",
+        "checker": "陶敏",
+        "attachments_count": 4,
+        "associated_doc_id": "15002281",
+        "entries": [
+          {
+            "account_code": "2203",
+            "account_name": "预收账款",
+            "debit": 60000000.0,
+            "credit": 0.0,
+            "summary": "辉腾风电场33台机组完成吊装确认收入"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 89760000.0,
+            "credit": 0.0,
+            "summary": "辉腾风电场33台机组完成吊装确认收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 128000000.0,
+            "summary": "辉腾风电场33台机组完成吊装确认收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 21760000.0,
+            "summary": "辉腾风电场机组-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-V09",
+        "voucher_date": "2011-11-20",
+        "preparer": "孙雪",
+        "checker": "陶敏",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 49140000.0,
+            "credit": 0.0,
+            "summary": "支付海风叶片货款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 49140000.0,
+            "summary": "支付海风叶片货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-V05",
+        "voucher_date": "2011-12-28",
+        "preparer": "孙雪",
+        "checker": "陶敏",
+        "attachments_count": 3,
+        "associated_doc_id": "15003016",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 193050000.0,
+            "credit": 0.0,
+            "summary": "安北风电场34台机组吊装完成确认收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 165000000.0,
+            "summary": "安北风电场34台机组吊装完成确认收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 28050000.0,
+            "summary": "安北风电场34台机组吊装完成确认收入-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-V06",
+        "voucher_date": "2011-12-30",
+        "preparer": "孙雪",
+        "checker": "陶敏",
+        "attachments_count": 3,
+        "associated_doc_id": "15003052",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 115830000.0,
+            "credit": 0.0,
+            "summary": "坝上风电场20台机组吊装完成确认收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 99000000.0,
+            "summary": "坝上风电场20台机组吊装完成确认收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 16830000.0,
+            "summary": "坝上风电场20台机组吊装完成确认收入-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-V07",
+        "voucher_date": "2011-12-31",
+        "preparer": "孙雪",
+        "checker": "陶敏",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 216480000.0,
+            "credit": 0.0,
+            "summary": "结转四季度风电机组销售成本"
+          },
+          {
+            "account_code": "1406",
+            "account_name": "发出商品",
+            "debit": 0.0,
+            "credit": 216480000.0,
+            "summary": "结转四季度风电机组销售成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-V08",
+        "voucher_date": "2011-12-31",
+        "preparer": "孙雪",
+        "checker": "陶敏",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 4620000.0,
+            "credit": 0.0,
+            "summary": "按售出机组计提质保期维修费用"
+          },
+          {
+            "account_code": "2801",
+            "account_name": "预计负债",
+            "debit": 0.0,
+            "credit": 4620000.0,
+            "summary": "按售出机组计提质保期维修费用"
+          }
+        ]
+      },
+      {
+        "voucher_id": "HR-V10",
+        "voucher_date": "2011-12-31",
+        "preparer": "孙雪",
+        "checker": "陶敏",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6701",
+            "account_name": "资产减值损失",
+            "debit": 9500000.0,
+            "credit": 0.0,
+            "summary": "按账龄计提应收账款坏账准备"
+          },
+          {
+            "account_code": "1231",
+            "account_name": "坏账准备",
+            "debit": 0.0,
+            "credit": 9500000.0,
+            "summary": "按账龄计提应收账款坏账准备"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "HR-C01",
+        "customer_or_vendor": "内蒙古辉腾风电有限公司",
+        "sign_date": "2011-02-28",
+        "total_amount": 149760000.0,
+        "payment_terms": "合同生效付30%，到货付40%，吊装验收付20%，质保金10%",
+        "delivery_condition": "设备到达现场经双方验收，完成吊装并经业主签署吊装确认单",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "HR-C02",
+        "customer_or_vendor": "甘肃安北风力发电有限公司",
+        "sign_date": "2011-04-12",
+        "total_amount": 193050000.0,
+        "payment_terms": "到货付50%，吊装验收付40%，质保金10%",
+        "delivery_condition": "设备到达现场经双方验收，完成吊装并经业主签署吊装确认单",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "HR-C03",
+        "customer_or_vendor": "河北坝上风能开发有限公司",
+        "sign_date": "2011-06-08",
+        "total_amount": 115830000.0,
+        "payment_terms": "到货付50%，吊装验收付40%，质保金10%",
+        "delivery_condition": "设备到达现场经双方验收，完成吊装并经业主签署吊装确认单",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "HR-C04",
+        "customer_or_vendor": "江苏海风叶片科技有限公司",
+        "sign_date": "2011-04-30",
+        "total_amount": 49140000.0,
+        "payment_terms": "到货验收后180日内付款",
+        "delivery_condition": "送达公司包头总装基地验收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "32001567",
+        "invoice_date": "2011-05-20",
+        "buyer_name": "华锐风电科技（集团）股份有限公司",
+        "seller_name": "江苏海风叶片科技有限公司",
+        "amount_without_tax": 42000000.0,
+        "tax_amount": 7140000.0,
+        "total_amount": 49140000.0,
+        "goods_or_service": "1.5MW风机叶片"
+      },
+      {
+        "invoice_no": "15002281",
+        "invoice_date": "2011-09-30",
+        "buyer_name": "内蒙古辉腾风电有限公司",
+        "seller_name": "华锐风电科技（集团）股份有限公司",
+        "amount_without_tax": 128000000.0,
+        "tax_amount": 21760000.0,
+        "total_amount": 149760000.0,
+        "goods_or_service": "1.5MW风电机组（33台）"
+      },
+      {
+        "invoice_no": "15003016",
+        "invoice_date": "2011-12-28",
+        "buyer_name": "甘肃安北风力发电有限公司",
+        "seller_name": "华锐风电科技（集团）股份有限公司",
+        "amount_without_tax": 165000000.0,
+        "tax_amount": 28050000.0,
+        "total_amount": 193050000.0,
+        "goods_or_service": "1.5MW风电机组（34台）"
+      },
+      {
+        "invoice_no": "15003052",
+        "invoice_date": "2011-12-30",
+        "buyer_name": "河北坝上风能开发有限公司",
+        "seller_name": "华锐风电科技（集团）股份有限公司",
+        "amount_without_tax": 99000000.0,
+        "tax_amount": 16830000.0,
+        "total_amount": 115830000.0,
+        "goods_or_service": "1.5MW风电机组（20台）"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "002-BF001",
+        "transaction_time": "2011-03-15 10:40",
+        "counterparty_name": "内蒙古辉腾风电有限公司",
+        "counterparty_account": "1505***210",
+        "amount": 60000000.0,
+        "remark": "收到辉腾风电项目合同预付款",
+        "balance_after": 360000000.0
+      },
+      {
+        "transaction_id": "002-BF002",
+        "transaction_time": "2011-11-20 15:02",
+        "counterparty_name": "江苏海风叶片科技有限公司",
+        "counterparty_account": "3204***519",
+        "amount": -49140000.0,
+        "remark": "支付海风叶片货款",
+        "balance_after": 310860000.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "未完成吊装即确认风电机组收入（提前确认收入）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 264000000.0,
+        "amount_basis": "由凭证HR-V05、HR-V06中科目6001（主营业务收入）贷方金额合计得出，不含税；对应吊装实际在次年完成",
+        "expected_vouchers": [
+          "HR-V05",
+          "HR-V06"
+        ],
+        "standard_clause": "《企业会计准则第14号——收入》（2006）第四条；公司披露的收入确认政策；《证券法》（2005）第一百九十三条"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND3_003",
+    "company_name": "山东墨龙石油机械股份有限公司",
+    "stock_code": "002490",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2017〕87号",
+    "source_url": "http://www.csrc.gov.cn/csrc/c101928/c1042656/content.shtml",
+    "case_category": "虚增收入（调增暂估售价）；少计营业成本",
+    "csrc_summary": "决定书认定山东墨龙2015年以来通过调增《借出明细表》中的销售单价虚增暂估收入，同时少结转销售成本，使2015、2016年季报及半年报由亏转盈；2016年半年报虚增收入10,000万元、少结转成本5,801.64万元，三季报虚增收入6,049.28万元、少结转成本17,582.29万元。",
+    "industry": "石油机械（油套管）制造",
+    "audit_period": "2016年1-9月",
+    "description": "公司生产石油套管、油管及抽油泵，部分产品以“先借出使用、后按结算单定价”方式供应油田客户，季末按借出明细暂估收入。凭证涵盖开票销售、回款、钢坯采购、暂估收入及成本结转。",
+    "vouchers": [
+      {
+        "voucher_id": "MD-V01",
+        "voucher_date": "2016-02-25",
+        "preparer": "丁红",
+        "checker": "杨文",
+        "attachments_count": 3,
+        "associated_doc_id": "37001105",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 14742000.0,
+            "credit": 0.0,
+            "summary": "销售J55石油套管"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 12600000.0,
+            "summary": "销售J55石油套管"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 2142000.0,
+            "summary": "销售J55石油套管-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "MD-V02",
+        "voucher_date": "2016-03-10",
+        "preparer": "丁红",
+        "checker": "杨文",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 14742000.0,
+            "credit": 0.0,
+            "summary": "收到瑞丰石油套管货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 14742000.0,
+            "summary": "收到瑞丰石油套管货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "MD-V03",
+        "voucher_date": "2016-03-31",
+        "preparer": "丁红",
+        "checker": "杨文",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 11850000.0,
+            "credit": 0.0,
+            "summary": "结转一季度开票销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 11850000.0,
+            "summary": "结转一季度开票销售成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "MD-V04",
+        "voucher_date": "2016-04-18",
+        "preparer": "丁红",
+        "checker": "杨文",
+        "attachments_count": 3,
+        "associated_doc_id": "37002033",
+        "entries": [
+          {
+            "account_code": "1403",
+            "account_name": "原材料",
+            "debit": 20000000.0,
+            "credit": 0.0,
+            "summary": "采购管坯钢"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 3400000.0,
+            "credit": 0.0,
+            "summary": "采购管坯钢-进项税额"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 23400000.0,
+            "summary": "采购管坯钢"
+          }
+        ]
+      },
+      {
+        "voucher_id": "MD-V05",
+        "voucher_date": "2016-06-30",
+        "preparer": "丁红",
+        "checker": "杨文",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 38000000.0,
+            "credit": 0.0,
+            "summary": "按借出明细表暂估二季度油管销售收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 38000000.0,
+            "summary": "按借出明细表暂估二季度油管销售收入"
+          }
+        ]
+      },
+      {
+        "voucher_id": "MD-V06",
+        "voucher_date": "2016-06-30",
+        "preparer": "丁红",
+        "checker": "杨文",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5001",
+            "account_name": "生产成本",
+            "debit": 4600000.0,
+            "credit": 0.0,
+            "summary": "计提6月生产人员工资"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 1350000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员工资"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 5950000.0,
+            "summary": "计提6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "MD-V09",
+        "voucher_date": "2016-08-06",
+        "preparer": "丁红",
+        "checker": "杨文",
+        "attachments_count": 2,
+        "associated_doc_id": "37003318",
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用",
+            "debit": 1600000.0,
+            "credit": 0.0,
+            "summary": "支付7月生产用电费"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 272000.0,
+            "credit": 0.0,
+            "summary": "支付7月生产用电费-进项税额"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 1872000.0,
+            "summary": "支付7月生产用电费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "MD-V07",
+        "voucher_date": "2016-09-30",
+        "preparer": "丁红",
+        "checker": "杨文",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 22000000.0,
+            "credit": 0.0,
+            "summary": "按借出明细表暂估三季度套管销售收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 22000000.0,
+            "summary": "按借出明细表暂估三季度套管销售收入"
+          }
+        ]
+      },
+      {
+        "voucher_id": "MD-V08",
+        "voucher_date": "2016-09-30",
+        "preparer": "丁红",
+        "checker": "杨文",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 47500000.0,
+            "credit": 0.0,
+            "summary": "调整本期暂估销售成本结转"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 0.0,
+            "credit": 47500000.0,
+            "summary": "调整本期暂估销售成本结转"
+          }
+        ]
+      },
+      {
+        "voucher_id": "MD-V10",
+        "voucher_date": "2016-09-30",
+        "preparer": "丁红",
+        "checker": "杨文",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用",
+            "debit": 3900000.0,
+            "credit": 0.0,
+            "summary": "计提三季度设备折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 3900000.0,
+            "summary": "计提三季度设备折旧"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "MD-C01",
+        "customer_or_vendor": "克拉玛依恒泰石油技术服务有限公司",
+        "sign_date": "2016-01-05",
+        "total_amount": 60000000.0,
+        "payment_terms": "结算单确认后90日内付款",
+        "delivery_condition": "借出使用，按实际使用量及双方确认的结算单价结算",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "MD-C02",
+        "customer_or_vendor": "东营瑞丰石油物资有限公司",
+        "sign_date": "2016-02-01",
+        "total_amount": 14742000.0,
+        "payment_terms": "货到验收后30日内付款",
+        "delivery_condition": "送达买方指定仓库验收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "MD-C03",
+        "customer_or_vendor": "日照恒钢特钢有限公司",
+        "sign_date": "2016-04-01",
+        "total_amount": 23400000.0,
+        "payment_terms": "货到验收后90日内付款",
+        "delivery_condition": "送达公司寿光厂区验收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "37001105",
+        "invoice_date": "2016-02-25",
+        "buyer_name": "东营瑞丰石油物资有限公司",
+        "seller_name": "山东墨龙石油机械股份有限公司",
+        "amount_without_tax": 12600000.0,
+        "tax_amount": 2142000.0,
+        "total_amount": 14742000.0,
+        "goods_or_service": "J55石油套管"
+      },
+      {
+        "invoice_no": "37002033",
+        "invoice_date": "2016-04-18",
+        "buyer_name": "山东墨龙石油机械股份有限公司",
+        "seller_name": "日照恒钢特钢有限公司",
+        "amount_without_tax": 20000000.0,
+        "tax_amount": 3400000.0,
+        "total_amount": 23400000.0,
+        "goods_or_service": "管坯钢"
+      },
+      {
+        "invoice_no": "37003318",
+        "invoice_date": "2016-08-06",
+        "buyer_name": "山东墨龙石油机械股份有限公司",
+        "seller_name": "国网山东省电力公司寿光市供电公司",
+        "amount_without_tax": 1600000.0,
+        "tax_amount": 272000.0,
+        "total_amount": 1872000.0,
+        "goods_or_service": "工业用电"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "003-BF001",
+        "transaction_time": "2016-03-10 09:48",
+        "counterparty_name": "东营瑞丰石油物资有限公司",
+        "counterparty_account": "3705***288",
+        "amount": 14742000.0,
+        "remark": "收到瑞丰石油套管货款",
+        "balance_after": 94742000.0
+      },
+      {
+        "transaction_id": "003-BF002",
+        "transaction_time": "2016-08-06 10:15",
+        "counterparty_name": "国网山东省电力公司寿光市供电公司",
+        "counterparty_account": "3707***001",
+        "amount": -1872000.0,
+        "remark": "支付7月生产用电费",
+        "balance_after": 92870000.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "调增借出产品暂估单价虚增收入（无发票、无结算单）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 60000000.0,
+        "amount_basis": "由凭证MD-V05、MD-V07中科目6001（主营业务收入）贷方金额合计得出，不含税暂估金额",
+        "expected_vouchers": [
+          "MD-V05",
+          "MD-V07"
+        ],
+        "standard_clause": "《企业会计准则第14号——收入》（2006）第四条、第五条；《证券法》（2005）第六十三条"
+      },
+      {
+        "finding_type": "冲减已结转销售成本（少结转营业成本）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 47500000.0,
+        "amount_basis": "由凭证MD-V08中科目6401（主营业务成本）贷方金额合计得出，冲减金额即少计成本",
+        "expected_vouchers": [
+          "MD-V08"
+        ],
+        "standard_clause": "《企业会计准则第1号——存货》第十四条；《企业会计准则——基本准则》第三十五条（配比）"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND3_004",
+    "company_name": "广东榕泰实业股份有限公司",
+    "stock_code": "600589",
+    "penalty_decision_no": "中国证券监督管理委员会广东监管局行政处罚决定书〔2021〕8号",
+    "source_url": "http://epaper.zqrb.cn/html/2021-05/15/content_731184.htm",
+    "case_category": "资产减值少提（虚构回款冲减应收免提坏账）；虚增收入（虚构保理利息）；关联交易非关联化",
+    "csrc_summary": "决定书认定：2019年通过关联方中粤农资及第三方循环支付并制作代付款协议，虚构从10家已注销客户收回货款3,124.23万元，免于计提坏账；虚构子公司金财通与和通塑胶、永佳农资、中粤农资的保理业务，确认其他业务收入1,177.99万元；实控人杨宝生安排员工挂名控制中粤农资、和通塑胶、永佳农资、国华机电，年报未披露关联关系及向3家关联方采购原材料（2019年40,376.68万元）。",
+    "industry": "化工（氨基模塑料、三聚氰胺）",
+    "audit_period": "2019年度",
+    "description": "公司生产三聚氰胺甲醛模塑料等化工产品，子公司开展商业保理业务。原材料（尿素、三聚氰胺）主要通过当地贸易商采购；年末集中清理长账龄应收账款，部分客户货款由第三方代为支付。",
+    "vouchers": [
+      {
+        "voucher_id": "RT-V01",
+        "voucher_date": "2019-01-15",
+        "preparer": "吴林",
+        "checker": "郑佳",
+        "attachments_count": 3,
+        "associated_doc_id": "44001982",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 7888000.0,
+            "credit": 0.0,
+            "summary": "销售氨基模塑料"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 6800000.0,
+            "summary": "销售氨基模塑料"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 1088000.0,
+            "summary": "销售氨基模塑料-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RT-V11",
+        "voucher_date": "2019-04-12",
+        "preparer": "吴林",
+        "checker": "郑佳",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 7888000.0,
+            "credit": 0.0,
+            "summary": "收到金宏塑胶货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 7888000.0,
+            "summary": "收到金宏塑胶货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RT-V02",
+        "voucher_date": "2019-05-20",
+        "preparer": "吴林",
+        "checker": "郑佳",
+        "attachments_count": 3,
+        "associated_doc_id": "44002577",
+        "entries": [
+          {
+            "account_code": "1403",
+            "account_name": "原材料",
+            "debit": 23800000.0,
+            "credit": 0.0,
+            "summary": "采购尿素原料"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 3094000.0,
+            "credit": 0.0,
+            "summary": "采购尿素原料-进项税额"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 26894000.0,
+            "summary": "采购尿素原料"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RT-V09",
+        "voucher_date": "2019-06-30",
+        "preparer": "吴林",
+        "checker": "郑佳",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5001",
+            "account_name": "生产成本",
+            "debit": 2900000.0,
+            "credit": 0.0,
+            "summary": "计提6月生产人员工资"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 980000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员工资"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 3880000.0,
+            "summary": "计提6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RT-V03",
+        "voucher_date": "2019-08-16",
+        "preparer": "吴林",
+        "checker": "郑佳",
+        "attachments_count": 3,
+        "associated_doc_id": "44003104",
+        "entries": [
+          {
+            "account_code": "1403",
+            "account_name": "原材料",
+            "debit": 19650000.0,
+            "credit": 0.0,
+            "summary": "采购三聚氰胺原料"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 2554500.0,
+            "credit": 0.0,
+            "summary": "采购三聚氰胺原料-进项税额"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 22204500.0,
+            "summary": "采购三聚氰胺原料"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RT-V04",
+        "voucher_date": "2019-09-30",
+        "preparer": "吴林",
+        "checker": "郑佳",
+        "attachments_count": 2,
+        "associated_doc_id": "44003690",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 6066650.0,
+            "credit": 0.0,
+            "summary": "收到中粤农资保理融资利息"
+          },
+          {
+            "account_code": "6051",
+            "account_name": "其他业务收入",
+            "debit": 0.0,
+            "credit": 5889951.46,
+            "summary": "收到中粤农资保理融资利息"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 176698.54,
+            "summary": "保理利息-应交增值税"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RT-V08",
+        "voucher_date": "2019-12-18",
+        "preparer": "吴林",
+        "checker": "郑佳",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 31500000.0,
+            "credit": 0.0,
+            "summary": "预付中粤农资尿素采购款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 31500000.0,
+            "summary": "预付中粤农资尿素采购款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RT-V06",
+        "voucher_date": "2019-12-20",
+        "preparer": "吴林",
+        "checker": "郑佳",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 18600000.0,
+            "credit": 0.0,
+            "summary": "收到百事佳鞋业等客户货款（第三方代付）"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 18600000.0,
+            "summary": "收到百事佳鞋业等客户货款（第三方代付）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RT-V05",
+        "voucher_date": "2019-12-25",
+        "preparer": "吴林",
+        "checker": "郑佳",
+        "attachments_count": 2,
+        "associated_doc_id": "44004218",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 6066650.0,
+            "credit": 0.0,
+            "summary": "收到和通塑胶保理融资利息"
+          },
+          {
+            "account_code": "6051",
+            "account_name": "其他业务收入",
+            "debit": 0.0,
+            "credit": 5889951.46,
+            "summary": "收到和通塑胶保理融资利息"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 176698.54,
+            "summary": "保理利息-应交增值税"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RT-V07",
+        "voucher_date": "2019-12-27",
+        "preparer": "吴林",
+        "checker": "郑佳",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 12642300.0,
+            "credit": 0.0,
+            "summary": "收到9家长账龄客户货款（第三方代付）"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 12642300.0,
+            "summary": "收到9家长账龄客户货款（第三方代付）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "RT-V10",
+        "voucher_date": "2019-12-31",
+        "preparer": "吴林",
+        "checker": "郑佳",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6702",
+            "account_name": "信用减值损失",
+            "debit": 380000.0,
+            "credit": 0.0,
+            "summary": "按账龄组合计提应收账款坏账准备"
+          },
+          {
+            "account_code": "1231",
+            "account_name": "坏账准备",
+            "debit": 0.0,
+            "credit": 380000.0,
+            "summary": "按账龄组合计提应收账款坏账准备"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "RT-C01",
+        "customer_or_vendor": "揭阳市和通塑胶有限公司",
+        "sign_date": "2019-04-28",
+        "total_amount": 26894000.0,
+        "payment_terms": "预付全款后发货",
+        "delivery_condition": "卖方安排供应商直接发货至公司厂区",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "RT-C02",
+        "customer_or_vendor": "揭阳市永佳农资有限公司",
+        "sign_date": "2019-07-30",
+        "total_amount": 22204500.0,
+        "payment_terms": "预付全款后发货",
+        "delivery_condition": "卖方安排供应商直接发货至公司厂区",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "RT-C03",
+        "customer_or_vendor": "揭阳市中粤农资有限公司",
+        "sign_date": "2019-04-02",
+        "total_amount": 80000000.0,
+        "payment_terms": "按季付息，到期还本",
+        "delivery_condition": "受让买方应收账款债权后放款",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "RT-C04",
+        "customer_or_vendor": "揭阳市和通塑胶有限公司",
+        "sign_date": "2019-04-02",
+        "total_amount": 90000000.0,
+        "payment_terms": "按季付息，到期还本",
+        "delivery_condition": "受让买方应收账款债权后放款",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "RT-C05",
+        "customer_or_vendor": "汕头市金宏塑胶制品有限公司",
+        "sign_date": "2019-01-05",
+        "total_amount": 7888000.0,
+        "payment_terms": "货到后90日内付款",
+        "delivery_condition": "送达买方仓库验收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "44001982",
+        "invoice_date": "2019-01-15",
+        "buyer_name": "汕头市金宏塑胶制品有限公司",
+        "seller_name": "广东榕泰实业股份有限公司",
+        "amount_without_tax": 6800000.0,
+        "tax_amount": 1088000.0,
+        "total_amount": 7888000.0,
+        "goods_or_service": "三聚氰胺甲醛模塑料"
+      },
+      {
+        "invoice_no": "44002577",
+        "invoice_date": "2019-05-20",
+        "buyer_name": "广东榕泰实业股份有限公司",
+        "seller_name": "揭阳市和通塑胶有限公司",
+        "amount_without_tax": 23800000.0,
+        "tax_amount": 3094000.0,
+        "total_amount": 26894000.0,
+        "goods_or_service": "尿素"
+      },
+      {
+        "invoice_no": "44003104",
+        "invoice_date": "2019-08-16",
+        "buyer_name": "广东榕泰实业股份有限公司",
+        "seller_name": "揭阳市永佳农资有限公司",
+        "amount_without_tax": 19650000.0,
+        "tax_amount": 2554500.0,
+        "total_amount": 22204500.0,
+        "goods_or_service": "三聚氰胺"
+      },
+      {
+        "invoice_no": "44003690",
+        "invoice_date": "2019-09-30",
+        "buyer_name": "揭阳市中粤农资有限公司",
+        "seller_name": "深圳金财通商业保理有限公司",
+        "amount_without_tax": 5889951.46,
+        "tax_amount": 176698.54,
+        "total_amount": 6066650.0,
+        "goods_or_service": "保理融资利息"
+      },
+      {
+        "invoice_no": "44004218",
+        "invoice_date": "2019-12-25",
+        "buyer_name": "揭阳市和通塑胶有限公司",
+        "seller_name": "深圳金财通商业保理有限公司",
+        "amount_without_tax": 5889951.46,
+        "tax_amount": 176698.54,
+        "total_amount": 6066650.0,
+        "goods_or_service": "保理融资利息"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "004-BF001",
+        "transaction_time": "2019-04-12 10:20",
+        "counterparty_name": "汕头市金宏塑胶制品有限公司",
+        "counterparty_account": "4405***117",
+        "amount": 7888000.0,
+        "remark": "收到金宏塑胶货款",
+        "balance_after": 57888000.0
+      },
+      {
+        "transaction_id": "004-BF002",
+        "transaction_time": "2019-09-30 16:05",
+        "counterparty_name": "揭阳市中粤农资有限公司",
+        "counterparty_account": "4405***602",
+        "amount": 6066650.0,
+        "remark": "收到中粤农资保理融资利息",
+        "balance_after": 63954650.0
+      },
+      {
+        "transaction_id": "004-BF003",
+        "transaction_time": "2019-12-18 11:30",
+        "counterparty_name": "揭阳市中粤农资有限公司",
+        "counterparty_account": "4405***602",
+        "amount": -31500000.0,
+        "remark": "预付中粤农资尿素采购款",
+        "balance_after": 32454650.0
+      },
+      {
+        "transaction_id": "004-BF004",
+        "transaction_time": "2019-12-20 15:42",
+        "counterparty_name": "揭阳市中粤农资有限公司",
+        "counterparty_account": "4405***602",
+        "amount": 18600000.0,
+        "remark": "收到百事佳鞋业等客户货款（第三方代付）",
+        "balance_after": 51054650.0
+      },
+      {
+        "transaction_id": "004-BF005",
+        "transaction_time": "2019-12-25 10:18",
+        "counterparty_name": "揭阳市和通塑胶有限公司",
+        "counterparty_account": "4405***873",
+        "amount": 6066650.0,
+        "remark": "收到和通塑胶保理融资利息",
+        "balance_after": 57121300.0
+      },
+      {
+        "transaction_id": "004-BF006",
+        "transaction_time": "2019-12-27 14:06",
+        "counterparty_name": "深圳前海汇通供应链管理有限公司",
+        "counterparty_account": "4000***519",
+        "amount": 12642300.0,
+        "remark": "收到9家长账龄客户货款（第三方代付）",
+        "balance_after": 69763600.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "第三方代付冲减已注销客户应收账款，规避坏账计提（资产减值少提）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 31242300.0,
+        "amount_basis": "由凭证RT-V06、RT-V07、RT-V08中科目1122（应收账款）贷方金额合计得出，代付款项资金源自同期预付中粤农资款项，构成资金闭环",
+        "expected_vouchers": [
+          "RT-V06",
+          "RT-V07",
+          "RT-V08"
+        ],
+        "standard_clause": "《企业会计准则第22号——金融工具确认和计量》第四十六条；《证券法》第一百九十七条"
+      },
+      {
+        "finding_type": "无真实应收账款基础的保理业务确认利息收入（虚增其他业务收入）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 11779902.92,
+        "amount_basis": "由凭证RT-V04、RT-V05中科目6051（其他业务收入）贷方金额合计得出，不含税",
+        "expected_vouchers": [
+          "RT-V04",
+          "RT-V05"
+        ],
+        "standard_clause": "《企业会计准则第14号——收入》第五条；《证券法》第七十八条"
+      },
+      {
+        "finding_type": "向实控人控制的挂名企业采购原材料，未识别披露为关联交易",
+        "expected_risk_level": "MEDIUM",
+        "expected_amount": 43450000.0,
+        "amount_basis": "由凭证RT-V02、RT-V03中科目1403（原材料）借方金额合计得出，不含税采购金额",
+        "expected_vouchers": [
+          "RT-V02",
+          "RT-V03"
+        ],
+        "standard_clause": "《企业会计准则第36号——关联方披露》第三条、第四条；《上市公司信息披露管理办法》（证监会令第40号）第七十一条"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND3_005",
+    "company_name": "中兴天恒能源科技（北京）股份公司",
+    "stock_code": "600856",
+    "penalty_decision_no": "中国证券监督管理委员会北京监管局行政处罚决定书〔2022〕16号",
+    "source_url": "http://www.csrc.gov.cn/csrc/c105938/c6459fa93d4814b1aa86d0eb4999a74e5/content.shtml",
+    "case_category": "预计负债/担保未足额确认；资产减值少提（停滞供应商预付款未重分类、未计提坏账）",
+    "csrc_summary": "处罚决定（经证监会行政复议决定书〔2023〕78号转述）认定：2020年4月广州中院一审判决中天能源对0.8亿元款项承担连带担保责任，公司仅按20%计提预计负债，少计提0.64亿元；九头风、加拿大优势自2018年下半年业务基本停滞，青岛中天向九头风支付的2.64亿元、对加拿大优势净额3.84亿元不再具有预付性质，公司未重分类为其他应收款并计提坏账，少计提1.32亿元、1.92亿元。2020年合计虚增利润3.88亿元。",
+    "industry": "天然气（LNG/CNG）供应及管网运营",
+    "audit_period": "2020年度",
+    "description": "公司经营LNG/CNG销售、城市燃气及海外油气资产，子公司青岛中天向上游气源方预付保证金锁定气源；公司为若干外部借款人提供过连带责任保证，相关诉讼已有一审判决。",
+    "vouchers": [
+      {
+        "voucher_id": "ZT-V01",
+        "voucher_date": "2020-01-15",
+        "preparer": "孟洁",
+        "checker": "施荣",
+        "attachments_count": 3,
+        "associated_doc_id": "37020115",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 6540000.0,
+            "credit": 0.0,
+            "summary": "销售LNG"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 6000000.0,
+            "summary": "销售LNG"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 540000.0,
+            "summary": "销售LNG-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZT-V02",
+        "voucher_date": "2020-02-20",
+        "preparer": "孟洁",
+        "checker": "施荣",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 6540000.0,
+            "credit": 0.0,
+            "summary": "收到港城燃气LNG货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 6540000.0,
+            "summary": "收到港城燃气LNG货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZT-V03",
+        "voucher_date": "2020-03-18",
+        "preparer": "孟洁",
+        "checker": "施荣",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 150000000.0,
+            "credit": 0.0,
+            "summary": "预付九头风LNG气源保证金"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 150000000.0,
+            "summary": "预付九头风LNG气源保证金"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZT-V04",
+        "voucher_date": "2020-06-30",
+        "preparer": "孟洁",
+        "checker": "施荣",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 1800000.0,
+            "credit": 0.0,
+            "summary": "计提6月销售人员工资"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 2600000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员工资"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 4400000.0,
+            "summary": "计提6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZT-V05",
+        "voucher_date": "2020-07-22",
+        "preparer": "孟洁",
+        "checker": "施荣",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 114000000.0,
+            "credit": 0.0,
+            "summary": "预付九头风LNG气源保证金（第二期）"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 114000000.0,
+            "summary": "预付九头风LNG气源保证金（第二期）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZT-V06",
+        "voucher_date": "2020-09-30",
+        "preparer": "孟洁",
+        "checker": "施荣",
+        "attachments_count": 3,
+        "associated_doc_id": "37022930",
+        "entries": [
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 4800000.0,
+            "credit": 0.0,
+            "summary": "采购LNG补充气源"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 432000.0,
+            "credit": 0.0,
+            "summary": "采购LNG补充气源-进项税额"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 5232000.0,
+            "summary": "采购LNG补充气源"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZT-V09",
+        "voucher_date": "2020-10-01",
+        "preparer": "孟洁",
+        "checker": "施荣",
+        "attachments_count": 2,
+        "associated_doc_id": "37023001",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 900000.0,
+            "credit": 0.0,
+            "summary": "支付9月管道运输费"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 81000.0,
+            "credit": 0.0,
+            "summary": "支付9月管道运输费-进项税额"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 981000.0,
+            "summary": "支付9月管道运输费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZT-V07",
+        "voucher_date": "2020-12-31",
+        "preparer": "孟洁",
+        "checker": "施荣",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6711",
+            "account_name": "营业外支出",
+            "debit": 16000000.0,
+            "credit": 0.0,
+            "summary": "广州农商行保证合同纠纷按20%确认担保损失"
+          },
+          {
+            "account_code": "1221",
+            "account_name": "其他应收款",
+            "debit": 64000000.0,
+            "credit": 0.0,
+            "summary": "广州农商行保证合同纠纷确认对主债务人追偿款"
+          },
+          {
+            "account_code": "2801",
+            "account_name": "预计负债",
+            "debit": 0.0,
+            "credit": 80000000.0,
+            "summary": "广州农商行保证合同纠纷一审判决确认担保责任"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZT-V08",
+        "voucher_date": "2020-12-31",
+        "preparer": "孟洁",
+        "checker": "施荣",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用",
+            "debit": 3300000.0,
+            "credit": 0.0,
+            "summary": "计提四季度加气站设备折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 3300000.0,
+            "summary": "计提四季度加气站设备折旧"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "ZT-C01",
+        "customer_or_vendor": "湖北九头风天然气有限公司",
+        "sign_date": "2018-05-10",
+        "total_amount": 264000000.0,
+        "payment_terms": "签约后预付气源保证金，按月供气结算后抵扣",
+        "delivery_condition": "按月度供气计划在九头风LNG工厂交付",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "ZT-C02",
+        "customer_or_vendor": "广州农村商业银行股份有限公司",
+        "sign_date": "2017-11-20",
+        "total_amount": 80000000.0,
+        "payment_terms": "主债务人到期未清偿时承担连带清偿责任",
+        "delivery_condition": "保证合同，保证期间为主债务履行期满后两年",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "ZT-C03",
+        "customer_or_vendor": "青岛港城燃气有限公司",
+        "sign_date": "2020-01-02",
+        "total_amount": 6540000.0,
+        "payment_terms": "货到后30日内付款",
+        "delivery_condition": "槽车送达买方储配站计量交接",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "37020115",
+        "invoice_date": "2020-01-15",
+        "buyer_name": "青岛港城燃气有限公司",
+        "seller_name": "中兴天恒能源科技（北京）股份公司",
+        "amount_without_tax": 6000000.0,
+        "tax_amount": 540000.0,
+        "total_amount": 6540000.0,
+        "goods_or_service": "液化天然气（LNG）"
+      },
+      {
+        "invoice_no": "37022930",
+        "invoice_date": "2020-09-30",
+        "buyer_name": "中兴天恒能源科技（北京）股份公司",
+        "seller_name": "中海石油气电集团有限责任公司山东分公司",
+        "amount_without_tax": 4800000.0,
+        "tax_amount": 432000.0,
+        "total_amount": 5232000.0,
+        "goods_or_service": "液化天然气（LNG）"
+      },
+      {
+        "invoice_no": "37023001",
+        "invoice_date": "2020-10-01",
+        "buyer_name": "中兴天恒能源科技（北京）股份公司",
+        "seller_name": "山东实华天然气管道运输有限公司",
+        "amount_without_tax": 900000.0,
+        "tax_amount": 81000.0,
+        "total_amount": 981000.0,
+        "goods_or_service": "天然气管道运输服务"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "005-BF001",
+        "transaction_time": "2020-02-20 10:05",
+        "counterparty_name": "青岛港城燃气有限公司",
+        "counterparty_account": "3702***519",
+        "amount": 6540000.0,
+        "remark": "收到港城燃气LNG货款",
+        "balance_after": 406540000.0
+      },
+      {
+        "transaction_id": "005-BF002",
+        "transaction_time": "2020-03-18 15:40",
+        "counterparty_name": "湖北九头风天然气有限公司",
+        "counterparty_account": "4205***116",
+        "amount": -150000000.0,
+        "remark": "预付九头风LNG气源保证金",
+        "balance_after": 256540000.0
+      },
+      {
+        "transaction_id": "005-BF003",
+        "transaction_time": "2020-07-22 16:20",
+        "counterparty_name": "湖北九头风天然气有限公司",
+        "counterparty_account": "4205***116",
+        "amount": -114000000.0,
+        "remark": "预付九头风LNG气源保证金（第二期）",
+        "balance_after": 142540000.0
+      },
+      {
+        "transaction_id": "005-BF004",
+        "transaction_time": "2020-10-01 09:30",
+        "counterparty_name": "山东实华天然气管道运输有限公司",
+        "counterparty_account": "3701***442",
+        "amount": -981000.0,
+        "remark": "支付9月管道运输费",
+        "balance_after": 141559000.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "担保诉讼一审判决后仅按20%确认损失，其余以追偿款挂账（预计负债/担保损失少确认）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 64000000.0,
+        "amount_basis": "由凭证ZT-V07中科目1221（其他应收款）借方金额合计得出，追偿款挂账金额即少确认的担保损失，与决定书2020年少计提0.64亿元一致；分录形式为出题构造",
+        "expected_vouchers": [
+          "ZT-V07"
+        ],
+        "standard_clause": "《企业会计准则第22号——金融工具确认和计量》（2017）第五十九条第四项；《企业会计准则第13号——或有事项》第四条"
+      },
+      {
+        "finding_type": "业务停滞供应商的预付款未重分类为其他应收款、未计提坏账准备",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 264000000.0,
+        "amount_basis": "由凭证ZT-V03、ZT-V05中科目1123（预付账款）借方金额合计得出，预付金额与决定书九头风2.64亿元一致（付款日期为构造）；决定书认定应计提坏账1.32亿元",
+        "expected_vouchers": [
+          "ZT-V03",
+          "ZT-V05"
+        ],
+        "standard_clause": "《企业会计准则第22号——金融工具确认和计量》（2017）第三条、第四十六条、第五十九条"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND3_006",
+    "company_name": "吉林紫鑫药业股份有限公司",
+    "stock_code": "002118",
+    "penalty_decision_no": "中国证监会行政处罚决定书〔2024〕122号",
+    "source_url": "http://www.csrc.gov.cn/csrc/c101928/c7530907/content.shtml",
+    "case_category": "关联交易非关联化（虚增收入）；存货虚增；资金占用（以采购预付名义向关联方转出资金）",
+    "csrc_summary": "决定书认定：实控人郭春生以模拟集团化方式控制182家关联公司，其中48家与紫鑫药业发生关联交易未披露；公司向关联公司支付在地林下参巨额采购款、资金实际未向出售方支付，构成未披露的非经营性资金往来；2018年虚构向关联方长春新银润贸易有限公司销售在地林下参，虚增营业收入200,000,000元、利润95,005,184.08元；2018年向王某丽、马某祥等购买在地林下参未向出售方支付采购款，虚增存货1,468,500,000元。",
+    "industry": "中药及人参产品",
+    "audit_period": "2018年度",
+    "description": "公司从事中成药生产及人参产业链经营，采购在地林下参（林地参）作为存货，并向贸易商销售林下参。凭证涉及药品销售、大额林下参采购与销售、研发及工资。",
+    "vouchers": [
+      {
+        "voucher_id": "ZX-V01",
+        "voucher_date": "2018-02-08",
+        "preparer": "孙莉",
+        "checker": "秦晶",
+        "attachments_count": 3,
+        "associated_doc_id": "22000418",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 6552000.0,
+            "credit": 0.0,
+            "summary": "销售中成药制剂"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 5600000.0,
+            "summary": "销售中成药制剂"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 952000.0,
+            "summary": "销售中成药制剂-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZX-V02",
+        "voucher_date": "2018-03-08",
+        "preparer": "孙莉",
+        "checker": "秦晶",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 6552000.0,
+            "credit": 0.0,
+            "summary": "收到吉林大药房货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 6552000.0,
+            "summary": "收到吉林大药房货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZX-V03",
+        "voucher_date": "2018-06-15",
+        "preparer": "孙莉",
+        "checker": "秦晶",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 380000000.0,
+            "credit": 0.0,
+            "summary": "采购敦化林场在地林下参（王某丽）"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 380000000.0,
+            "summary": "采购敦化林场在地林下参（王某丽）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZX-V08",
+        "voucher_date": "2018-06-30",
+        "preparer": "孙莉",
+        "checker": "秦晶",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5001",
+            "account_name": "生产成本",
+            "debit": 2400000.0,
+            "credit": 0.0,
+            "summary": "计提6月生产人员工资"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 1100000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员工资"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 3500000.0,
+            "summary": "计提6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZX-V04",
+        "voucher_date": "2018-09-20",
+        "preparer": "孙莉",
+        "checker": "秦晶",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 354250000.0,
+            "credit": 0.0,
+            "summary": "采购在地林下参（马某祥）"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 354250000.0,
+            "summary": "采购在地林下参（马某祥）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZX-V10",
+        "voucher_date": "2018-11-15",
+        "preparer": "孙莉",
+        "checker": "秦晶",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 150000000.0,
+            "credit": 0.0,
+            "summary": "预付在地林下参收购款（嘉益人参代收）"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 150000000.0,
+            "summary": "预付在地林下参收购款（嘉益人参代收）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZX-V05",
+        "voucher_date": "2018-12-20",
+        "preparer": "孙莉",
+        "checker": "秦晶",
+        "attachments_count": 2,
+        "associated_doc_id": "22001907",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 120000000.0,
+            "credit": 0.0,
+            "summary": "销售在地林下参（第一批）"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 120000000.0,
+            "summary": "销售在地林下参（第一批）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZX-V06",
+        "voucher_date": "2018-12-28",
+        "preparer": "孙莉",
+        "checker": "秦晶",
+        "attachments_count": 2,
+        "associated_doc_id": "22001935",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 80000000.0,
+            "credit": 0.0,
+            "summary": "销售在地林下参（第二批）"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 80000000.0,
+            "summary": "销售在地林下参（第二批）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZX-V07",
+        "voucher_date": "2018-12-28",
+        "preparer": "孙莉",
+        "checker": "秦晶",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 104994815.92,
+            "credit": 0.0,
+            "summary": "结转在地林下参销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 104994815.92,
+            "summary": "结转在地林下参销售成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "ZX-V09",
+        "voucher_date": "2018-12-29",
+        "preparer": "孙莉",
+        "checker": "秦晶",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5301",
+            "account_name": "研发支出",
+            "debit": 1200000.0,
+            "credit": 0.0,
+            "summary": "支付人参皂苷研究技术服务费"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 1200000.0,
+            "summary": "支付人参皂苷研究技术服务费"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "ZX-C01",
+        "customer_or_vendor": "长春新银润贸易有限公司",
+        "sign_date": "2018-12-10",
+        "total_amount": 200000000.0,
+        "payment_terms": "林地交割后一年内付清",
+        "delivery_condition": "林地现场点交，不实际采挖",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "ZX-C02",
+        "customer_or_vendor": "王某丽",
+        "sign_date": "2018-06-01",
+        "total_amount": 380000000.0,
+        "payment_terms": "林地踏查确认后分期支付",
+        "delivery_condition": "林地转让协议签署即视为交付",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "ZX-C03",
+        "customer_or_vendor": "马某祥",
+        "sign_date": "2018-09-05",
+        "total_amount": 354250000.0,
+        "payment_terms": "林地踏查确认后分期支付",
+        "delivery_condition": "林地转让协议签署即视为交付",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "ZX-C04",
+        "customer_or_vendor": "吉林大药房医药连锁有限公司",
+        "sign_date": "2018-01-15",
+        "total_amount": 6552000.0,
+        "payment_terms": "货到后30日内付款",
+        "delivery_condition": "送达买方配送中心验收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "22000418",
+        "invoice_date": "2018-02-08",
+        "buyer_name": "吉林大药房医药连锁有限公司",
+        "seller_name": "吉林紫鑫药业股份有限公司",
+        "amount_without_tax": 5600000.0,
+        "tax_amount": 952000.0,
+        "total_amount": 6552000.0,
+        "goods_or_service": "中成药制剂"
+      },
+      {
+        "invoice_no": "22001907",
+        "invoice_date": "2018-12-20",
+        "buyer_name": "长春新银润贸易有限公司",
+        "seller_name": "吉林紫鑫药业股份有限公司",
+        "amount_without_tax": 120000000.0,
+        "tax_amount": 0.0,
+        "total_amount": 120000000.0,
+        "goods_or_service": "在地林下参（免税农产品）"
+      },
+      {
+        "invoice_no": "22001935",
+        "invoice_date": "2018-12-28",
+        "buyer_name": "长春新银润贸易有限公司",
+        "seller_name": "吉林紫鑫药业股份有限公司",
+        "amount_without_tax": 80000000.0,
+        "tax_amount": 0.0,
+        "total_amount": 80000000.0,
+        "goods_or_service": "在地林下参（免税农产品）"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "006-BF001",
+        "transaction_time": "2018-03-08 13:40",
+        "counterparty_name": "吉林大药房医药连锁有限公司",
+        "counterparty_account": "2201***356",
+        "amount": 6552000.0,
+        "remark": "收到吉林大药房货款",
+        "balance_after": 306552000.0
+      },
+      {
+        "transaction_id": "006-BF002",
+        "transaction_time": "2018-11-15 14:25",
+        "counterparty_name": "延边嘉益人参贸易有限责任公司",
+        "counterparty_account": "2224***063",
+        "amount": -150000000.0,
+        "remark": "预付在地林下参收购款（嘉益人参代收）",
+        "balance_after": 156552000.0
+      },
+      {
+        "transaction_id": "006-BF003",
+        "transaction_time": "2018-12-29 10:26",
+        "counterparty_name": "长春中科生物医药研究院",
+        "counterparty_account": "2201***774",
+        "amount": -1200000.0,
+        "remark": "支付人参皂苷研究技术服务费",
+        "balance_after": 155352000.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "向实控人控制的未披露关联方销售林下参确认收入（关联交易非关联化/虚增收入）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 200000000.0,
+        "amount_basis": "由凭证ZX-V05、ZX-V06中科目6001（主营业务收入）贷方金额合计得出，免税收入，不含税=含税；金额与决定书一致",
+        "expected_vouchers": [
+          "ZX-V05",
+          "ZX-V06"
+        ],
+        "standard_clause": "《企业会计准则第36号——关联方披露》第三条；《企业会计准则第14号——收入》第五条；《证券法》（2005）第六十三条"
+      },
+      {
+        "finding_type": "采购在地林下参无对价支付，虚增存货",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 734250000.0,
+        "amount_basis": "由凭证ZX-V03、ZX-V04中科目1405（库存商品）借方金额合计得出，按决定书2018年虚增存货1,468,500,000元的50%构造",
+        "expected_vouchers": [
+          "ZX-V03",
+          "ZX-V04"
+        ],
+        "standard_clause": "《企业会计准则第1号——存货》第四条；《企业会计准则——基本准则》第二十条"
+      },
+      {
+        "finding_type": "以林下参采购预付名义向实控人控制的关联公司转出资金（非经营性资金往来）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 150000000.0,
+        "amount_basis": "由凭证ZX-V10中科目1123（预付账款）借方金额合计得出，收款方为决定书所列实控人控制的关联公司之一，金额为构造",
+        "expected_vouchers": [
+          "ZX-V10"
+        ],
+        "standard_clause": "《上市公司监管指引第8号——上市公司资金往来、对外担保的监管要求》第五条；《企业会计准则第36号——关联方披露》"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND3_007",
+    "company_name": "烟台园城黄金股份有限公司",
+    "stock_code": "600766",
+    "penalty_decision_no": "中国证券监督管理委员会山东监管局行政处罚决定书〔2024〕7号",
+    "source_url": "http://www.csrc.gov.cn/shandong/c104216/c7516881/content.shtml",
+    "case_category": "虚增收入（应按净额法却按总额法）；少计费用（职工薪酬由控股股东承担）",
+    "csrc_summary": "决定书认定：2021年钢材贸易业务采用总额法确认收入，年报虚增营业收入及营业成本各6,495.18万元；员工2021年绩效工资及满勤奖40.13万元由园城集团承担、公司未入账，少确认职工薪酬40.13万元；派驻小套峪矿人员薪酬11.97万元由小套峪矿发放，少确认托管成本11.97万元；合计虚增利润52.10万元，占当期利润总额15.27%。",
+    "industry": "黄金采选及大宗贸易",
+    "audit_period": "2021年度",
+    "description": "公司在黄金业务之外开展钢材贸易及矿山托管服务。贸易业务上下游均为外部客户，货物由供应商直发客户；年末对职工薪酬计提进行清理调整。",
+    "vouchers": [
+      {
+        "voucher_id": "YC-V01",
+        "voucher_date": "2021-03-15",
+        "preparer": "牟莹",
+        "checker": "郭珍",
+        "attachments_count": 3,
+        "associated_doc_id": "37010311",
+        "entries": [
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 38500000.0,
+            "credit": 0.0,
+            "summary": "采购螺纹钢（直发客户）"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 5005000.0,
+            "credit": 0.0,
+            "summary": "采购螺纹钢（直发客户）-进项税额"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 43505000.0,
+            "summary": "采购螺纹钢（直发客户）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YC-V02",
+        "voucher_date": "2021-03-18",
+        "preparer": "牟莹",
+        "checker": "郭珍",
+        "attachments_count": 3,
+        "associated_doc_id": "37010352",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 43505000.0,
+            "credit": 0.0,
+            "summary": "销售螺纹钢"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 38500000.0,
+            "summary": "销售螺纹钢"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 5005000.0,
+            "summary": "销售螺纹钢-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YC-V03",
+        "voucher_date": "2021-03-31",
+        "preparer": "牟莹",
+        "checker": "郭珍",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 38500000.0,
+            "credit": 0.0,
+            "summary": "结转螺纹钢销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 38500000.0,
+            "summary": "结转螺纹钢销售成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YC-V07",
+        "voucher_date": "2021-06-30",
+        "preparer": "牟莹",
+        "checker": "郭珍",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 1260000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员工资"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 1260000.0,
+            "summary": "计提6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YC-V08",
+        "voucher_date": "2021-07-10",
+        "preparer": "牟莹",
+        "checker": "郭珍",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 1260000.0,
+            "credit": 0.0,
+            "summary": "发放6月工资"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 1260000.0,
+            "summary": "发放6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YC-V09",
+        "voucher_date": "2021-08-20",
+        "preparer": "牟莹",
+        "checker": "郭珍",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 43505000.0,
+            "credit": 0.0,
+            "summary": "收到鑫港建材钢材货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 43505000.0,
+            "summary": "收到鑫港建材钢材货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YC-V10",
+        "voucher_date": "2021-08-25",
+        "preparer": "牟莹",
+        "checker": "郭珍",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 43505000.0,
+            "credit": 0.0,
+            "summary": "支付荣钢物资钢材货款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 43505000.0,
+            "summary": "支付荣钢物资钢材货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YC-V04",
+        "voucher_date": "2021-10-12",
+        "preparer": "牟莹",
+        "checker": "郭珍",
+        "attachments_count": 3,
+        "associated_doc_id": "37011806",
+        "entries": [
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 26451800.0,
+            "credit": 0.0,
+            "summary": "采购热轧卷板（直发客户）"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 3438734.0,
+            "credit": 0.0,
+            "summary": "采购热轧卷板（直发客户）-进项税额"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 29890534.0,
+            "summary": "采购热轧卷板（直发客户）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YC-V05",
+        "voucher_date": "2021-10-15",
+        "preparer": "牟莹",
+        "checker": "郭珍",
+        "attachments_count": 3,
+        "associated_doc_id": "37011840",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 29890534.0,
+            "credit": 0.0,
+            "summary": "销售热轧卷板并结转成本"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 26451800.0,
+            "summary": "销售热轧卷板并结转成本"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 3438734.0,
+            "summary": "热轧卷板-销项税额"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 26451800.0,
+            "credit": 0.0,
+            "summary": "销售热轧卷板并结转成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 26451800.0,
+            "summary": "销售热轧卷板并结转成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YC-V06",
+        "voucher_date": "2021-12-31",
+        "preparer": "牟莹",
+        "checker": "郭珍",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 401300.0,
+            "credit": 0.0,
+            "summary": "冲回已计提年度绩效及满勤奖（由集团统一发放）"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 0.0,
+            "credit": 401300.0,
+            "summary": "冲回已计提年度绩效及满勤奖（由集团统一发放）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YC-V11",
+        "voucher_date": "2021-12-31",
+        "preparer": "牟莹",
+        "checker": "郭珍",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 1060000.0,
+            "credit": 0.0,
+            "summary": "确认小套峪矿托管服务费收入"
+          },
+          {
+            "account_code": "6051",
+            "account_name": "其他业务收入",
+            "debit": 0.0,
+            "credit": 1000000.0,
+            "summary": "确认小套峪矿托管服务费收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 60000.0,
+            "summary": "托管服务费-销项税额"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "YC-C01",
+        "customer_or_vendor": "烟台鑫港建材贸易有限公司",
+        "sign_date": "2021-03-10",
+        "total_amount": 73395334.0,
+        "payment_terms": "货到后5个月内付款",
+        "delivery_condition": "卖方安排货物由上游钢厂直接发往买方指定工地，公司不承担运输及仓储",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "YC-C02",
+        "customer_or_vendor": "天津荣钢物资有限公司",
+        "sign_date": "2021-03-08",
+        "total_amount": 73395334.0,
+        "payment_terms": "收到下游货款后5日内支付",
+        "delivery_condition": "卖方安排货物由上游钢厂直接发往买方指定工地，公司不承担运输及仓储",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "37010311",
+        "invoice_date": "2021-03-15",
+        "buyer_name": "烟台园城黄金股份有限公司",
+        "seller_name": "天津荣钢物资有限公司",
+        "amount_without_tax": 38500000.0,
+        "tax_amount": 5005000.0,
+        "total_amount": 43505000.0,
+        "goods_or_service": "螺纹钢"
+      },
+      {
+        "invoice_no": "37010352",
+        "invoice_date": "2021-03-18",
+        "buyer_name": "烟台鑫港建材贸易有限公司",
+        "seller_name": "烟台园城黄金股份有限公司",
+        "amount_without_tax": 38500000.0,
+        "tax_amount": 5005000.0,
+        "total_amount": 43505000.0,
+        "goods_or_service": "螺纹钢"
+      },
+      {
+        "invoice_no": "37011806",
+        "invoice_date": "2021-10-12",
+        "buyer_name": "烟台园城黄金股份有限公司",
+        "seller_name": "天津荣钢物资有限公司",
+        "amount_without_tax": 26451800.0,
+        "tax_amount": 3438734.0,
+        "total_amount": 29890534.0,
+        "goods_or_service": "热轧卷板"
+      },
+      {
+        "invoice_no": "37011840",
+        "invoice_date": "2021-10-15",
+        "buyer_name": "烟台鑫港建材贸易有限公司",
+        "seller_name": "烟台园城黄金股份有限公司",
+        "amount_without_tax": 26451800.0,
+        "tax_amount": 3438734.0,
+        "total_amount": 29890534.0,
+        "goods_or_service": "热轧卷板"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "007-BF001",
+        "transaction_time": "2021-07-10 09:00",
+        "counterparty_name": "园城黄金工资代发专户",
+        "counterparty_account": "3706***880",
+        "amount": -1260000.0,
+        "remark": "发放6月工资",
+        "balance_after": 58740000.0
+      },
+      {
+        "transaction_id": "007-BF002",
+        "transaction_time": "2021-08-20 15:10",
+        "counterparty_name": "烟台鑫港建材贸易有限公司",
+        "counterparty_account": "3706***449",
+        "amount": 43505000.0,
+        "remark": "收到鑫港建材钢材货款",
+        "balance_after": 102245000.0
+      },
+      {
+        "transaction_id": "007-BF003",
+        "transaction_time": "2021-08-25 10:30",
+        "counterparty_name": "天津荣钢物资有限公司",
+        "counterparty_account": "1200***903",
+        "amount": -43505000.0,
+        "remark": "支付荣钢物资钢材货款",
+        "balance_after": 58740000.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "不承担存货风险的钢材贸易按总额法确认收入（应按净额法）",
+        "expected_risk_level": "MEDIUM",
+        "expected_amount": 64951800.0,
+        "amount_basis": "由凭证YC-V02、YC-V05中科目6001（主营业务收入）贷方金额合计得出，不含税；合计与决定书认定虚增收入6,495.18万元一致",
+        "expected_vouchers": [
+          "YC-V02",
+          "YC-V05"
+        ],
+        "standard_clause": "《企业会计准则第14号——收入》（2017）第三十四条（主要责任人/代理人）；《证券法》第七十八条"
+      },
+      {
+        "finding_type": "员工绩效工资由控股股东承担，冲回已计提薪酬（少计管理费用）",
+        "expected_risk_level": "MEDIUM",
+        "expected_amount": 401300.0,
+        "amount_basis": "由凭证YC-V06中科目6602（管理费用）贷方金额合计得出，金额与决定书认定的40.13万元一致",
+        "expected_vouchers": [
+          "YC-V06"
+        ],
+        "standard_clause": "《企业会计准则第9号——职工薪酬》第五条；《企业会计准则解释》关于股东代付费用的处理"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND3_008",
+    "company_name": "吉林亚联发展科技股份有限公司",
+    "stock_code": "002316",
+    "penalty_decision_no": "中国证券监督管理委员会吉林监管局行政处罚决定书〔2024〕1号",
+    "source_url": "http://epaper.zqrb.cn/html/2024-08/17/content_1074776.htm",
+    "case_category": "无单据核销负债增利；少计营业成本（重复冲减成本挂预付）",
+    "csrc_summary": "决定书认定子公司开店宝2021年：浙江即富错误清理三年以上不需支付的应付账款，虚减应付账款及营业成本8,278,844.67元；服务商返现业务将2020年已冲减的返现在主营业务成本中再次冲减，少确认成本、多确认预付账款13,714,256.57元；合计虚增利润总额33,311,352.35元，占当期12.33%。",
+    "industry": "第三方支付及金融科技服务",
+    "audit_period": "2021年度",
+    "description": "公司通过控股子公司开展POS收单及支付服务，按交易量向服务商支付分润与推广费，并与合作方核对返现结算单。年末对长账龄往来款进行清理。",
+    "vouchers": [
+      {
+        "voucher_id": "YL-V01",
+        "voucher_date": "2021-01-31",
+        "preparer": "陈晓",
+        "checker": "陈道",
+        "attachments_count": 2,
+        "associated_doc_id": "44030121",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 10600000.0,
+            "credit": 0.0,
+            "summary": "1月收单手续费清算款"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 10000000.0,
+            "summary": "1月收单手续费清算款"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 600000.0,
+            "summary": "收单手续费-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YL-V02",
+        "voucher_date": "2021-01-31",
+        "preparer": "陈晓",
+        "checker": "陈道",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 6800000.0,
+            "credit": 0.0,
+            "summary": "计提1月服务商分润成本"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 6800000.0,
+            "summary": "计提1月服务商分润成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YL-V03",
+        "voucher_date": "2021-02-13",
+        "preparer": "陈晓",
+        "checker": "陈道",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 6800000.0,
+            "credit": 0.0,
+            "summary": "支付1月服务商分润"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 6800000.0,
+            "summary": "支付1月服务商分润"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YL-V04",
+        "voucher_date": "2021-06-30",
+        "preparer": "陈晓",
+        "checker": "陈道",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 13714256.57,
+            "credit": 0.0,
+            "summary": "按合作方结算单冲减2019.12-2020.11服务商返现成本"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 0.0,
+            "credit": 13714256.57,
+            "summary": "按合作方结算单冲减2019.12-2020.11服务商返现成本"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YL-V07",
+        "voucher_date": "2021-06-30",
+        "preparer": "陈晓",
+        "checker": "陈道",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 2300000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员工资"
+          },
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 1500000.0,
+            "credit": 0.0,
+            "summary": "计提6月销售人员工资"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 3800000.0,
+            "summary": "计提6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YL-V08",
+        "voucher_date": "2021-09-30",
+        "preparer": "陈晓",
+        "checker": "陈道",
+        "attachments_count": 3,
+        "associated_doc_id": "44031955",
+        "entries": [
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 3000000.0,
+            "credit": 0.0,
+            "summary": "采购智能POS机具"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 390000.0,
+            "credit": 0.0,
+            "summary": "采购智能POS机具-进项税额"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 3390000.0,
+            "summary": "采购智能POS机具"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YL-V05",
+        "voucher_date": "2021-12-31",
+        "preparer": "陈晓",
+        "checker": "陈道",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 5120000.0,
+            "credit": 0.0,
+            "summary": "清理三年以上应付推广服务费（第一批）"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 0.0,
+            "credit": 5120000.0,
+            "summary": "清理三年以上应付推广服务费（第一批）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YL-V06",
+        "voucher_date": "2021-12-31",
+        "preparer": "陈晓",
+        "checker": "陈道",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 3158844.67,
+            "credit": 0.0,
+            "summary": "清理三年以上应付推广服务费（第二批）"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 0.0,
+            "credit": 3158844.67,
+            "summary": "清理三年以上应付推广服务费（第二批）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "YL-V09",
+        "voucher_date": "2021-12-31",
+        "preparer": "陈晓",
+        "checker": "陈道",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 1450000.0,
+            "credit": 0.0,
+            "summary": "计提四季度机具折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 1450000.0,
+            "summary": "计提四季度机具折旧"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "YL-C01",
+        "customer_or_vendor": "杭州聚商网络科技有限公司",
+        "sign_date": "2020-12-20",
+        "total_amount": 81600000.0,
+        "payment_terms": "按月结算分润，次月15日前支付",
+        "delivery_condition": "服务商连续6个月未拓展新用户则协议自动终止，暂停支付推广服务费",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "YL-C02",
+        "customer_or_vendor": "深圳新国都智能终端有限公司",
+        "sign_date": "2021-09-10",
+        "total_amount": 3390000.0,
+        "payment_terms": "货到验收后付款",
+        "delivery_condition": "送达公司深圳仓库验收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "44030121",
+        "invoice_date": "2021-01-31",
+        "buyer_name": "中国银联股份有限公司",
+        "seller_name": "吉林亚联发展科技股份有限公司",
+        "amount_without_tax": 10000000.0,
+        "tax_amount": 600000.0,
+        "total_amount": 10600000.0,
+        "goods_or_service": "收单手续费"
+      },
+      {
+        "invoice_no": "44031955",
+        "invoice_date": "2021-09-30",
+        "buyer_name": "吉林亚联发展科技股份有限公司",
+        "seller_name": "深圳新国都智能终端有限公司",
+        "amount_without_tax": 3000000.0,
+        "tax_amount": 390000.0,
+        "total_amount": 3390000.0,
+        "goods_or_service": "智能POS机具"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "008-BF001",
+        "transaction_time": "2021-01-31 23:10",
+        "counterparty_name": "中国银联股份有限公司",
+        "counterparty_account": "3100***001",
+        "amount": 10600000.0,
+        "remark": "1月收单手续费清算款",
+        "balance_after": 50600000.0
+      },
+      {
+        "transaction_id": "008-BF002",
+        "transaction_time": "2021-02-13 10:00",
+        "counterparty_name": "杭州聚商网络科技有限公司",
+        "counterparty_account": "3301***714",
+        "amount": -6800000.0,
+        "remark": "支付1月服务商分润",
+        "balance_after": 43800000.0
+      },
+      {
+        "transaction_id": "008-BF003",
+        "transaction_time": "2021-09-30 14:22",
+        "counterparty_name": "深圳新国都智能终端有限公司",
+        "counterparty_account": "4403***338",
+        "amount": -3390000.0,
+        "remark": "采购智能POS机具",
+        "balance_after": 40410000.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "无债权人确认、无原始单据清理长账龄应付款并冲减营业成本（无单据核销负债增利）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 8278844.67,
+        "amount_basis": "由凭证YL-V05、YL-V06中科目6401（主营业务成本）贷方金额合计得出，金额与决定书一致",
+        "expected_vouchers": [
+          "YL-V05",
+          "YL-V06"
+        ],
+        "standard_clause": "《企业会计准则第22号——金融工具确认和计量》第十二条（金融负债终止确认）；《企业会计准则——基本准则》第十八条"
+      },
+      {
+        "finding_type": "已于上年冲减的服务商返现再次冲减成本并挂预付账款（少计营业成本）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 13714256.57,
+        "amount_basis": "由凭证YL-V04中科目6401（主营业务成本）贷方金额合计得出，金额与决定书一致",
+        "expected_vouchers": [
+          "YL-V04"
+        ],
+        "standard_clause": "《企业会计准则——基本准则》第九条、第三十五条；《企业会计准则第28号——会计政策、会计估计变更和差错更正》"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND3_009",
+    "company_name": "安徽荃银高科种业股份有限公司",
+    "stock_code": "300087",
+    "penalty_decision_no": "中国证券监督管理委员会安徽监管局行政处罚决定书〔2026〕3号",
+    "source_url": "http://www.csrc.gov.cn/anhui/c103988/c7644608/content.shtml",
+    "case_category": "资产减值不提或少提（应收账款未单项计提坏账）",
+    "csrc_summary": "决定书认定荃银高科2024年年报未如实反映控股子公司荃银生物与贵州某公司的债权债务关系，在知悉贵州某公司存在信用风险情况下未单项计提坏账准备、仍按账龄组合计提，少计提信用减值损失18,715,068.36元，虚增利润总额同额，占当期利润总额10.86%。",
+    "industry": "农作物种业",
+    "audit_period": "2024年度",
+    "description": "公司从事杂交水稻、玉米等种子的研发、生产与销售，下设多家控股子公司，客户以经销商为主。年末按账龄组合计提应收账款坏账准备。",
+    "vouchers": [
+      {
+        "voucher_id": "QY-V01",
+        "voucher_date": "2024-03-20",
+        "preparer": "张琳",
+        "checker": "张庆",
+        "attachments_count": 3,
+        "associated_doc_id": "34100321",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 8600000.0,
+            "credit": 0.0,
+            "summary": "销售杂交水稻种子"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 8600000.0,
+            "summary": "销售杂交水稻种子"
+          }
+        ]
+      },
+      {
+        "voucher_id": "QY-V03",
+        "voucher_date": "2024-04-18",
+        "preparer": "张琳",
+        "checker": "张庆",
+        "attachments_count": 3,
+        "associated_doc_id": "34100588",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 10215068.36,
+            "credit": 0.0,
+            "summary": "子公司销售玉米杂交种"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 10215068.36,
+            "summary": "子公司销售玉米杂交种"
+          }
+        ]
+      },
+      {
+        "voucher_id": "QY-V02",
+        "voucher_date": "2024-05-10",
+        "preparer": "张琳",
+        "checker": "张庆",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 8600000.0,
+            "credit": 0.0,
+            "summary": "收到赣丰种业种子款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 8600000.0,
+            "summary": "收到赣丰种业种子款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "QY-V04",
+        "voucher_date": "2024-06-26",
+        "preparer": "张琳",
+        "checker": "张庆",
+        "attachments_count": 3,
+        "associated_doc_id": "34100913",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 8500000.0,
+            "credit": 0.0,
+            "summary": "子公司销售玉米杂交种"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 8500000.0,
+            "summary": "子公司销售玉米杂交种"
+          }
+        ]
+      },
+      {
+        "voucher_id": "QY-V06",
+        "voucher_date": "2024-06-30",
+        "preparer": "张琳",
+        "checker": "张庆",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5001",
+            "account_name": "生产成本",
+            "debit": 3100000.0,
+            "credit": 0.0,
+            "summary": "计提6月制种基地人员工资"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 1900000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员工资"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 5000000.0,
+            "summary": "计提6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "QY-V05",
+        "voucher_date": "2024-08-15",
+        "preparer": "张琳",
+        "checker": "张庆",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 6000000.0,
+            "credit": 0.0,
+            "summary": "预付张掖制种基地2024年制种款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 6000000.0,
+            "summary": "预付张掖制种基地2024年制种款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "QY-V09",
+        "voucher_date": "2024-11-30",
+        "preparer": "张琳",
+        "checker": "张庆",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 5000000.0,
+            "credit": 0.0,
+            "summary": "收到赣丰种业2025年种子预订款"
+          },
+          {
+            "account_code": "2203",
+            "account_name": "预收账款",
+            "debit": 0.0,
+            "credit": 5000000.0,
+            "summary": "收到赣丰种业2025年种子预订款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "QY-V07",
+        "voucher_date": "2024-12-31",
+        "preparer": "张琳",
+        "checker": "张庆",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6702",
+            "account_name": "信用减值损失",
+            "debit": 1186000.0,
+            "credit": 0.0,
+            "summary": "按账龄组合计提应收账款坏账准备"
+          },
+          {
+            "account_code": "1231",
+            "account_name": "坏账准备",
+            "debit": 0.0,
+            "credit": 1186000.0,
+            "summary": "按账龄组合计提应收账款坏账准备"
+          }
+        ]
+      },
+      {
+        "voucher_id": "QY-V08",
+        "voucher_date": "2024-12-31",
+        "preparer": "张琳",
+        "checker": "张庆",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用",
+            "debit": 2600000.0,
+            "credit": 0.0,
+            "summary": "计提四季度加工设备折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 2600000.0,
+            "summary": "计提四季度加工设备折旧"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "QY-C01",
+        "customer_or_vendor": "贵州黔禾农业发展有限公司",
+        "sign_date": "2024-04-01",
+        "total_amount": 18715068.36,
+        "payment_terms": "货到后6个月内付清",
+        "delivery_condition": "送达买方仓库验收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "QY-C02",
+        "customer_or_vendor": "江西赣丰种业有限公司",
+        "sign_date": "2024-03-01",
+        "total_amount": 8600000.0,
+        "payment_terms": "货到后60日内付款",
+        "delivery_condition": "送达买方仓库验收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "QY-C03",
+        "customer_or_vendor": "张掖市甘州区丰源制种专业合作社",
+        "sign_date": "2024-03-20",
+        "total_amount": 12000000.0,
+        "payment_terms": "播种前预付50%，收获验收后付清",
+        "delivery_condition": "按合同约定纯度、发芽率检测合格后交付",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "34100321",
+        "invoice_date": "2024-03-20",
+        "buyer_name": "江西赣丰种业有限公司",
+        "seller_name": "安徽荃银高科种业股份有限公司",
+        "amount_without_tax": 8600000.0,
+        "tax_amount": 0.0,
+        "total_amount": 8600000.0,
+        "goods_or_service": "杂交水稻种子（免税）"
+      },
+      {
+        "invoice_no": "34100588",
+        "invoice_date": "2024-04-18",
+        "buyer_name": "贵州黔禾农业发展有限公司",
+        "seller_name": "安徽荃银高科种业股份有限公司",
+        "amount_without_tax": 10215068.36,
+        "tax_amount": 0.0,
+        "total_amount": 10215068.36,
+        "goods_or_service": "玉米杂交种（免税）"
+      },
+      {
+        "invoice_no": "34100913",
+        "invoice_date": "2024-06-26",
+        "buyer_name": "贵州黔禾农业发展有限公司",
+        "seller_name": "安徽荃银高科种业股份有限公司",
+        "amount_without_tax": 8500000.0,
+        "tax_amount": 0.0,
+        "total_amount": 8500000.0,
+        "goods_or_service": "玉米杂交种（免税）"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "009-BF001",
+        "transaction_time": "2024-05-10 11:05",
+        "counterparty_name": "江西赣丰种业有限公司",
+        "counterparty_account": "3601***820",
+        "amount": 8600000.0,
+        "remark": "收到赣丰种业种子款",
+        "balance_after": 78600000.0
+      },
+      {
+        "transaction_id": "009-BF002",
+        "transaction_time": "2024-08-15 09:30",
+        "counterparty_name": "张掖市甘州区丰源制种专业合作社",
+        "counterparty_account": "6207***116",
+        "amount": -6000000.0,
+        "remark": "预付张掖制种基地2024年制种款",
+        "balance_after": 72600000.0
+      },
+      {
+        "transaction_id": "009-BF003",
+        "transaction_time": "2024-11-30 16:40",
+        "counterparty_name": "江西赣丰种业有限公司",
+        "counterparty_account": "3601***820",
+        "amount": 5000000.0,
+        "remark": "收到赣丰种业2025年种子预订款",
+        "balance_after": 77600000.0
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "已知存在信用风险的客户应收账款未单项计提坏账准备（仅按账龄组合）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 18715068.36,
+        "amount_basis": "由凭证QY-V03、QY-V04、QY-V07中科目1122（应收账款）借方金额合计得出，种子免税，不含税=含税；该客户应收余额应单项全额计提，与决定书少计提金额一致",
+        "expected_vouchers": [
+          "QY-V03",
+          "QY-V04",
+          "QY-V07"
+        ],
+        "standard_clause": "《企业会计准则第22号——金融工具确认和计量》第四十六条、第四十八条；《证券法》第一百九十七条"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND3_010",
+    "company_name": "沈阳化工股份有限公司",
+    "stock_code": "000698",
+    "penalty_decision_no": "中国证券监督管理委员会辽宁监管局行政处罚决定书〔2025〕7号",
+    "source_url": "http://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESZ_STOCK/2025/2025-11/2025-11-29/11647070.PDF",
+    "case_category": "少计营业成本；预付账款虚增（延迟确认存货）",
+    "csrc_summary": "决定书认定全资子公司沈阳蜡化2018-2021年通过人为调整原材料生产投入数量、半成品和产成品数量及延迟确认存货，虚减（虚增）营业成本。2018年年报虚减营业成本129,914,310.43元（占利润总额80.44%），虚减存货509,093,316.68元，虚增预付账款341,572,381.06元，虚减应付账款297,435,246.05元。",
+    "industry": "石油化工（聚乙烯、烧碱）",
+    "audit_period": "2018年度",
+    "description": "公司通过全资子公司沈阳蜡化生产聚乙烯等石化产品，乙烯等原料按合同预付、到货后结算。年末按考核口径对生产投料及成本进行调整。",
+    "vouchers": [
+      {
+        "voucher_id": "SH-V01",
+        "voucher_date": "2018-02-10",
+        "preparer": "冷昭",
+        "checker": "李中",
+        "attachments_count": 3,
+        "associated_doc_id": "21000206",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 17550000.0,
+            "credit": 0.0,
+            "summary": "销售聚乙烯"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 15000000.0,
+            "summary": "销售聚乙烯"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 2550000.0,
+            "summary": "销售聚乙烯-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-V02",
+        "voucher_date": "2018-03-05",
+        "preparer": "冷昭",
+        "checker": "李中",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 17550000.0,
+            "credit": 0.0,
+            "summary": "收到恒力塑料聚乙烯货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 17550000.0,
+            "summary": "收到恒力塑料聚乙烯货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-V03",
+        "voucher_date": "2018-06-25",
+        "preparer": "冷昭",
+        "checker": "李中",
+        "attachments_count": 3,
+        "associated_doc_id": "21001377",
+        "entries": [
+          {
+            "account_code": "1403",
+            "account_name": "原材料",
+            "debit": 30000000.0,
+            "credit": 0.0,
+            "summary": "采购乙烯原料"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 4800000.0,
+            "credit": 0.0,
+            "summary": "采购乙烯原料-进项税额"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 34800000.0,
+            "summary": "采购乙烯原料"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-V08",
+        "voucher_date": "2018-06-30",
+        "preparer": "冷昭",
+        "checker": "李中",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5001",
+            "account_name": "生产成本",
+            "debit": 5300000.0,
+            "credit": 0.0,
+            "summary": "计提6月生产人员工资"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 1700000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员工资"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 7000000.0,
+            "summary": "计提6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-V04",
+        "voucher_date": "2018-07-20",
+        "preparer": "冷昭",
+        "checker": "李中",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 34800000.0,
+            "credit": 0.0,
+            "summary": "支付润宏石化乙烯货款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 34800000.0,
+            "summary": "支付润宏石化乙烯货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-V10",
+        "voucher_date": "2018-09-29",
+        "preparer": "冷昭",
+        "checker": "李中",
+        "attachments_count": 2,
+        "associated_doc_id": "21002288",
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用",
+            "debit": 2400000.0,
+            "credit": 0.0,
+            "summary": "支付9月生产用蒸汽费"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 384000.0,
+            "credit": 0.0,
+            "summary": "支付9月生产用蒸汽费-进项税额"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 2784000.0,
+            "summary": "支付9月生产用蒸汽费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-V05",
+        "voucher_date": "2018-12-24",
+        "preparer": "冷昭",
+        "checker": "李中",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 20157238.11,
+            "credit": 0.0,
+            "summary": "支付润宏石化12月乙烯原料款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 20157238.11,
+            "summary": "支付润宏石化12月乙烯原料款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-V06",
+        "voucher_date": "2018-12-28",
+        "preparer": "冷昭",
+        "checker": "李中",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 14000000.0,
+            "credit": 0.0,
+            "summary": "支付润宏石化12月乙烯原料款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 14000000.0,
+            "summary": "支付润宏石化12月乙烯原料款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-V07",
+        "voucher_date": "2018-12-31",
+        "preparer": "冷昭",
+        "checker": "李中",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1123",
+            "account_name": "预付账款",
+            "debit": 12991431.04,
+            "credit": 0.0,
+            "summary": "按考核口径重算本月投料量，已耗用乙烯待结算部分转入预付"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 0.0,
+            "credit": 12991431.04,
+            "summary": "按考核口径重算本月投料量，已耗用乙烯待结算部分转入预付"
+          }
+        ]
+      },
+      {
+        "voucher_id": "SH-V09",
+        "voucher_date": "2018-12-31",
+        "preparer": "冷昭",
+        "checker": "李中",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用",
+            "debit": 8800000.0,
+            "credit": 0.0,
+            "summary": "计提四季度装置折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 8800000.0,
+            "summary": "计提四季度装置折旧"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "SH-C01",
+        "customer_or_vendor": "辽宁润宏石化物资有限公司",
+        "sign_date": "2018-01-05",
+        "total_amount": 420000000.0,
+        "payment_terms": "按月预付，到货计量后按实际数量结算",
+        "delivery_condition": "管道输送至沈阳蜡化，以计量表读数验收入库",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "SH-C02",
+        "customer_or_vendor": "大连恒力塑料制品有限公司",
+        "sign_date": "2018-01-20",
+        "total_amount": 17550000.0,
+        "payment_terms": "款到发货",
+        "delivery_condition": "买方自提",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "21000206",
+        "invoice_date": "2018-02-10",
+        "buyer_name": "大连恒力塑料制品有限公司",
+        "seller_name": "沈阳化工股份有限公司",
+        "amount_without_tax": 15000000.0,
+        "tax_amount": 2550000.0,
+        "total_amount": 17550000.0,
+        "goods_or_service": "线性低密度聚乙烯"
+      },
+      {
+        "invoice_no": "21001377",
+        "invoice_date": "2018-06-25",
+        "buyer_name": "沈阳化工股份有限公司",
+        "seller_name": "辽宁润宏石化物资有限公司",
+        "amount_without_tax": 30000000.0,
+        "tax_amount": 4800000.0,
+        "total_amount": 34800000.0,
+        "goods_or_service": "乙烯"
+      },
+      {
+        "invoice_no": "21002288",
+        "invoice_date": "2018-09-29",
+        "buyer_name": "沈阳化工股份有限公司",
+        "seller_name": "沈阳经济技术开发区热电有限公司",
+        "amount_without_tax": 2400000.0,
+        "tax_amount": 384000.0,
+        "total_amount": 2784000.0,
+        "goods_or_service": "工业蒸汽"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "010-BF001",
+        "transaction_time": "2018-03-05 10:50",
+        "counterparty_name": "大连恒力塑料制品有限公司",
+        "counterparty_account": "2102***640",
+        "amount": 17550000.0,
+        "remark": "收到恒力塑料聚乙烯货款",
+        "balance_after": 167550000.0
+      },
+      {
+        "transaction_id": "010-BF002",
+        "transaction_time": "2018-07-20 14:15",
+        "counterparty_name": "辽宁润宏石化物资有限公司",
+        "counterparty_account": "2101***557",
+        "amount": -34800000.0,
+        "remark": "支付润宏石化乙烯货款",
+        "balance_after": 132750000.0
+      },
+      {
+        "transaction_id": "010-BF003",
+        "transaction_time": "2018-09-29 11:00",
+        "counterparty_name": "沈阳经济技术开发区热电有限公司",
+        "counterparty_account": "2101***092",
+        "amount": -2784000.0,
+        "remark": "支付9月生产用蒸汽费",
+        "balance_after": 129966000.0
+      },
+      {
+        "transaction_id": "010-BF004",
+        "transaction_time": "2018-12-24 15:30",
+        "counterparty_name": "辽宁润宏石化物资有限公司",
+        "counterparty_account": "2101***557",
+        "amount": -20157238.11,
+        "remark": "支付润宏石化12月乙烯原料款",
+        "balance_after": 109808761.89
+      },
+      {
+        "transaction_id": "010-BF005",
+        "transaction_time": "2018-12-28 16:05",
+        "counterparty_name": "辽宁润宏石化物资有限公司",
+        "counterparty_account": "2101***557",
+        "amount": -14000000.0,
+        "remark": "支付润宏石化12月乙烯原料款",
+        "balance_after": 95808761.89
+      }
+    ],
+    "ground_truth_findings": [
+      {
+        "finding_type": "人为调减投料量冲减营业成本（少计营业成本）",
+        "expected_risk_level": "HIGH",
+        "expected_amount": 12991431.04,
+        "amount_basis": "由凭证SH-V07中科目6401（主营业务成本）贷方金额合计得出，按决定书2018年虚减营业成本约1/10构造",
+        "expected_vouchers": [
+          "SH-V07"
+        ],
+        "standard_clause": "《企业会计准则第1号——存货》第十四条；《企业会计准则——基本准则》第三十五条"
+      },
+      {
+        "finding_type": "原料已到货耗用仍挂预付账款，延迟确认存货及应付（预付账款虚增）",
+        "expected_risk_level": "MEDIUM",
+        "expected_amount": 34157238.11,
+        "amount_basis": "由凭证SH-V05、SH-V06中科目1123（预付账款）借方金额合计得出，按决定书2018年虚增预付账款约1/10构造；入库计量记录显示12月已到货",
+        "expected_vouchers": [
+          "SH-V05",
+          "SH-V06"
+        ],
+        "standard_clause": "《企业会计准则第1号——存货》第四条；《企业会计准则——基本准则》第二十条"
+      }
+    ]
+  },
+  {
+    "case_id": "BLIND3_011",
+    "company_name": "宜宾五粮液股份有限公司",
+    "stock_code": "000858",
+    "penalty_decision_no": "",
+    "source_url": "https://www.wuliangye.com.cn",
+    "case_category": "合规对照",
+    "csrc_summary": "",
+    "industry": "白酒",
+    "audit_period": "2023年度",
+    "description": "公司生产销售浓香型白酒，经销商实行“先款后货”，年末收取次年计划款；年末按经销商考核结果计提市场支持费。凭证含跨年预收、整数广告费、票据背书及节假日付款。",
+    "vouchers": [
+      {
+        "voucher_id": "W-V01",
+        "voucher_date": "2023-01-10",
+        "preparer": "罗静",
+        "checker": "曾强",
+        "attachments_count": 3,
+        "associated_doc_id": "51000102",
+        "entries": [
+          {
+            "account_code": "2203",
+            "account_name": "预收账款",
+            "debit": 56500000.0,
+            "credit": 0.0,
+            "summary": "以上年预收款发货确认收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 50000000.0,
+            "summary": "以上年预收款发货确认收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 6500000.0,
+            "summary": "普五-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "W-V02",
+        "voucher_date": "2023-02-25",
+        "preparer": "罗静",
+        "checker": "曾强",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 30000000.0,
+            "credit": 0.0,
+            "summary": "收到锦源酒业二季度计划打款"
+          },
+          {
+            "account_code": "2203",
+            "account_name": "预收账款",
+            "debit": 0.0,
+            "credit": 30000000.0,
+            "summary": "收到锦源酒业二季度计划打款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "W-V03",
+        "voucher_date": "2023-04-01",
+        "preparer": "罗静",
+        "checker": "曾强",
+        "attachments_count": 3,
+        "associated_doc_id": "51000477",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 28301886.79,
+            "credit": 0.0,
+            "summary": "支付年度品牌电视广告费"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 1698113.21,
+            "credit": 0.0,
+            "summary": "支付年度品牌电视广告费-进项税额"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 30000000.0,
+            "summary": "支付年度品牌电视广告费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "W-V04",
+        "voucher_date": "2023-06-15",
+        "preparer": "罗静",
+        "checker": "曾强",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1121",
+            "account_name": "应收票据",
+            "debit": 20000000.0,
+            "credit": 0.0,
+            "summary": "收到经销商银行承兑汇票冲预收"
+          },
+          {
+            "account_code": "2203",
+            "account_name": "预收账款",
+            "debit": 0.0,
+            "credit": 20000000.0,
+            "summary": "收到经销商银行承兑汇票冲预收"
+          }
+        ]
+      },
+      {
+        "voucher_id": "W-V08",
+        "voucher_date": "2023-06-30",
+        "preparer": "罗静",
+        "checker": "曾强",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5001",
+            "account_name": "生产成本",
+            "debit": 36000000.0,
+            "credit": 0.0,
+            "summary": "计提6月生产人员工资"
+          },
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 9000000.0,
+            "credit": 0.0,
+            "summary": "计提6月销售人员工资"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 7000000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员工资"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 52000000.0,
+            "summary": "计提6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "W-V05",
+        "voucher_date": "2023-07-10",
+        "preparer": "罗静",
+        "checker": "曾强",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 20000000.0,
+            "credit": 0.0,
+            "summary": "背书转让银行承兑汇票支付包材款"
+          },
+          {
+            "account_code": "1121",
+            "account_name": "应收票据",
+            "debit": 0.0,
+            "credit": 20000000.0,
+            "summary": "背书转让银行承兑汇票支付包材款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "W-V10",
+        "voucher_date": "2023-10-02",
+        "preparer": "罗静",
+        "checker": "曾强",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 18000000.0,
+            "credit": 0.0,
+            "summary": "支付高粱收购款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 18000000.0,
+            "summary": "支付高粱收购款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "W-V06",
+        "voucher_date": "2023-12-31",
+        "preparer": "罗静",
+        "checker": "曾强",
+        "attachments_count": 3,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 186000000.0,
+            "credit": 0.0,
+            "summary": "按经销商年度考核结果计提市场支持费"
+          },
+          {
+            "account_code": "2241",
+            "account_name": "其他应付款",
+            "debit": 0.0,
+            "credit": 186000000.0,
+            "summary": "按经销商年度考核结果计提市场支持费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "W-V07",
+        "voucher_date": "2023-12-31",
+        "preparer": "罗静",
+        "checker": "曾强",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 120000000.0,
+            "credit": 0.0,
+            "summary": "收到经销商2024年一季度计划款"
+          },
+          {
+            "account_code": "2203",
+            "account_name": "预收账款",
+            "debit": 0.0,
+            "credit": 120000000.0,
+            "summary": "收到经销商2024年一季度计划款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "W-V09",
+        "voucher_date": "2023-12-31",
+        "preparer": "罗静",
+        "checker": "曾强",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 12600000.0,
+            "credit": 0.0,
+            "summary": "结转普五销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 12600000.0,
+            "summary": "结转普五销售成本"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "W-C01",
+        "customer_or_vendor": "成都锦源酒业贸易有限公司",
+        "sign_date": "2022-12-15",
+        "total_amount": 400000000.0,
+        "payment_terms": "先款后货，按季度打款",
+        "delivery_condition": "经销商自提或公司配送至指定仓库",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "W-C02",
+        "customer_or_vendor": "北京盛世华视广告传媒有限公司",
+        "sign_date": "2023-03-20",
+        "total_amount": 30000000.0,
+        "payment_terms": "签约后10个工作日内付清",
+        "delivery_condition": "按排期播出，以第三方监播报告为准",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "W-C03",
+        "customer_or_vendor": "四川华彩包装印务有限公司",
+        "sign_date": "2023-05-10",
+        "total_amount": 20000000.0,
+        "payment_terms": "货到验收后以票据或电汇结算",
+        "delivery_condition": "送达公司包材库验收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "51000102",
+        "invoice_date": "2023-01-10",
+        "buyer_name": "成都锦源酒业贸易有限公司",
+        "seller_name": "宜宾五粮液股份有限公司",
+        "amount_without_tax": 50000000.0,
+        "tax_amount": 6500000.0,
+        "total_amount": 56500000.0,
+        "goods_or_service": "五粮液52度普五"
+      },
+      {
+        "invoice_no": "51000477",
+        "invoice_date": "2023-04-01",
+        "buyer_name": "宜宾五粮液股份有限公司",
+        "seller_name": "北京盛世华视广告传媒有限公司",
+        "amount_without_tax": 28301886.79,
+        "tax_amount": 1698113.21,
+        "total_amount": 30000000.0,
+        "goods_or_service": "品牌电视广告"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "011-BF001",
+        "transaction_time": "2023-02-25 10:05",
+        "counterparty_name": "成都锦源酒业贸易有限公司",
+        "counterparty_account": "5101***336",
+        "amount": 30000000.0,
+        "remark": "收到锦源酒业二季度计划打款",
+        "balance_after": 830000000.0
+      },
+      {
+        "transaction_id": "011-BF002",
+        "transaction_time": "2023-04-01 09:30",
+        "counterparty_name": "北京盛世华视广告传媒有限公司",
+        "counterparty_account": "1100***219",
+        "amount": -30000000.0,
+        "remark": "支付年度品牌电视广告费",
+        "balance_after": 800000000.0
+      },
+      {
+        "transaction_id": "011-BF003",
+        "transaction_time": "2023-10-02 11:20",
+        "counterparty_name": "宜宾翠屏区高粱种植专业合作社",
+        "counterparty_account": "5115***631",
+        "amount": -18000000.0,
+        "remark": "支付高粱收购款",
+        "balance_after": 782000000.0
+      },
+      {
+        "transaction_id": "011-BF004",
+        "transaction_time": "2023-12-31 15:00",
+        "counterparty_name": "成都锦源酒业贸易有限公司",
+        "counterparty_account": "5101***336",
+        "amount": 120000000.0,
+        "remark": "收到经销商2024年一季度计划款",
+        "balance_after": 902000000.0
+      }
+    ],
+    "ground_truth_findings": []
+  },
+  {
+    "case_id": "BLIND3_012",
+    "company_name": "青岛啤酒股份有限公司",
+    "stock_code": "600600",
+    "penalty_decision_no": "",
+    "source_url": "https://www.tsingtao.com.cn",
+    "case_category": "合规对照",
+    "csrc_summary": "",
+    "industry": "啤酒",
+    "audit_period": "2023年度",
+    "description": "公司生产销售啤酒，旺季集中采购麦芽，常年开展公益捐赠。凭证含整数捐赠、节假日付款、整数广告费、月末多科目复合凭证及年末奖金计提。",
+    "vouchers": [
+      {
+        "voucher_id": "Q-V01",
+        "voucher_date": "2023-01-20",
+        "preparer": "于洁",
+        "checker": "王浩",
+        "attachments_count": 3,
+        "associated_doc_id": "37020106",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 13560000.0,
+            "credit": 0.0,
+            "summary": "销售啤酒"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 12000000.0,
+            "summary": "销售啤酒"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 1560000.0,
+            "summary": "销售啤酒-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "Q-V02",
+        "voucher_date": "2023-04-20",
+        "preparer": "于洁",
+        "checker": "王浩",
+        "attachments_count": 3,
+        "associated_doc_id": "37020533",
+        "entries": [
+          {
+            "account_code": "1403",
+            "account_name": "原材料",
+            "debit": 26000000.0,
+            "credit": 0.0,
+            "summary": "采购大麦芽"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 2340000.0,
+            "credit": 0.0,
+            "summary": "采购大麦芽-进项税额"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 28340000.0,
+            "summary": "采购大麦芽"
+          }
+        ]
+      },
+      {
+        "voucher_id": "Q-V03",
+        "voucher_date": "2023-05-01",
+        "preparer": "于洁",
+        "checker": "王浩",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 28340000.0,
+            "credit": 0.0,
+            "summary": "支付瑞穗麦芽货款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 28340000.0,
+            "summary": "支付瑞穗麦芽货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "Q-V06",
+        "voucher_date": "2023-07-15",
+        "preparer": "于洁",
+        "checker": "王浩",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 13560000.0,
+            "credit": 0.0,
+            "summary": "收到鲁啤商贸货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 13560000.0,
+            "summary": "收到鲁啤商贸货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "Q-V04",
+        "voucher_date": "2023-08-10",
+        "preparer": "于洁",
+        "checker": "王浩",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6711",
+            "account_name": "营业外支出",
+            "debit": 2000000.0,
+            "credit": 0.0,
+            "summary": "向青岛市慈善总会公益捐赠"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 2000000.0,
+            "summary": "向青岛市慈善总会公益捐赠"
+          }
+        ]
+      },
+      {
+        "voucher_id": "Q-V07",
+        "voucher_date": "2023-09-29",
+        "preparer": "于洁",
+        "checker": "王浩",
+        "attachments_count": 3,
+        "associated_doc_id": "37021018",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 9433962.26,
+            "credit": 0.0,
+            "summary": "支付赛事品牌赞助费"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 566037.74,
+            "credit": 0.0,
+            "summary": "支付赛事品牌赞助费-进项税额"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 10000000.0,
+            "summary": "支付赛事品牌赞助费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "Q-V05",
+        "voucher_date": "2023-12-31",
+        "preparer": "于洁",
+        "checker": "王浩",
+        "attachments_count": 4,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 9100000.0,
+            "credit": 0.0,
+            "summary": "月末结转啤酒销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 9100000.0,
+            "summary": "月末结转啤酒销售成本"
+          },
+          {
+            "account_code": "6403",
+            "account_name": "税金及附加",
+            "debit": 1250000.0,
+            "credit": 0.0,
+            "summary": "计提本月消费税"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 1250000.0,
+            "summary": "计提本月消费税"
+          },
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 600000.0,
+            "credit": 0.0,
+            "summary": "分摊本月仓储费"
+          },
+          {
+            "account_code": "2241",
+            "account_name": "其他应付款",
+            "debit": 0.0,
+            "credit": 600000.0,
+            "summary": "分摊本月仓储费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "Q-V08",
+        "voucher_date": "2023-12-31",
+        "preparer": "于洁",
+        "checker": "王浩",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5001",
+            "account_name": "生产成本",
+            "debit": 48000000.0,
+            "credit": 0.0,
+            "summary": "计提年度绩效奖金"
+          },
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 36000000.0,
+            "credit": 0.0,
+            "summary": "计提年度绩效奖金"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 21000000.0,
+            "credit": 0.0,
+            "summary": "计提年度绩效奖金"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 105000000.0,
+            "summary": "计提年度绩效奖金"
+          }
+        ]
+      },
+      {
+        "voucher_id": "Q-V09",
+        "voucher_date": "2023-12-31",
+        "preparer": "于洁",
+        "checker": "王浩",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5101",
+            "account_name": "制造费用",
+            "debit": 15600000.0,
+            "credit": 0.0,
+            "summary": "计提四季度设备折旧"
+          },
+          {
+            "account_code": "1602",
+            "account_name": "累计折旧",
+            "debit": 0.0,
+            "credit": 15600000.0,
+            "summary": "计提四季度设备折旧"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "Q-C01",
+        "customer_or_vendor": "江苏瑞穗麦芽有限公司",
+        "sign_date": "2023-03-30",
+        "total_amount": 28340000.0,
+        "payment_terms": "到货验收后30日内付款",
+        "delivery_condition": "送达青岛啤酒二厂原料库验收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "Q-C02",
+        "customer_or_vendor": "上海星河体育营销有限公司",
+        "sign_date": "2023-09-01",
+        "total_amount": 10000000.0,
+        "payment_terms": "签约后一次性支付",
+        "delivery_condition": "按赛事权益清单执行",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "Q-C03",
+        "customer_or_vendor": "山东鲁啤商贸有限公司",
+        "sign_date": "2023-01-05",
+        "total_amount": 13560000.0,
+        "payment_terms": "月结，次月末前付款",
+        "delivery_condition": "送达经销商仓库",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "37020106",
+        "invoice_date": "2023-01-20",
+        "buyer_name": "山东鲁啤商贸有限公司",
+        "seller_name": "青岛啤酒股份有限公司",
+        "amount_without_tax": 12000000.0,
+        "tax_amount": 1560000.0,
+        "total_amount": 13560000.0,
+        "goods_or_service": "青岛啤酒经典系列"
+      },
+      {
+        "invoice_no": "37020533",
+        "invoice_date": "2023-04-20",
+        "buyer_name": "青岛啤酒股份有限公司",
+        "seller_name": "江苏瑞穗麦芽有限公司",
+        "amount_without_tax": 26000000.0,
+        "tax_amount": 2340000.0,
+        "total_amount": 28340000.0,
+        "goods_or_service": "啤酒大麦芽"
+      },
+      {
+        "invoice_no": "37021018",
+        "invoice_date": "2023-09-29",
+        "buyer_name": "青岛啤酒股份有限公司",
+        "seller_name": "上海星河体育营销有限公司",
+        "amount_without_tax": 9433962.26,
+        "tax_amount": 566037.74,
+        "total_amount": 10000000.0,
+        "goods_or_service": "体育赛事品牌赞助"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "012-BF001",
+        "transaction_time": "2023-05-01 10:00",
+        "counterparty_name": "江苏瑞穗麦芽有限公司",
+        "counterparty_account": "3209***184",
+        "amount": -28340000.0,
+        "remark": "支付瑞穗麦芽货款",
+        "balance_after": 571660000.0
+      },
+      {
+        "transaction_id": "012-BF002",
+        "transaction_time": "2023-07-15 09:40",
+        "counterparty_name": "山东鲁啤商贸有限公司",
+        "counterparty_account": "3701***275",
+        "amount": 13560000.0,
+        "remark": "收到鲁啤商贸货款",
+        "balance_after": 585220000.0
+      },
+      {
+        "transaction_id": "012-BF003",
+        "transaction_time": "2023-08-10 14:00",
+        "counterparty_name": "青岛市慈善总会",
+        "counterparty_account": "3702***001",
+        "amount": -2000000.0,
+        "remark": "向青岛市慈善总会公益捐赠",
+        "balance_after": 583220000.0
+      },
+      {
+        "transaction_id": "012-BF004",
+        "transaction_time": "2023-09-29 16:30",
+        "counterparty_name": "上海星河体育营销有限公司",
+        "counterparty_account": "3100***725",
+        "amount": -10000000.0,
+        "remark": "支付赛事品牌赞助费",
+        "balance_after": 573220000.0
+      }
+    ],
+    "ground_truth_findings": []
+  },
+  {
+    "case_id": "BLIND3_013",
+    "company_name": "深圳迈瑞生物医疗电子股份有限公司",
+    "stock_code": "300760",
+    "penalty_decision_no": "",
+    "source_url": "https://www.mindray.com",
+    "case_category": "合规对照",
+    "csrc_summary": "",
+    "industry": "医疗器械",
+    "audit_period": "2023年度",
+    "description": "公司研发生产生命信息与支持、体外诊断、医学影像设备，经销商及医院年末集中签约并预付设备款。凭证含跨年预收、年末大额奖金计提、周末付款、票据背书及研发领料。",
+    "vouchers": [
+      {
+        "voucher_id": "M-V01",
+        "voucher_date": "2023-03-15",
+        "preparer": "林颖",
+        "checker": "黄涛",
+        "attachments_count": 3,
+        "associated_doc_id": "44030315",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 20340000.0,
+            "credit": 0.0,
+            "summary": "销售监护及除颤设备"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 18000000.0,
+            "summary": "销售监护及除颤设备"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 2340000.0,
+            "summary": "销售监护及除颤设备-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "M-V07",
+        "voucher_date": "2023-06-30",
+        "preparer": "林颖",
+        "checker": "黄涛",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5301",
+            "account_name": "研发支出",
+            "debit": 4200000.0,
+            "credit": 0.0,
+            "summary": "研发项目领用芯片及传感器"
+          },
+          {
+            "account_code": "1403",
+            "account_name": "原材料",
+            "debit": 0.0,
+            "credit": 4200000.0,
+            "summary": "研发项目领用芯片及传感器"
+          }
+        ]
+      },
+      {
+        "voucher_id": "M-V04",
+        "voucher_date": "2023-07-08",
+        "preparer": "林颖",
+        "checker": "黄涛",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 22600000.0,
+            "credit": 0.0,
+            "summary": "支付芯片采购款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 22600000.0,
+            "summary": "支付芯片采购款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "M-V05",
+        "voucher_date": "2023-09-15",
+        "preparer": "林颖",
+        "checker": "黄涛",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1121",
+            "account_name": "应收票据",
+            "debit": 20340000.0,
+            "credit": 0.0,
+            "summary": "收到粤西联合银行承兑汇票"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 20340000.0,
+            "summary": "收到粤西联合银行承兑汇票"
+          }
+        ]
+      },
+      {
+        "voucher_id": "M-V06",
+        "voucher_date": "2023-10-20",
+        "preparer": "林颖",
+        "checker": "黄涛",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 20340000.0,
+            "credit": 0.0,
+            "summary": "背书转让银行承兑汇票支付芯片款"
+          },
+          {
+            "account_code": "1121",
+            "account_name": "应收票据",
+            "debit": 0.0,
+            "credit": 20340000.0,
+            "summary": "背书转让银行承兑汇票支付芯片款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "M-V02",
+        "voucher_date": "2023-12-28",
+        "preparer": "林颖",
+        "checker": "黄涛",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 36000000.0,
+            "credit": 0.0,
+            "summary": "收到湘南医疗2024年设备采购预付款"
+          },
+          {
+            "account_code": "2203",
+            "account_name": "预收账款",
+            "debit": 0.0,
+            "credit": 36000000.0,
+            "summary": "收到湘南医疗2024年设备采购预付款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "M-V03",
+        "voucher_date": "2023-12-31",
+        "preparer": "林颖",
+        "checker": "黄涛",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 260000000.0,
+            "credit": 0.0,
+            "summary": "计提年度奖金"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 90000000.0,
+            "credit": 0.0,
+            "summary": "计提年度奖金"
+          },
+          {
+            "account_code": "5301",
+            "account_name": "研发支出",
+            "debit": 150000000.0,
+            "credit": 0.0,
+            "summary": "计提年度奖金"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 500000000.0,
+            "summary": "计提年度奖金"
+          }
+        ]
+      },
+      {
+        "voucher_id": "M-V08",
+        "voucher_date": "2023-12-31",
+        "preparer": "林颖",
+        "checker": "黄涛",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 8300000.0,
+            "credit": 0.0,
+            "summary": "结转监护及除颤设备销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 8300000.0,
+            "summary": "结转监护及除颤设备销售成本"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "M-C01",
+        "customer_or_vendor": "湘南医疗器械有限公司",
+        "sign_date": "2023-12-20",
+        "total_amount": 90000000.0,
+        "payment_terms": "签约预付40%，到货安装验收后付55%，质保金5%",
+        "delivery_condition": "设备送达医院并安装调试验收",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "M-C02",
+        "customer_or_vendor": "粤西联合医疗设备有限公司",
+        "sign_date": "2023-03-01",
+        "total_amount": 20340000.0,
+        "payment_terms": "货到后90日内以电汇或银行承兑汇票支付",
+        "delivery_condition": "送达经销商仓库验收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "44030315",
+        "invoice_date": "2023-03-15",
+        "buyer_name": "粤西联合医疗设备有限公司",
+        "seller_name": "深圳迈瑞生物医疗电子股份有限公司",
+        "amount_without_tax": 18000000.0,
+        "tax_amount": 2340000.0,
+        "total_amount": 20340000.0,
+        "goods_or_service": "监护仪及除颤仪"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "013-BF001",
+        "transaction_time": "2023-07-08 10:30",
+        "counterparty_name": "深圳华芯微电子有限公司",
+        "counterparty_account": "4403***571",
+        "amount": -22600000.0,
+        "remark": "支付芯片采购款",
+        "balance_after": 877400000.0
+      },
+      {
+        "transaction_id": "013-BF002",
+        "transaction_time": "2023-12-28 15:20",
+        "counterparty_name": "湘南医疗器械有限公司",
+        "counterparty_account": "4300***642",
+        "amount": 36000000.0,
+        "remark": "收到湘南医疗2024年设备采购预付款",
+        "balance_after": 913400000.0
+      }
+    ],
+    "ground_truth_findings": []
+  },
+  {
+    "case_id": "BLIND3_014",
+    "company_name": "三一重工股份有限公司",
+    "stock_code": "600031",
+    "penalty_decision_no": "",
+    "source_url": "https://www.sanygroup.com",
+    "case_category": "合规对照",
+    "csrc_summary": "",
+    "industry": "工程机械",
+    "audit_period": "2023年度",
+    "description": "公司生产挖掘机、混凝土机械、起重机等，销售采用首付加分期结算；按售出设备计提产品质量保证金；与控股股东三一集团有限公司存在经股东大会审议并披露的日常关联交易。凭证含复合销售凭证、期末大额计提、已披露关联交易、节假日及周末付款。",
+    "vouchers": [
+      {
+        "voucher_id": "S-V01",
+        "voucher_date": "2023-03-10",
+        "preparer": "彭丽",
+        "checker": "易军",
+        "attachments_count": 4,
+        "associated_doc_id": "43000310",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 7460000.0,
+            "credit": 0.0,
+            "summary": "销售挖掘机收首付并确认收入"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 17400000.0,
+            "credit": 0.0,
+            "summary": "销售挖掘机收首付并确认收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 22000000.0,
+            "summary": "销售挖掘机收首付并确认收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 2860000.0,
+            "summary": "挖掘机-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "S-V02",
+        "voucher_date": "2023-04-20",
+        "preparer": "彭丽",
+        "checker": "易军",
+        "attachments_count": 3,
+        "associated_doc_id": "43000522",
+        "entries": [
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 5000000.0,
+            "credit": 0.0,
+            "summary": "采购工业互联网平台服务（日常关联交易）"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 300000.0,
+            "credit": 0.0,
+            "summary": "采购工业互联网平台服务（日常关联交易）-进项税额"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 5300000.0,
+            "summary": "采购工业互联网平台服务（日常关联交易）"
+          }
+        ]
+      },
+      {
+        "voucher_id": "S-V05",
+        "voucher_date": "2023-06-30",
+        "preparer": "彭丽",
+        "checker": "易军",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5001",
+            "account_name": "生产成本",
+            "debit": 58000000.0,
+            "credit": 0.0,
+            "summary": "计提6月生产人员工资"
+          },
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 21000000.0,
+            "credit": 0.0,
+            "summary": "计提6月销售人员工资"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 13000000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员工资"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 92000000.0,
+            "summary": "计提6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "S-V06",
+        "voucher_date": "2023-08-15",
+        "preparer": "彭丽",
+        "checker": "易军",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 6000000.0,
+            "credit": 0.0,
+            "summary": "收到恒通租赁分期款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 6000000.0,
+            "summary": "收到恒通租赁分期款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "S-V04",
+        "voucher_date": "2023-10-03",
+        "preparer": "彭丽",
+        "checker": "易军",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 33900000.0,
+            "credit": 0.0,
+            "summary": "支付钢材采购款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 33900000.0,
+            "summary": "支付钢材采购款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "S-V08",
+        "voucher_date": "2023-11-18",
+        "preparer": "彭丽",
+        "checker": "易军",
+        "attachments_count": 3,
+        "associated_doc_id": "43001877",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 4716981.13,
+            "credit": 0.0,
+            "summary": "支付国际工程机械展参展费"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 283018.87,
+            "credit": 0.0,
+            "summary": "支付国际工程机械展参展费-进项税额"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 5000000.0,
+            "summary": "支付国际工程机械展参展费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "S-V03",
+        "voucher_date": "2023-12-31",
+        "preparer": "彭丽",
+        "checker": "易军",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 320000000.0,
+            "credit": 0.0,
+            "summary": "按售出设备计提产品质量保证金"
+          },
+          {
+            "account_code": "2801",
+            "account_name": "预计负债",
+            "debit": 0.0,
+            "credit": 320000000.0,
+            "summary": "按售出设备计提产品质量保证金"
+          }
+        ]
+      },
+      {
+        "voucher_id": "S-V07",
+        "voucher_date": "2023-12-31",
+        "preparer": "彭丽",
+        "checker": "易军",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 16800000.0,
+            "credit": 0.0,
+            "summary": "结转挖掘机销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 16800000.0,
+            "summary": "结转挖掘机销售成本"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "S-C01",
+        "customer_or_vendor": "湖南恒通工程机械租赁有限公司",
+        "sign_date": "2023-03-01",
+        "total_amount": 24860000.0,
+        "payment_terms": "首付30%，余款24期按月分期",
+        "delivery_condition": "设备交付并经买方签署交机确认单",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "S-C02",
+        "customer_or_vendor": "三一集团有限公司",
+        "sign_date": "2023-01-10",
+        "total_amount": 5300000.0,
+        "payment_terms": "按季度结算",
+        "delivery_condition": "按服务等级协议提供平台服务；已经股东大会审议的日常关联交易",
+        "is_related_party": true
+      },
+      {
+        "contract_id": "S-C03",
+        "customer_or_vendor": "湖南华菱涟钢板材销售有限公司",
+        "sign_date": "2023-08-20",
+        "total_amount": 33900000.0,
+        "payment_terms": "到货验收后30日内付款",
+        "delivery_condition": "送达长沙产业园原料库",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "43000310",
+        "invoice_date": "2023-03-10",
+        "buyer_name": "湖南恒通工程机械租赁有限公司",
+        "seller_name": "三一重工股份有限公司",
+        "amount_without_tax": 22000000.0,
+        "tax_amount": 2860000.0,
+        "total_amount": 24860000.0,
+        "goods_or_service": "SY215C挖掘机（10台）"
+      },
+      {
+        "invoice_no": "43000522",
+        "invoice_date": "2023-04-20",
+        "buyer_name": "三一重工股份有限公司",
+        "seller_name": "三一集团有限公司",
+        "amount_without_tax": 5000000.0,
+        "tax_amount": 300000.0,
+        "total_amount": 5300000.0,
+        "goods_or_service": "工业互联网平台技术服务"
+      },
+      {
+        "invoice_no": "43001877",
+        "invoice_date": "2023-11-18",
+        "buyer_name": "三一重工股份有限公司",
+        "seller_name": "上海博展国际会展有限公司",
+        "amount_without_tax": 4716981.13,
+        "tax_amount": 283018.87,
+        "total_amount": 5000000.0,
+        "goods_or_service": "国际工程机械展会展位及搭建"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "014-BF001",
+        "transaction_time": "2023-03-10 11:15",
+        "counterparty_name": "湖南恒通工程机械租赁有限公司",
+        "counterparty_account": "4301***408",
+        "amount": 7460000.0,
+        "remark": "销售挖掘机收首付并确认收入",
+        "balance_after": 707460000.0
+      },
+      {
+        "transaction_id": "014-BF002",
+        "transaction_time": "2023-08-15 09:50",
+        "counterparty_name": "湖南恒通工程机械租赁有限公司",
+        "counterparty_account": "4301***408",
+        "amount": 6000000.0,
+        "remark": "收到恒通租赁分期款",
+        "balance_after": 713460000.0
+      },
+      {
+        "transaction_id": "014-BF003",
+        "transaction_time": "2023-10-03 10:20",
+        "counterparty_name": "湖南华菱涟钢板材销售有限公司",
+        "counterparty_account": "4313***552",
+        "amount": -33900000.0,
+        "remark": "支付钢材采购款",
+        "balance_after": 679560000.0
+      },
+      {
+        "transaction_id": "014-BF004",
+        "transaction_time": "2023-11-18 14:00",
+        "counterparty_name": "上海博展国际会展有限公司",
+        "counterparty_account": "3100***367",
+        "amount": -5000000.0,
+        "remark": "支付国际工程机械展参展费",
+        "balance_after": 674560000.0
+      }
+    ],
+    "ground_truth_findings": []
+  },
+  {
+    "case_id": "BLIND3_015",
+    "company_name": "顺丰控股股份有限公司",
+    "stock_code": "002352",
+    "penalty_decision_no": "",
+    "source_url": "https://www.sf-express.com",
+    "case_category": "合规对照",
+    "csrc_summary": "",
+    "industry": "快递物流",
+    "audit_period": "2023年度",
+    "description": "公司提供快递、快运及供应链服务，月结客户按月对账开票，部分大客户预存运费；春节期间外包运力费用按协议照常支付；年末暂估航空燃油费。凭证含复合收入凭证、节假日付款、整数广告费、跨年预收及期末大额暂估。",
+    "vouchers": [
+      {
+        "voucher_id": "F-V02",
+        "voucher_date": "2023-01-24",
+        "preparer": "邓敏",
+        "checker": "郑宇",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 15800000.0,
+            "credit": 0.0,
+            "summary": "支付12月外包干线运力费"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 15800000.0,
+            "summary": "支付12月外包干线运力费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "F-V01",
+        "voucher_date": "2023-01-31",
+        "preparer": "邓敏",
+        "checker": "郑宇",
+        "attachments_count": 3,
+        "associated_doc_id": "44100131",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 21560000.0,
+            "credit": 0.0,
+            "summary": "确认优品电商1月月结快递收入"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 8000000.0,
+            "summary": "收派服务收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 480000.0,
+            "summary": "收派服务-销项税额"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 12000000.0,
+            "summary": "运输服务收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 0.0,
+            "credit": 1080000.0,
+            "summary": "运输服务-销项税额"
+          }
+        ]
+      },
+      {
+        "voucher_id": "F-V03",
+        "voucher_date": "2023-03-01",
+        "preparer": "邓敏",
+        "checker": "郑宇",
+        "attachments_count": 3,
+        "associated_doc_id": "44100388",
+        "entries": [
+          {
+            "account_code": "6601",
+            "account_name": "销售费用",
+            "debit": 18867924.53,
+            "credit": 0.0,
+            "summary": "支付年度品牌数字广告费"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "debit": 1132075.47,
+            "credit": 0.0,
+            "summary": "支付年度品牌数字广告费-进项税额"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 20000000.0,
+            "summary": "支付年度品牌数字广告费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "F-V05",
+        "voucher_date": "2023-06-30",
+        "preparer": "邓敏",
+        "checker": "郑宇",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 210000000.0,
+            "credit": 0.0,
+            "summary": "计提6月一线收派人员薪酬"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 45000000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员薪酬"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 255000000.0,
+            "summary": "计提6月薪酬"
+          }
+        ]
+      },
+      {
+        "voucher_id": "F-V07",
+        "voucher_date": "2023-08-10",
+        "preparer": "邓敏",
+        "checker": "郑宇",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 21560000.0,
+            "credit": 0.0,
+            "summary": "收到优品电商月结运费"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 21560000.0,
+            "summary": "收到优品电商月结运费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "F-V04",
+        "voucher_date": "2023-12-29",
+        "preparer": "邓敏",
+        "checker": "郑宇",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 50000000.0,
+            "credit": 0.0,
+            "summary": "收到优品电商2024年预存运费"
+          },
+          {
+            "account_code": "2203",
+            "account_name": "预收账款",
+            "debit": 0.0,
+            "credit": 50000000.0,
+            "summary": "收到优品电商2024年预存运费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "F-V06",
+        "voucher_date": "2023-12-31",
+        "preparer": "邓敏",
+        "checker": "郑宇",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 168000000.0,
+            "credit": 0.0,
+            "summary": "暂估12月航空燃油费"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 168000000.0,
+            "summary": "暂估12月航空燃油费"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "F-C01",
+        "customer_or_vendor": "广州优品电子商务有限公司",
+        "sign_date": "2022-12-20",
+        "total_amount": 260000000.0,
+        "payment_terms": "月结，对账后30日内付款；可预存运费抵扣",
+        "delivery_condition": "按电子运单签收记录确认",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "F-C02",
+        "customer_or_vendor": "东莞捷运物流有限公司",
+        "sign_date": "2022-11-15",
+        "total_amount": 190000000.0,
+        "payment_terms": "按月结算，次月25日前支付（节假日不顺延）",
+        "delivery_condition": "按干线发车记录及到达签收确认",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "44100131",
+        "invoice_date": "2023-01-31",
+        "buyer_name": "广州优品电子商务有限公司",
+        "seller_name": "顺丰控股股份有限公司",
+        "amount_without_tax": 8000000.0,
+        "tax_amount": 480000.0,
+        "total_amount": 8480000.0,
+        "goods_or_service": "收派服务"
+      },
+      {
+        "invoice_no": "44100132",
+        "invoice_date": "2023-01-31",
+        "buyer_name": "广州优品电子商务有限公司",
+        "seller_name": "顺丰控股股份有限公司",
+        "amount_without_tax": 12000000.0,
+        "tax_amount": 1080000.0,
+        "total_amount": 13080000.0,
+        "goods_or_service": "国内运输服务"
+      },
+      {
+        "invoice_no": "44100388",
+        "invoice_date": "2023-03-01",
+        "buyer_name": "顺丰控股股份有限公司",
+        "seller_name": "北京星耀数字营销有限公司",
+        "amount_without_tax": 18867924.53,
+        "tax_amount": 1132075.47,
+        "total_amount": 20000000.0,
+        "goods_or_service": "年度品牌数字广告"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "015-BF001",
+        "transaction_time": "2023-01-24 10:00",
+        "counterparty_name": "东莞捷运物流有限公司",
+        "counterparty_account": "4419***305",
+        "amount": -15800000.0,
+        "remark": "支付12月外包干线运力费",
+        "balance_after": 1184200000.0
+      },
+      {
+        "transaction_id": "015-BF002",
+        "transaction_time": "2023-03-01 09:20",
+        "counterparty_name": "北京星耀数字营销有限公司",
+        "counterparty_account": "1100***846",
+        "amount": -20000000.0,
+        "remark": "支付年度品牌数字广告费",
+        "balance_after": 1164200000.0
+      },
+      {
+        "transaction_id": "015-BF003",
+        "transaction_time": "2023-08-10 11:30",
+        "counterparty_name": "广州优品电子商务有限公司",
+        "counterparty_account": "4401***913",
+        "amount": 21560000.0,
+        "remark": "收到优品电商月结运费",
+        "balance_after": 1185760000.0
+      },
+      {
+        "transaction_id": "015-BF004",
+        "transaction_time": "2023-12-29 16:10",
+        "counterparty_name": "广州优品电子商务有限公司",
+        "counterparty_account": "4401***913",
+        "amount": 50000000.0,
+        "remark": "收到优品电商2024年预存运费",
+        "balance_after": 1235760000.0
+      }
+    ],
+    "ground_truth_findings": []
+  },
+  {
+    "case_id": "BLIND3_016",
+    "company_name": "立讯精密工业股份有限公司",
+    "stock_code": "002475",
+    "penalty_decision_no": "",
+    "source_url": "https://www.luxshare-ict.com",
+    "case_category": "合规对照",
+    "csrc_summary": "",
+    "industry": "消费电子精密制造",
+    "audit_period": "2023年度",
+    "description": "公司从事连接器、声学及整机组装等精密制造，产品迭代快，年末按可变现净值对呆滞物料集中计提跌价准备；出口销售适用免抵退税。凭证含期末大额减值计提、票据背书、周末付款、出口零税率发票及复合凭证。",
+    "vouchers": [
+      {
+        "voucher_id": "L-V01",
+        "voucher_date": "2023-02-20",
+        "preparer": "周婷",
+        "checker": "吴斌",
+        "attachments_count": 3,
+        "associated_doc_id": "44200220",
+        "entries": [
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 45000000.0,
+            "credit": 0.0,
+            "summary": "出口销售精密连接器"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "debit": 0.0,
+            "credit": 45000000.0,
+            "summary": "出口销售精密连接器"
+          }
+        ]
+      },
+      {
+        "voucher_id": "L-V03",
+        "voucher_date": "2023-05-12",
+        "preparer": "周婷",
+        "checker": "吴斌",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1121",
+            "account_name": "应收票据",
+            "debit": 30000000.0,
+            "credit": 0.0,
+            "summary": "收到东莞客户银行承兑汇票"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 30000000.0,
+            "summary": "收到东莞客户银行承兑汇票"
+          }
+        ]
+      },
+      {
+        "voucher_id": "L-V07",
+        "voucher_date": "2023-06-30",
+        "preparer": "周婷",
+        "checker": "吴斌",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "5001",
+            "account_name": "生产成本",
+            "debit": 96000000.0,
+            "credit": 0.0,
+            "summary": "计提6月生产人员工资"
+          },
+          {
+            "account_code": "6602",
+            "account_name": "管理费用",
+            "debit": 22000000.0,
+            "credit": 0.0,
+            "summary": "计提6月管理人员工资"
+          },
+          {
+            "account_code": "2211",
+            "account_name": "应付职工薪酬",
+            "debit": 0.0,
+            "credit": 118000000.0,
+            "summary": "计提6月工资"
+          }
+        ]
+      },
+      {
+        "voucher_id": "L-V05",
+        "voucher_date": "2023-07-15",
+        "preparer": "周婷",
+        "checker": "吴斌",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 27120000.0,
+            "credit": 0.0,
+            "summary": "支付铜材采购款"
+          },
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 0.0,
+            "credit": 27120000.0,
+            "summary": "支付铜材采购款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "L-V04",
+        "voucher_date": "2023-08-10",
+        "preparer": "周婷",
+        "checker": "吴斌",
+        "attachments_count": 2,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 30000000.0,
+            "credit": 0.0,
+            "summary": "背书转让银行承兑汇票支付模具款"
+          },
+          {
+            "account_code": "1121",
+            "account_name": "应收票据",
+            "debit": 0.0,
+            "credit": 30000000.0,
+            "summary": "背书转让银行承兑汇票支付模具款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "L-V08",
+        "voucher_date": "2023-09-30",
+        "preparer": "周婷",
+        "checker": "吴斌",
+        "attachments_count": 3,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 36500000.0,
+            "credit": 0.0,
+            "summary": "结转出口连接器销售成本"
+          },
+          {
+            "account_code": "1405",
+            "account_name": "库存商品",
+            "debit": 0.0,
+            "credit": 36500000.0,
+            "summary": "结转出口连接器销售成本"
+          },
+          {
+            "account_code": "6401",
+            "account_name": "主营业务成本",
+            "debit": 1200000.0,
+            "credit": 0.0,
+            "summary": "分摊三季度出口运保费"
+          },
+          {
+            "account_code": "2202",
+            "account_name": "应付账款",
+            "debit": 0.0,
+            "credit": 1200000.0,
+            "summary": "分摊三季度出口运保费"
+          }
+        ]
+      },
+      {
+        "voucher_id": "L-V06",
+        "voucher_date": "2023-10-09",
+        "preparer": "周婷",
+        "checker": "吴斌",
+        "attachments_count": 1,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "debit": 45000000.0,
+            "credit": 0.0,
+            "summary": "收到Apex出口货款"
+          },
+          {
+            "account_code": "1122",
+            "account_name": "应收账款",
+            "debit": 0.0,
+            "credit": 45000000.0,
+            "summary": "收到Apex出口货款"
+          }
+        ]
+      },
+      {
+        "voucher_id": "L-V02",
+        "voucher_date": "2023-12-31",
+        "preparer": "周婷",
+        "checker": "吴斌",
+        "attachments_count": 3,
+        "associated_doc_id": "",
+        "entries": [
+          {
+            "account_code": "6701",
+            "account_name": "资产减值损失",
+            "debit": 265000000.0,
+            "credit": 0.0,
+            "summary": "按可变现净值计提呆滞物料存货跌价准备"
+          },
+          {
+            "account_code": "1471",
+            "account_name": "存货跌价准备",
+            "debit": 0.0,
+            "credit": 265000000.0,
+            "summary": "按可变现净值计提呆滞物料存货跌价准备"
+          }
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "contract_id": "L-C01",
+        "customer_or_vendor": "Apex Consumer Electronics Ltd.",
+        "sign_date": "2023-01-15",
+        "total_amount": 45000000.0,
+        "payment_terms": "FOB深圳，提单日后60日电汇",
+        "delivery_condition": "货物装船即完成交付",
+        "is_related_party": false
+      },
+      {
+        "contract_id": "L-C02",
+        "customer_or_vendor": "江西鑫铜新材料有限公司",
+        "sign_date": "2023-06-01",
+        "total_amount": 27120000.0,
+        "payment_terms": "货到验收后30日内付款",
+        "delivery_condition": "送达昆山工厂验收",
+        "is_related_party": false
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_no": "44200220",
+        "invoice_date": "2023-02-20",
+        "buyer_name": "Apex Consumer Electronics Ltd.",
+        "seller_name": "立讯精密工业股份有限公司",
+        "amount_without_tax": 45000000.0,
+        "tax_amount": 0.0,
+        "total_amount": 45000000.0,
+        "goods_or_service": "精密连接器（出口，免抵退）"
+      }
+    ],
+    "bank_flows": [
+      {
+        "transaction_id": "016-BF001",
+        "transaction_time": "2023-07-15 10:45",
+        "counterparty_name": "江西鑫铜新材料有限公司",
+        "counterparty_account": "3604***230",
+        "amount": -27120000.0,
+        "remark": "支付铜材采购款",
+        "balance_after": 972880000.0
+      },
+      {
+        "transaction_id": "016-BF002",
+        "transaction_time": "2023-10-09 21:30",
+        "counterparty_name": "Apex Consumer Electronics Ltd.",
+        "counterparty_account": "HK01***558",
+        "amount": 45000000.0,
+        "remark": "收到Apex出口货款",
+        "balance_after": 1017880000.0
+      }
+    ],
+    "ground_truth_findings": []
+  }
+]

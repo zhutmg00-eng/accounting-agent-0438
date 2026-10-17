@@ -270,6 +270,37 @@ _REDACTIONS = [
 ]
 
 
+import threading as _threading
+
+# DeepSeek 按账户余额限制并发（常见为 5）。自洽性投票与并行评测会同时发出多个请求，
+# 用进程级信号量把在途请求数限制在 DEEPSEEK_MAX_CONCURRENCY 以内，避免 429。
+_API_SLOTS = _threading.BoundedSemaphore(max(1, int(os.getenv("DEEPSEEK_MAX_CONCURRENCY", "4"))))
+
+
+def _slot_post(*args, **kwargs):
+    stream = kwargs.get("stream")
+    _API_SLOTS.acquire()
+    try:
+        resp = requests.post(*args, **kwargs)
+    except Exception:
+        _API_SLOTS.release()
+        raise
+    if stream:
+        # 流式响应在读完前仍占用并发：读完或关闭时释放
+        orig_close = resp.close
+        released = {"v": False}
+
+        def _close(*a, **k):
+            if not released["v"]:
+                released["v"] = True
+                _API_SLOTS.release()
+            return orig_close(*a, **k)
+        resp.close = _close
+        return resp
+    _API_SLOTS.release()
+    return resp
+
+
 def redact_outbound(messages: List[Dict[str, Any]]) -> tuple:
     """Mask bank accounts, ID / unified social credit codes, mobiles and e-mails.
 
@@ -398,7 +429,7 @@ class DeepSeekLLMAdapter:
             last_exc: Optional[Exception] = None
             for attempt in range(attempts):
                 try:
-                    resp = requests.post(url, json=payload, headers=headers, timeout=settings.timeout_seconds)
+                    resp = _slot_post(url, json=payload, headers=headers, timeout=settings.timeout_seconds)
                 except Exception as exc:
                     resp = None
                     last_exc = exc
@@ -493,7 +524,7 @@ class DeepSeekLLMAdapter:
         host = self.api_base.split("//")[-1]
         logger.info("DeepSeek POST %s/v1/chat/completions model=%s stream=true", host, self.model_name)
         try:
-            with requests.post(url, json=payload, headers=headers, stream=True,
+            with _slot_post(url, json=payload, headers=headers, stream=True,
                                timeout=(10, settings.timeout_seconds)) as resp:
                 if resp.status_code != 200:
                     raise DeepSeekAPIError(f"DeepSeek API HTTP {resp.status_code}: {resp.text}",
@@ -568,7 +599,7 @@ class DeepSeekLLMAdapter:
                 "model": self.model_name, "messages": convo, "tools": tools,
                 "tool_choice": "auto", "temperature": temperature, "max_tokens": max_tokens,
             }
-            resp = requests.post(url, json=payload, headers=headers, timeout=settings.timeout_seconds * 2)
+            resp = _slot_post(url, json=payload, headers=headers, timeout=settings.timeout_seconds * 2)
             if resp.status_code != 200:
                 raise DeepSeekAPIError(f"DeepSeek API HTTP {resp.status_code}: {resp.text}",
                                        status_code=resp.status_code, response_text=resp.text)
@@ -640,11 +671,6 @@ class DeepSeekLLMAdapter:
         m_comp = re.search(r"【被审计单位】：(.*?)(?:（|\n|$)", user_prompt)
         if m_comp:
             company_name = m_comp.group(1).strip()
-        else:
-            for known in ("康美药业", "康得新", "辅仁药业", "宜华生活", "金正大", "胜通集团", "东方金钰", "同济堂", "瑞幸咖啡", "索菱股份", "科融环境", "亚太药业", "抚顺特钢", "獐子岛", "广州浪奇", "雏鹰农牧", "万福生科", "延安必康", "华泽钴镍", "凯迪生态", "三圣股份", "金亚科技", "欣泰电气", "雅百特", "风神轮胎", "贵州茅台", "福耀玻璃", "中国移动"):
-                if known in user_prompt:
-                    company_name = known
-                    break
 
         case_id_match = re.search(r"\b(REAL_[A-Z0-9_]+|CASE-[A-Z0-9_-]+)\b", user_prompt)
         case_id_parsed = case_id_match.group(1) if case_id_match else ""
@@ -731,87 +757,11 @@ class DeepSeekLLMAdapter:
             disc_max = max((d["amount"] for d in discrepancies if d["amount"] > 0), default=0.0)
             primary_amt = v_amt if v_amt > 0 else (disc_max if disc_max > 0 else total_abnormal_parsed)
 
-            # Derive standard and risk title from case background & transaction context
-            desc_context = f"{company_name} {case_desc} " + " ".join(v["entries_summary"] for v in vouchers_parsed)
-            if "联动账户" in desc_context or "资金归集" in desc_context:
-                title = "银行联动账户资金归集受限与虚增存款"
-                std = "CAS 22 - 金融工具确认和计量 及 CAS 36 - 关联方披露"
-            elif "辅仁" in desc_context or "受限资金" in desc_context or "分红" in desc_context:
-                title = "大额受限资金未披露与大股东非经营性资金占用"
-                std = "CAS 36 - 关联方披露 及 CSA 1141 - 舞弊相关的责任"
-            elif "海关" in desc_context or "报关单" in desc_context or "宜华" in desc_context or "境外销售" in desc_context:
-                title = "虚增境外销售收入与伪造海关报关单及存款"
-                std = "CAS 14 - 收入准则 及 CSA 1141 - 舞弊相关的责任"
-            elif "化肥" in desc_context or "诺贝丰" in desc_context or "金正大" in desc_context:
-                title = "虚构化肥无实质贸易走账与资金闭环空转"
-                std = "CAS 14 - 收入准则 及 CAS 36 - 关联方披露"
-            elif "双套账" in desc_context or "两套账" in desc_context or "胜通" in desc_context:
-                title = "编制双套账虚构大宗购销贸易收入"
-                std = "CAS 14 - 收入准则 及 CSA 1141 - 舞弊相关的责任"
-            elif "翡翠" in desc_context or "原石" in desc_context or "东方金钰" in desc_context:
-                title = "虚构高估值翡翠原石购销与体外闭环走账"
-                std = "CAS 14 - 收入准则 及 CSA 1141 - 舞弊相关的责任"
-            elif "药品分销" in desc_context or "医药中间体" in desc_context or "同济堂" in desc_context:
-                title = "虚构药品分销业务与关联方大额资金占用"
-                std = "CAS 14 - 收入准则 及 CAS 36 - 关联方披露"
-            elif "自提" in desc_context or "代金券" in desc_context or "瑞幸" in desc_context:
-                title = "虚假自提订单与企业代金券膨胀虚增收入"
-                std = "CAS 14 - 收入准则 及 CSA 1141 - 舞弊相关的责任"
-            elif "车机" in desc_context or "索菱" in desc_context or "研发支出" in desc_context:
-                title = "跨期提前确认车机系统开发收入与研发支出不当资本化"
-                std = "CAS 14 - 收入准则 及 CAS 6 - 无形资产"
-            elif "科融" in desc_context or "脱硫" in desc_context or "环保工程" in desc_context:
-                title = "环保工程项目跨期提前确认收入以规避亏损"
-                std = "CAS 14 - 收入准则 及 CSA 1141 - 舞弊相关的责任"
-            elif "CRO" in desc_context or "新高峰" in desc_context or "亚太药业" in desc_context:
-                title = "并购子公司虚构CRO医药技术外包收入达成对赌"
-                std = "CAS 14 - 收入准则 及 CAS 20 - 企业合并"
-            elif "特钢" in desc_context or "抚顺特钢" in desc_context or "在制品" in desc_context:
-                title = "报废特钢伪装在制品挂账与存货系统性虚增"
-                std = "CAS 1 - 存货准则 及 CSA 1141 - 舞弊相关的责任"
-            elif "扇贝" in desc_context or "獐子岛" in desc_context or "北斗" in desc_context:
-                title = "北斗轨迹穿透虚假采捕与消耗性生物资产操纵"
-                std = "CAS 5 - 生物资产 及 CSA 1141 - 舞弊相关的责任"
-            elif "辉丰仓" in desc_context or "浪奇" in desc_context or "电子仓单" in desc_context or "灭失" in desc_context:
-                title = "虚构第三方仓储电子仓单与存货离奇灭失"
-                std = "CAS 1 - 存货准则 及 CSA 1141 - 舞弊相关的责任"
-            elif "生猪" in desc_context or "雏鹰" in desc_context or "死亡" in desc_context:
-                title = "虚假盘点生物资产与生猪非正常死亡转出"
-                std = "CAS 5 - 生物资产 及 CSA 1141 - 舞弊相关的责任"
-            elif "农户" in desc_context or "万福生科" in desc_context or "大米" in desc_context:
-                title = "虚构农户收购与大米深加工产业链销售"
-                std = "CAS 14 - 收入准则 及 CSA 1141 - 舞弊相关的责任"
-            elif "必康" in desc_context or "延安必康" in desc_context or "划转占用" in desc_context or "提款机" in desc_context:
-                title = "控股股东非经营性违规划转占用上市公司资金"
-                std = "CAS 36 - 关联方披露 及 CSA 1141 - 舞弊相关的责任"
-            elif "华泽" in desc_context or "汇票" in desc_context or "资金空洞" in desc_context or "最穷上市公司" in desc_context:
-                title = "虚假商业汇票挂账掩盖大股东巨额资金空洞"
-                std = "CAS 22 - 金融工具确认和计量 及 CAS 36 - 关联方披露"
-            elif "林权" in desc_context or "凯迪" in desc_context or "抵债" in desc_context:
-                title = "大股东占用资金与虚高林权资产以次充好抵债"
-                std = "CAS 36 - 关联方披露 及 CAS 12 - 债务重组"
-            elif "共同借款" in desc_context or "三圣" in desc_context or "减值滞后" in desc_context:
-                title = "关联方共同借款隐瞒不报与海外投资减值滞后"
-                std = "CAS 36 - 关联方披露 及 CAS 8 - 资产减值"
-            elif "金亚科技" in desc_context or "日记账" in desc_context or "机顶盒" in desc_context:
-                title = "伪造银行存款日记账与虚构预付工程款扭亏为盈"
-                std = "CAS 22 - 金融工具确认和计量 及 CSA 1141 - 舞弊相关的责任"
-            elif "欣泰电气" in desc_context or "欺诈发行" in desc_context or "倒账" in desc_context:
-                title = "欺诈发行中利用外部借款跨期倒账虚减应收账款"
-                std = "CAS 22 - 金融工具确认和计量 及 CSA 1141 - 舞弊相关的责任"
-            elif "巴基斯坦" in desc_context or "雅百特" in desc_context or "木尔坦" in desc_context:
-                title = "虚构巴基斯坦跨国工程与伪造境外银行汇款单"
-                std = "CAS 14 - 收入准则 及 CSA 1141 - 舞弊相关的责任"
-            elif "风神" in desc_context or "三包" in desc_context or "轮胎" in desc_context:
-                title = "跨期延迟转销存货跌价准备与三包预计负债操纵"
-                std = "CAS 1 - 存货准则 及 CAS 13 - 或有事项"
-            elif "存单" in desc_context or "定期存单" in desc_context or "康美" in desc_context:
-                title = "虚增货币资金与伪造银行定期存单"
-                std = "CAS 22 - 金融工具确认和计量 及 CSA 1141 - 舞弊相关的责任"
-            else:
-                first_disc = discrepancies[0]
-                title = first_disc["type"]
-                std = "CSA 1141 - 财务报表审计中与舞弊相关的责任"
+            # 标题与准则只由算子检出的异常类型决定（通用映射，不含任何公司名或案情关键词）
+            from src.plugins.audit_fraud_plugin.rule_reasoner import RECON_FAMILIES
+            first_type = discrepancies[0]["type"]
+            title, std = RECON_FAMILIES.get(first_type, (first_type, "CSA 1141 - 财务报表审计中与舞弊相关的责任"))[:2]
+            desc_context = ""
 
             # Build comprehensive evidence chain
             evidences = []
@@ -848,7 +798,7 @@ class DeepSeekLLMAdapter:
                 voucher_summary_str += f" 等（共 {len(_rel)} 张相关凭证）"
 
             # Determine risk level based on case characteristics
-            risk_lvl = "MEDIUM" if ("风神" in desc_context or "轮胎" in desc_context) else "HIGH"
+            risk_lvl = "HIGH"
 
             findings.append({
                 "finding_id": f"RF-{stock_code or 'AUDIT'}-001",

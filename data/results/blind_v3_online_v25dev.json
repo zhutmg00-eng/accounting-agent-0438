@@ -1,0 +1,771 @@
+{
+  "algorithm_version": "v2.5",
+  "settings": {
+    "model": "deepseek-flash",
+    "vote_samples": 3,
+    "reflection_rounds": 1
+  },
+  "beneish_reported": {
+    "scope": "仅统计两期数据均为年报披露原值的案例（重构数据的案例单列，不计入）",
+    "fraud_cases": 23,
+    "fraud_flagged": 9,
+    "detection_rate": 0.3913,
+    "clean_cases": 3,
+    "clean_false_positive": 0,
+    "excluded_reconstructed": [
+      "山东胜通集团股份有限公司",
+      "瑞幸咖啡公司 (Luckin Coffee Inc.)"
+    ],
+    "rows": [
+      {
+        "case_id": "REAL_CSRC_001",
+        "company": "康美药业股份有限公司",
+        "group": "fraud",
+        "m_score": -1.6122,
+        "flagged": true,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_002",
+        "company": "康得新复合材料集团股份有限公司",
+        "group": "fraud",
+        "m_score": -2.3041,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_003",
+        "company": "辅仁药业集团制药股份有限公司",
+        "group": "fraud",
+        "m_score": -2.4304,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_004",
+        "company": "宜华生活科技股份有限公司",
+        "group": "fraud",
+        "m_score": -1.8106,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_005",
+        "company": "金正大生态工程集团股份有限公司",
+        "group": "fraud",
+        "m_score": -0.9825,
+        "flagged": true,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_006",
+        "company": "山东胜通集团股份有限公司",
+        "group": "fraud",
+        "m_score": -1.112,
+        "flagged": true,
+        "input_quality": "reconstructed",
+        "caveats": [
+          "缺少流动资产数据，AQI 按 Beneish 文献惯例取中性值 1.0",
+          "部分输入为按比例结构化重构的估算值，M-Score 仅演示算法流程，不构成对该公司的量化结论；正式使用须替换为年报披露原值"
+        ]
+      },
+      {
+        "case_id": "REAL_CSRC_007",
+        "company": "东方金钰股份有限公司",
+        "group": "fraud",
+        "m_score": -0.9584,
+        "flagged": true,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_008",
+        "company": "同济堂医药有限公司",
+        "group": "fraud",
+        "m_score": -2.1271,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_009",
+        "company": "瑞幸咖啡公司 (Luckin Coffee Inc.)",
+        "group": "fraud",
+        "m_score": -3.0062,
+        "flagged": false,
+        "input_quality": "reconstructed",
+        "caveats": [
+          "缺少流动资产数据，AQI 按 Beneish 文献惯例取中性值 1.0",
+          "部分输入为按比例结构化重构的估算值，M-Score 仅演示算法流程，不构成对该公司的量化结论；正式使用须替换为年报披露原值"
+        ]
+      },
+      {
+        "case_id": "REAL_CSRC_010",
+        "company": "深圳市索菱实业股份有限公司",
+        "group": "fraud",
+        "m_score": -1.0526,
+        "flagged": true,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_011",
+        "company": "徐州科融环境资源股份有限公司",
+        "group": "fraud",
+        "m_score": -2.5004,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_012",
+        "company": "浙江亚太药业股份有限公司",
+        "group": "fraud",
+        "m_score": -1.9986,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_013",
+        "company": "抚顺特殊钢股份有限公司",
+        "group": "fraud",
+        "m_score": -2.3497,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_014",
+        "company": "獐子岛集团股份有限公司",
+        "group": "fraud",
+        "m_score": -3.2145,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_015",
+        "company": "广州市浪奇实业股份有限公司",
+        "group": "fraud",
+        "m_score": -2.342,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_016",
+        "company": "雏鹰农牧集团股份有限公司",
+        "group": "fraud",
+        "m_score": -2.1975,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": [
+          "本期或上期毛利率≤0，GMI 失去经济含义，按中性值 1.0 处理"
+        ]
+      },
+      {
+        "case_id": "REAL_CSRC_017",
+        "company": "万福生科 (湖南) 农业开发股份有限公司",
+        "group": "fraud",
+        "m_score": 0.2801,
+        "flagged": true,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_018",
+        "company": "延安必康制药股份有限公司",
+        "group": "fraud",
+        "m_score": -1.8113,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_019",
+        "company": "成都华泽钴镍材料股份有限公司",
+        "group": "fraud",
+        "m_score": 0.0017,
+        "flagged": true,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_020",
+        "company": "凯迪生态环境科技股份有限公司",
+        "group": "fraud",
+        "m_score": -2.284,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_021",
+        "company": "重庆三圣实业股份有限公司",
+        "group": "fraud",
+        "m_score": -2.7356,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_022",
+        "company": "金亚科技股份有限公司",
+        "group": "fraud",
+        "m_score": -2.7447,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_023",
+        "company": "丹东欣泰电气股份有限公司",
+        "group": "fraud",
+        "m_score": -0.7206,
+        "flagged": true,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_024",
+        "company": "江苏雅百特科技股份有限公司",
+        "group": "fraud",
+        "m_score": 2.5725,
+        "flagged": true,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CSRC_025",
+        "company": "风神轮胎股份有限公司",
+        "group": "fraud",
+        "m_score": -1.6367,
+        "flagged": true,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CLEAN_026",
+        "company": "贵州茅台酒股份有限公司",
+        "group": "clean",
+        "m_score": -3.1207,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CLEAN_027",
+        "company": "福耀玻璃工业集团股份有限公司",
+        "group": "clean",
+        "m_score": -2.3434,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      },
+      {
+        "case_id": "REAL_CLEAN_028",
+        "company": "中国移动有限公司",
+        "group": "clean",
+        "m_score": -2.5593,
+        "flagged": false,
+        "input_quality": "reported",
+        "caveats": []
+      }
+    ]
+  },
+  "blind_cases": {
+    "available": true,
+    "mode": "online",
+    "blind_set": "v3",
+    "contaminated": true,
+    "contamination_note": "v2.5 扩充职业判断算子时参考了 v2.4 在 v3 上的漏检",
+    "protocol": "出题方未接触代码；运行时剥离答案字段；按证据锚点评分。",
+    "cases": 16,
+    "fraud_cases": 10,
+    "fraud_cases_flagged": 10,
+    "truth_items": 20,
+    "truth_items_hit_by_agent": 20,
+    "truth_items_amount_within_1pct": 20,
+    "truth_items_with_analytics_flag": 15,
+    "errors": 0,
+    "errored_cases": [],
+    "clean_cases": 6,
+    "clean_cases_flagged": 1,
+    "clean_cases_with_high": 0,
+    "per_case": [
+      {
+        "case_id": "BLIND3_001",
+        "company": "乐视网信息技术（北京）股份有限公司",
+        "group": "fraud",
+        "case_flagged": true,
+        "high_medium_findings": 3,
+        "findings": [
+          "[RiskLevel.HIGH] 广告资源互换收入未取得排期确认单及回款支撑即确认，涉嫌提前或无依据确认收入",
+          "[RiskLevel.HIGH] 无依据冲回上海高钧互换广告资源暂估成本，借应付账款贷主营业务成本",
+          "[RiskLevel.HIGH] 大额银行收款直接确认收入但缺少合同、发票及业务单据支撑",
+          "[RiskLevel.LOW] CDN带宽服务周末付款且为整数金额，列成本截止与授权关注事项",
+          "[RiskLevel.LOW] 期末版权摊销为整数金额，列摊销政策及减值关注事项"
+        ],
+        "truth": [
+          {
+            "finding_type": "未实际执行的广告互换框架合同确认收入（虚增营业收入）",
+            "expected_amount": 51886792.45,
+            "agent_hit": true,
+            "agent_title": "广告资源互换收入未取得排期确认单及回款支撑即确认，涉嫌提前或无依据确认收入",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "LS-V06",
+              "LS-V07"
+            ]
+          },
+          {
+            "finding_type": "广告互换业务冲回成本，只计收入不计成本（少计营业成本）",
+            "expected_amount": 9433962.26,
+            "agent_hit": true,
+            "agent_title": "无依据冲回上海高钧互换广告资源暂估成本，借应付账款贷主营业务成本",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "LS-V08"
+            ]
+          }
+        ],
+        "source_url": "https://www.csrc.gov.cn/csrc/c101928/c490192772b7748f58f089887c76bb662/content.shtml"
+      },
+      {
+        "case_id": "BLIND3_002",
+        "company": "华锐风电科技（集团）股份有限公司",
+        "group": "fraud",
+        "case_flagged": true,
+        "high_medium_findings": 2,
+        "findings": [
+          "[RiskLevel.HIGH] 年末突击确认风电机组销售收入，缺少到货验收及吊装确认，收入截止性错报风险",
+          "[RiskLevel.HIGH] 与年末突击收入相匹配的主营业务成本提前结转，发出商品结转依据不足",
+          "[RiskLevel.LOW] 关注事项：大额整数预收账款长期挂账，需关注期后收入结转及函证",
+          "[RiskLevel.LOW] 关注事项：非工作日大额应付账款付款，需补充审批与资金流水核查",
+          "[RiskLevel.LOW] 关注事项：坏账准备整数计提，需复核账龄及单项减值测试"
+        ],
+        "truth": [
+          {
+            "finding_type": "未完成吊装即确认风电机组收入（提前确认收入）",
+            "expected_amount": 264000000.0,
+            "agent_hit": true,
+            "agent_title": "年末突击确认风电机组销售收入，缺少到货验收及吊装确认，收入截止性错报风险",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "HR-V05"
+            ]
+          }
+        ],
+        "source_url": "http://www.csrc.gov.cn/csrc/c101928/c1042913/content.shtml"
+      },
+      {
+        "case_id": "BLIND3_003",
+        "company": "山东墨龙石油机械股份有限公司",
+        "group": "fraud",
+        "case_flagged": true,
+        "high_medium_findings": 2,
+        "findings": [
+          "[RiskLevel.HIGH] 期末以借出暂估方式确认收入，缺乏结算单/回款支撑，涉嫌提前确认收入",
+          "[RiskLevel.HIGH] 期末无依据冲减主营业务成本47,500,000.00元，涉嫌调节利润"
+        ],
+        "truth": [
+          {
+            "finding_type": "调增借出产品暂估单价虚增收入（无发票、无结算单）",
+            "expected_amount": 60000000.0,
+            "agent_hit": true,
+            "agent_title": "期末以借出暂估方式确认收入，缺乏结算单/回款支撑，涉嫌提前确认收入",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "MD-V05",
+              "MD-V07"
+            ]
+          },
+          {
+            "finding_type": "冲减已结转销售成本（少结转营业成本）",
+            "expected_amount": 47500000.0,
+            "agent_hit": true,
+            "agent_title": "期末无依据冲减主营业务成本47,500,000.00元，涉嫌调节利润",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "MD-V08"
+            ]
+          }
+        ],
+        "source_url": "http://www.csrc.gov.cn/csrc/c101928/c1042656/content.shtml"
+      },
+      {
+        "case_id": "BLIND3_004",
+        "company": "广东榕泰实业股份有限公司",
+        "group": "fraud",
+        "case_flagged": true,
+        "high_medium_findings": 4,
+        "findings": [
+          "[RiskLevel.HIGH] 第三方代付集中清收长账龄应收账款，付款方与账面客户不一致且与供应商重叠",
+          "[RiskLevel.HIGH] 对中粤农资大额预付尿素款长期挂账，供应商同时为第三方回款方，采购真实性存疑",
+          "[RiskLevel.HIGH] 保理利息收入无保理本金放款记录，对手方兼具供应商/代付方身份，收入真实性及商业实质存疑",
+          "[RiskLevel.HIGH] 原材料采购合同约定预付全款且上游直发，实际全额挂应付，供应商兼具保理对手方身份",
+          "[RiskLevel.LOW] 非工作日期末薪酬计提，截止性关注事项"
+        ],
+        "truth": [
+          {
+            "finding_type": "第三方代付冲减已注销客户应收账款，规避坏账计提（资产减值少提）",
+            "expected_amount": 31242300.0,
+            "agent_hit": true,
+            "agent_title": "第三方代付集中清收长账龄应收账款，付款方与账面客户不一致且与供应商重叠",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "RT-V06",
+              "RT-V08"
+            ]
+          },
+          {
+            "finding_type": "无真实应收账款基础的保理业务确认利息收入（虚增其他业务收入）",
+            "expected_amount": 11779902.92,
+            "agent_hit": true,
+            "agent_title": "保理利息收入无保理本金放款记录，对手方兼具供应商/代付方身份，收入真实性及商业实质存疑",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": []
+          },
+          {
+            "finding_type": "向实控人控制的挂名企业采购原材料，未识别披露为关联交易",
+            "expected_amount": 43450000.0,
+            "agent_hit": true,
+            "agent_title": "原材料采购合同约定预付全款且上游直发，实际全额挂应付，供应商兼具保理对手方身份",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": []
+          }
+        ],
+        "source_url": "http://epaper.zqrb.cn/html/2021-05/15/content_731184.htm"
+      },
+      {
+        "case_id": "BLIND3_005",
+        "company": "中兴天恒能源科技（北京）股份公司",
+        "group": "fraud",
+        "case_flagged": true,
+        "high_medium_findings": 2,
+        "findings": [
+          "[RiskLevel.HIGH] 将未基本确定的担保追偿款确认为其他应收款，少计预计负债损失",
+          "[RiskLevel.MEDIUM] 大额预付九头风LNG气源保证金挂账，商业实质及可收回性需关注",
+          "[RiskLevel.LOW] 国庆节假日支付天然气管道运输费并结转成本，需关注成本截止性",
+          "[RiskLevel.LOW] 年中计提销售/管理费用及应付职工薪酬，整数金额需关注费用完整性"
+        ],
+        "truth": [
+          {
+            "finding_type": "担保诉讼一审判决后仅按20%确认损失，其余以追偿款挂账（预计负债/担保损失少确认）",
+            "expected_amount": 64000000.0,
+            "agent_hit": true,
+            "agent_title": "将未基本确定的担保追偿款确认为其他应收款，少计预计负债损失",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "ZT-V07"
+            ]
+          },
+          {
+            "finding_type": "业务停滞供应商的预付款未重分类为其他应收款、未计提坏账准备",
+            "expected_amount": 264000000.0,
+            "agent_hit": true,
+            "agent_title": "大额预付九头风LNG气源保证金挂账，商业实质及可收回性需关注",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "ZT-V03",
+              "ZT-V05"
+            ]
+          }
+        ],
+        "source_url": "http://www.csrc.gov.cn/csrc/c105938/c6459fa93d4814b1aa86d0eb4999a74e5/content.shtml"
+      },
+      {
+        "case_id": "BLIND3_006",
+        "company": "吉林紫鑫药业股份有限公司",
+        "group": "fraud",
+        "case_flagged": true,
+        "high_medium_findings": 3,
+        "findings": [
+          "[RiskLevel.HIGH] 大额林下参采购无发票、无付款流水且协议签署即视为交付，存货真实性及采购商业实质存疑",
+          "[RiskLevel.HIGH] 年末免税林下参销售收入无回款且约定现场点交不实际采挖，控制权转移及收入真实性存疑",
+          "[RiskLevel.HIGH] 预付在地林下参150,000,000.00元长期挂账，未见入库、发票及供应商合同，存在资金占用或虚构采购风险",
+          "[RiskLevel.LOW] 2018-06-30工资及生产成本计提为非工作日整数金额，列为低风险关注事项",
+          "[RiskLevel.LOW] 研发支出付款1,200,000.00元列为低风险关注事项"
+        ],
+        "truth": [
+          {
+            "finding_type": "向实控人控制的未披露关联方销售林下参确认收入（关联交易非关联化/虚增收入）",
+            "expected_amount": 200000000.0,
+            "agent_hit": true,
+            "agent_title": "年末免税林下参销售收入无回款且约定现场点交不实际采挖，控制权转移及收入真实性存疑",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "ZX-V05",
+              "ZX-V06"
+            ]
+          },
+          {
+            "finding_type": "采购在地林下参无对价支付，虚增存货",
+            "expected_amount": 734250000.0,
+            "agent_hit": true,
+            "agent_title": "大额林下参采购无发票、无付款流水且协议签署即视为交付，存货真实性及采购商业实质存疑",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "ZX-V03"
+            ]
+          },
+          {
+            "finding_type": "以林下参采购预付名义向实控人控制的关联公司转出资金（非经营性资金往来）",
+            "expected_amount": 150000000.0,
+            "agent_hit": true,
+            "agent_title": "预付在地林下参150,000,000.00元长期挂账，未见入库、发票及供应商合同，存在资金占用或虚构采购风险",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "ZX-V10"
+            ]
+          }
+        ],
+        "source_url": "http://www.csrc.gov.cn/csrc/c101928/c7530907/content.shtml"
+      },
+      {
+        "case_id": "BLIND3_007",
+        "company": "烟台园城黄金股份有限公司",
+        "group": "fraud",
+        "case_flagged": true,
+        "high_medium_findings": 2,
+        "findings": [
+          "[RiskLevel.HIGH] 零毛利直发钢材贸易按总额法确认收入，疑似代理人交易或融资性贸易虚增收入",
+          "[RiskLevel.MEDIUM] 年末冲回已计提年度绩效及满勤奖并贷记管理费用，费用完整性及跨期调整存疑",
+          "[RiskLevel.LOW] 非工作日大额支付职工薪酬，需补充发放审批与人员真实性核查",
+          "[RiskLevel.LOW] 整数金额结转主营业务成本，成本计算依据需复核"
+        ],
+        "truth": [
+          {
+            "finding_type": "不承担存货风险的钢材贸易按总额法确认收入（应按净额法）",
+            "expected_amount": 64951800.0,
+            "agent_hit": true,
+            "agent_title": "零毛利直发钢材贸易按总额法确认收入，疑似代理人交易或融资性贸易虚增收入",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": []
+          },
+          {
+            "finding_type": "员工绩效工资由控股股东承担，冲回已计提薪酬（少计管理费用）",
+            "expected_amount": 401300.0,
+            "agent_hit": true,
+            "agent_title": "年末冲回已计提年度绩效及满勤奖并贷记管理费用，费用完整性及跨期调整存疑",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "YC-V06"
+            ]
+          }
+        ],
+        "source_url": "http://www.csrc.gov.cn/shandong/c104216/c7516881/content.shtml"
+      },
+      {
+        "case_id": "BLIND3_008",
+        "company": "吉林亚联发展科技股份有限公司",
+        "group": "fraud",
+        "case_flagged": true,
+        "high_medium_findings": 2,
+        "findings": [
+          "[RiskLevel.HIGH] 跨期冲减2019-2020年服务商返现成本并虚挂预付账款",
+          "[RiskLevel.HIGH] 无依据核销三年以上应付推广服务费并贷记主营业务成本",
+          "[RiskLevel.LOW] 收入确认截止性形式关注：月末非工作日记账且整数金额",
+          "[RiskLevel.LOW] 服务商成本计提与春节假期付款的形式关注",
+          "[RiskLevel.LOW] 半年奖/绩效薪酬期末整数计提的关注事项"
+        ],
+        "truth": [
+          {
+            "finding_type": "无债权人确认、无原始单据清理长账龄应付款并冲减营业成本（无单据核销负债增利）",
+            "expected_amount": 8278844.67,
+            "agent_hit": true,
+            "agent_title": "无依据核销三年以上应付推广服务费并贷记主营业务成本",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": []
+          },
+          {
+            "finding_type": "已于上年冲减的服务商返现再次冲减成本并挂预付账款（少计营业成本）",
+            "expected_amount": 13714256.57,
+            "agent_hit": true,
+            "agent_title": "跨期冲减2019-2020年服务商返现成本并虚挂预付账款",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": []
+          }
+        ],
+        "source_url": "http://epaper.zqrb.cn/html/2024-08/17/content_1074776.htm"
+      },
+      {
+        "case_id": "BLIND3_009",
+        "company": "安徽荃银高科种业股份有限公司",
+        "group": "fraud",
+        "case_flagged": true,
+        "high_medium_findings": 2,
+        "findings": [
+          "[RiskLevel.HIGH] 贵州黔禾应收账款逾期零回款，未单项计提坏账准备，减值准备计提不足",
+          "[RiskLevel.MEDIUM] 大额赊销收入对应客户零回款，控制权转移时点及商业实质待验证",
+          "[RiskLevel.LOW] 张掖制种预付款6,000,000.00元年末长期挂账，采购真实性与资金占用待查",
+          "[RiskLevel.LOW] 非工作日整数计提职工薪酬5,000,000.00元，费用归集准确性关注",
+          "[RiskLevel.LOW] 非工作日整数预收账款5,000,000.00元，资金流水与预收匹配关注",
+          "[RiskLevel.LOW] 年末制造费用折旧2,600,000.00元正常计提，关注折旧分配合理性",
+          "[RiskLevel.LOW] 大额整数赊销已回款，关注经销商最终销售及收入确认证据"
+        ],
+        "truth": [
+          {
+            "finding_type": "已知存在信用风险的客户应收账款未单项计提坏账准备（仅按账龄组合）",
+            "expected_amount": 18715068.36,
+            "agent_hit": true,
+            "agent_title": "贵州黔禾应收账款逾期零回款，未单项计提坏账准备，减值准备计提不足",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "QY-V04"
+            ]
+          }
+        ],
+        "source_url": "http://www.csrc.gov.cn/anhui/c103988/c7644608/content.shtml"
+      },
+      {
+        "case_id": "BLIND3_010",
+        "company": "沈阳化工股份有限公司",
+        "group": "fraud",
+        "case_flagged": true,
+        "high_medium_findings": 1,
+        "findings": [
+          "[RiskLevel.HIGH] 期末以考核口径将已耗用乙烯成本转入预付账款，导致成本少计、预付虚增及利润虚增",
+          "[RiskLevel.LOW] 周末确认大额聚乙烯销售收入，截止性需关注",
+          "[RiskLevel.LOW] 年末大额预付润宏石化乙烯款集中挂账，需关注预付真实性与资金占用",
+          "[RiskLevel.LOW] 整数金额乙烯采购，需关注存货入库与付款真实性",
+          "[RiskLevel.LOW] 半年末非工作日计提职工薪酬，属正常期末计提关注",
+          "[RiskLevel.LOW] 年末非工作日计提折旧，属正常期末计提关注"
+        ],
+        "truth": [
+          {
+            "finding_type": "人为调减投料量冲减营业成本（少计营业成本）",
+            "expected_amount": 12991431.04,
+            "agent_hit": true,
+            "agent_title": "期末以考核口径将已耗用乙烯成本转入预付账款，导致成本少计、预付虚增及利润虚增",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "SH-V07"
+            ]
+          },
+          {
+            "finding_type": "原料已到货耗用仍挂预付账款，延迟确认存货及应付（预付账款虚增）",
+            "expected_amount": 34157238.11,
+            "agent_hit": true,
+            "agent_title": "年末大额预付润宏石化乙烯款集中挂账，需关注预付真实性与资金占用",
+            "amount_within_1pct": true,
+            "analytics_flagged_ids": [
+              "SH-V06"
+            ]
+          }
+        ],
+        "source_url": "http://file.finance.sina.com.cn/211.154.219.97:9494/MRGG/CNSESZ_STOCK/2025/2025-11/2025-11-29/11647070.PDF"
+      },
+      {
+        "case_id": "BLIND3_011",
+        "company": "宜宾五粮液股份有限公司",
+        "group": "clean",
+        "case_flagged": false,
+        "high_medium_findings": 0,
+        "findings": [
+          "[RiskLevel.LOW] 年末预收账款大额整数收款及截止性关注（W-V02、W-V07）",
+          "[RiskLevel.LOW] 年末市场支持费大额整数计提关注（W-V06）",
+          "[RiskLevel.LOW] 非工作日大额广告费支付关注（W-V03）",
+          "[RiskLevel.LOW] 节假日大额应付账款付款关注（W-V10）",
+          "[RiskLevel.LOW] 非工作日整数预收账款30,000,000.00元关注",
+          "[RiskLevel.LOW] 跨年预收款转收入的控制权转移时点与截止性关注",
+          "[RiskLevel.LOW] 应收票据收取预收款及背书支付应付款的票据真实性关注"
+        ],
+        "truth": [],
+        "source_url": "https://www.wuliangye.com.cn"
+      },
+      {
+        "case_id": "BLIND3_012",
+        "company": "青岛啤酒股份有限公司",
+        "group": "clean",
+        "case_flagged": false,
+        "high_medium_findings": 0,
+        "findings": [
+          "[RiskLevel.LOW] 年末集中计提应付职工薪酬105,000,000.00元——关注事项",
+          "[RiskLevel.LOW] 体育赛事品牌赞助费10,000,000.00元非工作日付款——关注事项",
+          "[RiskLevel.LOW] 公益捐赠支出2,000,000.00元整数支付——关注事项",
+          "[RiskLevel.LOW] 年末计提折旧15,600,000.00元——关注事项",
+          "[RiskLevel.LOW] 五一节假日支付麦芽采购款28,340,000.00元——关注事项",
+          "[RiskLevel.LOW] 周末收回应收账款13,560,000.00元——关注事项",
+          "[RiskLevel.LOW] 年末复合凭证结转成本及计提销售费用——关注事项",
+          "[RiskLevel.LOW] 体育赛事品牌赞助费价税匹配及费用归类关注（Q-V07）"
+        ],
+        "truth": [],
+        "source_url": "https://www.tsingtao.com.cn"
+      },
+      {
+        "case_id": "BLIND3_013",
+        "company": "深圳迈瑞生物医疗电子股份有限公司",
+        "group": "clean",
+        "case_flagged": false,
+        "high_medium_findings": 0,
+        "findings": [
+          "[RiskLevel.LOW] 年末集中计提应付职工薪酬500,000,000.00元，触发非工作日、期末截止窗口及整数金额关注",
+          "[RiskLevel.LOW] 年末预收设备款36,000,000.00元，关注收入确认时点及期后结转",
+          "[RiskLevel.LOW] 周末支付应付账款22,600,000.00元，关注付款真实性与三单匹配",
+          "[RiskLevel.LOW] 研发领料4,200,000.00元，关注研发支出归集及领料真实性",
+          "[RiskLevel.LOW] 年末结转主营业务成本8,300,000.00元，关注成本截止性及收入成本配比"
+        ],
+        "truth": [],
+        "source_url": "https://www.mindray.com"
+      },
+      {
+        "case_id": "BLIND3_014",
+        "company": "三一重工股份有限公司",
+        "group": "clean",
+        "case_flagged": false,
+        "high_medium_findings": 0,
+        "findings": [
+          "[RiskLevel.LOW] 年末产品质量保证金大额计提——日期与整数金额关注",
+          "[RiskLevel.LOW] 国庆假期大额供应商付款——日期与整数金额关注",
+          "[RiskLevel.LOW] 职工薪酬期末计提——整数金额关注",
+          "[RiskLevel.LOW] 年末主营业务成本结转——日期与整数金额关注",
+          "[RiskLevel.LOW] 关联方工业互联网平台技术服务费——已披露关联交易关注",
+          "[RiskLevel.LOW] 周六支付国际工程机械展会展位及搭建费——日期与整数金额关注",
+          "[RiskLevel.LOW] 应收账款回款——关注事项"
+        ],
+        "truth": [],
+        "source_url": "https://www.sanygroup.com"
+      },
+      {
+        "case_id": "BLIND3_015",
+        "company": "顺丰控股股份有限公司",
+        "group": "clean",
+        "case_flagged": false,
+        "high_medium_findings": 0,
+        "findings": [
+          "[RiskLevel.LOW] 年末大额航空燃油暂估成本截止性与支持性关注",
+          "[RiskLevel.LOW] 春节前大额应付账款付款的节假日与真实性关注",
+          "[RiskLevel.LOW] 整数品牌数字广告费发票与费用期间关注",
+          "[RiskLevel.LOW] 期末职工薪酬大额计提的分配与依据关注",
+          "[RiskLevel.LOW] 年末整数预收运费款的收入确认时点关注"
+        ],
+        "truth": [],
+        "source_url": "https://www.sf-express.com"
+      },
+      {
+        "case_id": "BLIND3_016",
+        "company": "立讯精密工业股份有限公司",
+        "group": "clean",
+        "case_flagged": true,
+        "high_medium_findings": 1,
+        "findings": [
+          "[RiskLevel.MEDIUM] 期末大额存货跌价准备集中计提，可变现净值测算及审批证据缺失",
+          "[RiskLevel.LOW] 季末主营业务成本暂估入账，供应商发票及入库依据待补",
+          "[RiskLevel.LOW] 非工作日大额供应商付款与合同金额一致（L-V05）",
+          "[RiskLevel.LOW] 半年度工资薪酬集中计提（L-V07）",
+          "[RiskLevel.LOW] 出口销售收入整数金额确认（L-V01）",
+          "[RiskLevel.LOW] 应收票据收取后背书支付，终止确认与背书连续性关注"
+        ],
+        "truth": [],
+        "source_url": "https://www.luxshare-ict.com"
+      }
+    ]
+  }
+}

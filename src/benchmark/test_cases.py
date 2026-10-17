@@ -96,6 +96,8 @@ def _load_cases_from_json() -> List[AccountingCaseData]:
 
 
 _DYNAMIC_CASES_STORE: Dict[str, AccountingCaseData] = {}
+# 脱敏覆盖层：脱敏后的案例按 case_id 覆盖原数据（不进入案例列表，避免重复显示）
+_SANITIZED_OVERRIDES: Dict[str, AccountingCaseData] = {}
 
 
 def _load_custom_cases_from_disk(data_dir: Optional[Path] = None) -> None:
@@ -165,6 +167,8 @@ def get_case_by_id(case_id: str) -> Optional[AccountingCaseData]:
     if not lookup:
         return None
 
+    if lookup in _SANITIZED_OVERRIDES:
+        return _SANITIZED_OVERRIDES[lookup]
     if lookup in _DYNAMIC_CASES_STORE:
         return _DYNAMIC_CASES_STORE[lookup]
 
